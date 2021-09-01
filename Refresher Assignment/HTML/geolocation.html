@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>GeoLocation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="geolocation.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Refresher Assignment</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="1.html" class="active">Registration</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="geolocation.html">GeoLocation API</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user" id="name"></span> </a></li>
+              </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <button id="geolocation" onclick="getLocation();" class="btn-info btn" onmouseover="changeColor('geolocation')" 
+        onmouseout="resetColor('geolocation')">Get Co-Ordinates</button>
+        <p id="locationBody"></p>
+        <button id="nearBy" onclick="getNearByFromGoogle(1,2,'restaurant');" class="btn-info btn" onmouseover="changeColor('nearBy')" 
+        onmouseout="resetColor('nearBy')">Get NearBy Restaurants</button>
+        <p id="details"></p>
+    </div>
+</body>
+<script>
+    let userActive=sessionStorage.getItem('active');
+    document.getElementById('name').innerHTML=' '+userActive;
+</script>
+</html>

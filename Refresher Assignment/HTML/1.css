@@ -1,0 +1,7 @@
+.table{
+    width: 40%;
+    margin-left: 35%;
+}
+form.submitted input:invalid {
+    border: 2px solid red;
+  }
