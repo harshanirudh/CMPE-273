@@ -1,4 +1,7 @@
 'use strict';
+
+// const { default: axios } = require("axios");
+
 // var axios = require("axios").default;
 
 // const { default: axios } = require("axios");
@@ -12,24 +15,22 @@ async function getAddress(latlng,key){
         console.log(address);
         return address;
 }
-function getCoOrdinates(){
-    navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        lat=latitude;
-        lon=longitude;
-    });
+async function getCoOrdinates(){
+    const res=await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBZi--8bDA1gLOlH1o0cC0NFVGngFseprE');
+    return res;
 }
 function getLocation(){
-    navigator.geolocation.getCurrentPosition(position => {
-    const { latitude, longitude } = position.coords;
-    lat=latitude;
-    lon=longitude;
-    console.log(latitude,longitude);
-    const resultString=` Longitude = ${longitude} Latitude =${latitude}`
-    getAddress(latitude+','+longitude,'AIzaSyB1mRHizceSJDs4TuXu_pi8j8HPt5DQRLY').then(res=>{
-        document.getElementById('locationBody').innerHTML=resultString+'<br/>'+res;
-    });
-});
+    
+    getCoOrdinates().then(resp=>{
+        const resultString=` Longitude = ${resp.data.location.lng} Latitude =${resp.data.location.lat}`;
+        lon=resp.data.location.lng;
+        lat=resp.data.location.lat;
+            getAddress(resp.data.location.lat+','+resp.data.location.lng,'AIzaSyB1mRHizceSJDs4TuXu_pi8j8HPt5DQRLY').then(res=>{
+                document.getElementById('locationBody').innerHTML=resultString+'<br/>'+res;
+        });
+    })
+
+
 }
 // https://documenu.com/docs#get_search_restaurants_geo
 let getNearByFromGoogle= async ()=>{

@@ -11,7 +11,7 @@ class Car{
     }
 };
 
-console.log(Car.createCar('Tesla x','red'));
+// console.log(Car.createCar('Tesla x','red'));
 //----------------------------------------------
 // 3. regular expression to check if given file is of .java extensions
 // 2. Rest operaotor

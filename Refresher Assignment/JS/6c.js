@@ -1,34 +1,4 @@
-// b. to demonstrate difference between var,let and const
-'use strict'
-var helloVar = "Hi from Var";
-var helloVar = "Hi redeclaring var, This will not throw error"
-console.log(helloVar);
-let helloLet = "Hi from let";
-//let helloLet="Hi Redeclaring let, this will throw a error"
-console.log(helloLet);
-const helloConst = "Hi from const"
-//helloConst="changing const variable is restricted,this will throw a error"
-console.log(helloConst);
-
-function counterVar() {
-    for (var count = 0; count < 3; count++) {
-        console.log(count);
-    }
-    console.log(`outside blockscope ${count}`);
-
-}
-function counterLet() {
-    for (let count = 0; count < 3; count++) {
-        console.log(count);
-    }
-    //This will throw error as let is block scoped unlike var which is function scope
-    // console.log(`outside blockscope ${count}`);
-
-}
-
-// counterVar();
-// counterLet();
-//----------------------------------------------------------
+'use strict';
 // (c) callback,promise & async await
 // to simulate fileread
 let readFileCallBack = (fileName) => {
