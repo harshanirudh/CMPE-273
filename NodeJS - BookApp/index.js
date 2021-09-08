@@ -127,6 +127,11 @@ app.post('/delete', function (req, res) {
     }
 })
 
+app.get('/logout',function(req,res){
+    req.session.destroy();
+    res.redirect('/');
+})
+
 var server = app.listen(3000, function () {
     console.log("Server listening on port 3000");
 });
