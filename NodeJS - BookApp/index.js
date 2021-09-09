@@ -42,7 +42,7 @@ var books = [
 app.get('/', function (req, res) {
     //check if user session exits
     if (req.session.user) {
-        res.render('/home');
+        res.redirect('/home');
     } else
         res.render('login');
 });
