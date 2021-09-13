@@ -5,7 +5,8 @@ var connectionPool=mysql.createPool({
     user:'root',
     password:'BiryaniBois@1008',
     database:'uber_eats',
-    connectionLimit: 3
+    connectionLimit: 3,
+    multipleStatements: true
 
 });
 
