@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
+var axios = require("axios").default;
+
+var { baseUrl } = require('../apiConfig')
 
 const restSignupValidator=yup.object({
     rname:yup.string().required('Restaurant Name is required')
@@ -24,6 +27,23 @@ const restSignupValidator=yup.object({
     country:yup.string().required('Country is Required')
 })
 export class RestaurantSignup extends Component {
+    addNewRest(values){
+        let url = baseUrl + '/users/restaurant'
+        axios.post(url, values).then(res => {
+            console.log(res.data);
+           /* this.setState({
+                redirect:true,
+                redirectTo:'/restaurantSingup/success'
+            })*/
+        }).catch((err) => {
+                console.log(`error ${err}`)
+                this.setState({
+                    redirect:true,
+                    redirectTo:'/restaurantSingup/error'
+                })
+            })
+        console.log(values);
+    }
     render() {
         return (
             <div className="container">
@@ -37,7 +57,7 @@ export class RestaurantSignup extends Component {
                     email:'',
                     pass:'',
                     country:''
-                }} validationSchema={restSignupValidator} onSubmit={values=>console.log(values)}>
+                }} validationSchema={restSignupValidator} onSubmit={(values)=>this.addNewRest(values)}>
                     <Form>
                         <div className="form-group">
                             <label >Restaurant Name:</label>

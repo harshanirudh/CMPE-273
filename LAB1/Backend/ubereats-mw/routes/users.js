@@ -27,11 +27,12 @@ const customerPostValidator = validator.check(['fname', 'lname', 'email', 'pass'
 router.post('/customer', customerPostValidator, (req, res) => {
   try {
     validator.validationResult(req).throw();
-    let saveCustomer = 'call uber_eats.SP_Add_New_Customer(?,?,?,?,?)'
+    let saveCustomer = 'set @id = 0;call uber_eats.SP_Add_New_Customer(?,?,?,?,@id);select @id;'
     let { fname, lname, email, pass } = req.body;
-    let id=0;
-    pool.execute(saveCustomer, [fname, lname, email, pass,id]).then(resp => {
-      res.status(201).send(resp[0]);
+    pool.query(saveCustomer, [fname, lname, email, pass]).then(resp => {
+      resp=Object.values(JSON.parse(JSON.stringify(resp)));
+      console.log(resp[0][2][0])
+      res.status(201).json(resp[0][2][0]);
     }).catch((err) => {
       console.log(err)
       res.status(500).send(err);
@@ -60,4 +61,27 @@ router.get('/restarunt/:id', (req, res) => {
     console.log(err);
   })
 })
+
+const restPostValidator = validator.check(['add', 'city', 'country', 'email','pass','rname','state','zipcode'], 'Bad Request').exists();
+router.post('/restaurant', restPostValidator, (req, res) => {
+  try {
+    validator.validationResult(req).throw();
+    let saveRestaurant = 'set @id = 0;call uber_eats.SP_Add_New_Customer(?,?,?,?,@id);select @id;'
+    let { add, city, country, email,pass,rname,state,zipcode } = req.body;
+   /* pool.query(saveRestaurant, [rname, add, city, state,zipcode,country,email,pass]).then(resp => {
+      resp=Object.values(JSON.parse(JSON.stringify(resp)));
+      console.log(resp[0][2][0])
+      res.status(201).json(resp[0][2][0]);
+    }).catch((err) => {
+      console.log(err)
+      res.status(500).send(err);
+    })*/
+    res.status(201).json(req.body)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+})
+
 module.exports = router;

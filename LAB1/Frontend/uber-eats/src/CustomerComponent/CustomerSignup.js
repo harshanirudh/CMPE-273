@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
-import {addNewCustomer} from './CustomerSignupService'
+import { Redirect } from 'react-router';
+
+var axios = require("axios").default;
+
+var { baseUrl } = require('../apiConfig')
+// import {AddNewCustomer} from './CustomerSignupService'
+
+
 
 const custSignupValidator=yup.object({
     fname:yup.string().required('First Name is required')
@@ -14,15 +21,48 @@ const custSignupValidator=yup.object({
         .min(6,'Min length 6 ')
         .max(30,'Max length 30')
 })
+
+
+
 export class CustomerSignup extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             redirect:false,
+             redirectTo:''
+        }
+    }
+    AddNewCustomer(values) {
+    
+        let url = baseUrl + '/users/customer'
+        axios.post(url, values).then(res => {
+            console.log(res.data);
+            this.setState({
+                redirect:true,
+                redirectTo:'/customerSignup/success'
+            })
+        }).catch((err) => {
+                console.log(`error ${err}`)
+                this.setState({
+                    redirect:true,
+                    redirectTo:'/customerSignup/error'
+                })
+            })
+        console.log(values);
+    }
+    
     render() {
+        if(this.state.redirect){
+            return <Redirect to={this.state.redirectTo}></Redirect>
+        }
         return (
             <Formik initialValues={{
                 fname:'',
                 lname:'',
                 email:'',
                 pass:''
-            }} validationSchema={custSignupValidator}  onSubmit={(values)=>addNewCustomer(values)}>
+            }} validationSchema={custSignupValidator}  onSubmit={(values)=>this.AddNewCustomer(values)}>
                 <div className="container">
                     <h2 className="text-center">Customer Registration</h2>
                     <Form>
@@ -47,11 +87,15 @@ export class CustomerSignup extends Component {
                             <ErrorMessage name="pass" className="text-danger" component="div"></ErrorMessage>
                         </div>
                         <button type="submit" className="btn btn-primary">Register</button>
+                        
                     </Form>
+                
                 </div>
             </Formik>
         )
     }
+
+    
 }
 
 export default CustomerSignup
