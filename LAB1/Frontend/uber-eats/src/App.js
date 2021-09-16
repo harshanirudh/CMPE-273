@@ -8,14 +8,17 @@ import LoginComponent from './SharedComponents/LoginComponent';
 import CustomPopup from './SharedComponents/CustomPopup';
 import SignupStatus from './CustomerComponent/SignupStatus';
 import CustomerProfile from './CustomerComponent/CustomerProfile';
+import RestaurantProfile from './RestaurantComponent.js/RestaurantProfile';
+import RestaurantLanding from './RestaurantComponent.js/RestaurantLanding';
 
 
 function App() {
   return (
     <Router>
       <div className="App">
+        <div >
         <NavComponent></NavComponent>
-        
+        </div>
         <div className="content">
           <Switch>
             <Route exact path="/customer">
@@ -39,6 +42,14 @@ function App() {
             <Route exact path="/customer/profile/:profileId">
               <CustomerProfile></CustomerProfile>
             </Route>
+
+            <Route exact path="/restaurant/landing">
+              <RestaurantLanding></RestaurantLanding>
+            </Route>
+            <Route exact path="/restaurant/profile/:profileId">
+              <RestaurantProfile></RestaurantProfile>
+            </Route>
+
           </Switch>
         </div>
       </div>
