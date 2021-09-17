@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 function NavComponent(props) {
     return (
         <div>
-            <nav className="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+            <nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
                 <ul className="navbar-nav">
                     <li className="nav-item active">
                         <Link className="nav-link" to='/'>Uber Eats</Link>

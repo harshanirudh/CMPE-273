@@ -2,14 +2,16 @@
 import './App.css';
 import NavComponent from './SharedComponents/NavComponent';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import RestaurantSignup from './RestaurantComponent.js/RestaurantSignup';
+import RestaurantSignup from './RestaurantComponent/RestaurantSignup';
 import CustomerSignup from './CustomerComponent/CustomerSignup';
 import LoginComponent from './SharedComponents/LoginComponent';
 import CustomPopup from './SharedComponents/CustomPopup';
 import SignupStatus from './CustomerComponent/SignupStatus';
 import CustomerProfile from './CustomerComponent/CustomerProfile';
-import RestaurantProfile from './RestaurantComponent.js/RestaurantProfile';
-import RestaurantLanding from './RestaurantComponent.js/RestaurantLanding';
+import RestaurantProfile from './RestaurantComponent/RestaurantProfile';
+import RestaurantLanding from './RestaurantComponent/RestaurantLanding';
+import DishesDetailsComponent from './RestaurantComponent/DishesDetailsComponent';
+
 
 
 function App() {
@@ -27,6 +29,9 @@ function App() {
             <Route exact path="/restaurant" >
               <LoginComponent type="Restaurant Owner" key="rest" path="restaurantSingup"></LoginComponent>
             </Route>
+            <Route exact path="/restaurant/:restId/dish/:dishId" >
+              <DishesDetailsComponent></DishesDetailsComponent>
+            </Route>
             <Route exact path="/restaurantSingup">
               <RestaurantSignup></RestaurantSignup>
             </Route>
@@ -43,12 +48,13 @@ function App() {
               <CustomerProfile></CustomerProfile>
             </Route>
 
-            <Route exact path="/restaurant/landing">
+            <Route exact path="/restaurant/landing/:profileId">
               <RestaurantLanding></RestaurantLanding>
             </Route>
             <Route exact path="/restaurant/profile/:profileId">
               <RestaurantProfile></RestaurantProfile>
             </Route>
+            
 
           </Switch>
         </div>
