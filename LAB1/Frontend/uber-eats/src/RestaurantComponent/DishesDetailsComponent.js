@@ -25,6 +25,7 @@ export class DishesDetailsComponent extends Component {
         this.formvals.ingre="ingre"
         this.formvals.dprice="$10"
         this.formvals.dtype="vegan"
+        this.formvals.dimg=""
         // this.setState({formObj:this.formvals})
         this.setState((state)=>{
             console.log(state)

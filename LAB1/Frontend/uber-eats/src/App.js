@@ -11,6 +11,9 @@ import CustomerProfile from './CustomerComponent/CustomerProfile';
 import RestaurantProfile from './RestaurantComponent/RestaurantProfile';
 import RestaurantLanding from './RestaurantComponent/RestaurantLanding';
 import DishesDetailsComponent from './RestaurantComponent/DishesDetailsComponent';
+import { OrdersListComponent } from './RestaurantComponent/OrdersListComponent';
+
+
 
 
 
@@ -31,6 +34,9 @@ function App() {
             </Route>
             <Route exact path="/restaurant/:restId/dish/:dishId" >
               <DishesDetailsComponent></DishesDetailsComponent>
+            </Route>
+            <Route exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}>
+              
             </Route>
             <Route exact path="/restaurantSingup">
               <RestaurantSignup></RestaurantSignup>

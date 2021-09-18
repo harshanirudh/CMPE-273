@@ -5,6 +5,7 @@ import S3FileUpload from 'react-s3';
 function DisheFormComponent(props) {
     let imgbtntype=props.type==='add'?'Add':'Add/Edit';
     let submitBtnType=props.type=='add'?'Save':'Edit'; 
+    let imgSrc = props.intialValues.dimg != undefined ? props.intialValues.dimg:'/dish.png'
     let fileInput=useRef();
     let handleAddButton=()=>{
         fileInput.current.click();
@@ -28,11 +29,16 @@ function DisheFormComponent(props) {
                         <div className="col-sm-3">
                             <label className="mb-0">Dish Image</label>
                         </div>
-                        <div className="col-sm-9 text-secondary">
+                        <div className="col-sm-3 text-secondary">
                             <div className="text-center">
-                                <input className="form-control" type='file'  ref={fileInput} accept="image/png, image/gif, image/jpeg" />
+                                <input className="form-control-sm" type='file'  ref={fileInput} accept="image/png, image/gif, image/jpeg" onClick={handleAddButton} />
                             </div>
-                            <ErrorMessage name="dname" className="text-danger" component="div"></ErrorMessage>
+                            {/* <ErrorMessage name="dname" className="text-danger" component="div"></ErrorMessage> */}
+                        </div>
+                        <div className="col-sm-6 text-secondary card-columns">
+                            <div className="card ">
+                                <img src={imgSrc} className="float-right card-img-top" ></img>
+                            </div>
                         </div>
                     </div>
                     <Form>
