@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
+import { Redirect } from 'react-router';
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -27,14 +28,23 @@ const restSignupValidator=yup.object({
     country:yup.string().required('Country is Required')
 })
 export class RestaurantSignup extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            redirect:false,
+            redirectTo:''
+        }
+    }
+    
     addNewRest(values){
         let url = baseUrl + '/users/restaurant'
         axios.post(url, values).then(res => {
             console.log(res.data);
-           /* this.setState({
+            this.setState({
                 redirect:true,
                 redirectTo:'/restaurantSingup/success'
-            })*/
+            })
         }).catch((err) => {
                 console.log(`error ${err}`)
                 this.setState({
@@ -45,6 +55,9 @@ export class RestaurantSignup extends Component {
         console.log(values);
     }
     render() {
+        if(this.state.redirect){
+            return <Redirect to={this.state.redirectTo}></Redirect>
+        }
         return (
             <div className="container">
                 <h2 className="text-center">Restaurant Registration</h2>

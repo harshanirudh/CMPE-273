@@ -9,12 +9,12 @@ PASS char(128) NOT NULL,
 STREET VARCHAR(120) ,
 CITY VARCHAR(40),
 STATE VARCHAR(40),
-COUNTRY INT,
+COUNTRY varchar(40),
 ZIPCODE VARCHAR(5),
 PHONE VARCHAR(14),
 RDESCRIPTION VARCHAR(255),
-START_TIME VARCHAR(4),
-END_TIME VARCHAR(4)
+START_TIME VARCHAR(10),
+END_TIME VARCHAR(10)
 );
 CREATE TABLE IF NOT EXISTS CUSTOMER_USERS(
 CUST_ID INT AUTO_INCREMENT,
@@ -24,11 +24,12 @@ EMAIL VARCHAR(60) NOT NULL unique,
 PASS CHAR(128) NOT NULL,
 NICKNAME VARCHAR(30),
 ABOUT VARCHAR(120),
-PROFILE_PIC BLOB,
+PROFILE_PIC varchar(150),
 STREET VARCHAR(120),
 CITY VARCHAR(30),
 STATE VARCHAR(30),
-COUNTRY INT ,
+COUNTRY varchar(40) ,
+DOB varchar(10),
 ZIPCODE VARCHAR(5),
 PHONE VARCHAR(14),
 PRIMARY KEY(CUST_ID)
@@ -49,7 +50,7 @@ PRIMARY KEY(CUST_ID)
 CREATE TABLE IF NOT EXISTS RESTAURANT_IMAGES(
 	REST_ID INT,
     IMAGE_ID INT ,
-    IMAGE BLOB,
+    IMAGE varchar(150),
     PRIMARY KEY (IMAGE_ID),
     FOREIGN KEY(REST_ID) REFERENCES RESTAURANT_USERS(REST_ID)
 );
@@ -58,7 +59,7 @@ CREATE TABLE IF NOT EXISTS RESTAURANT_DISHES(
     DISH_ID INT,
     DISH_NAME VARCHAR (45) NOT NULL,
     INGREDIENTS VARCHAR(255) ,
-    IMAGE BLOB,
+    IMAGE varchar(150),
     PRICE VARCHAR(5) NOT NULL,
     DISH_DESCR VARCHAR(255),
     CATEGORY INT NOT NULL,
@@ -94,3 +95,19 @@ create table if not exists ORDERS_DETAILS(
     DISH_QUANTITY INT,
     PRICE INT
 );
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Add_New_Customer`(in c_fname varchar(50),in c_lname varchar(50),in c_email varchar(60),in c_pass char(128),out id int)
+BEGIN
+	insert into customer_users(fname,lname,email,pass) values(c_fname,c_lname,c_email,c_pass);
+    set id=LAST_INSERT_ID();
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Add_New_Restaurant`(in r_name varchar(50),in r_add varchar(120), in r_city varchar(40),in r_state varchar(49),in r_zip varchar(5),in r_country varchar(40),in r_email varchar(60),in r_pass char(128),out id int)
+BEGIN
+	insert into RESTAURANT_USERS(rname,email,pass,street,city,state,country,zipcode) values(r_name,r_email,r_pass,r_add,r_city,r_state,r_country,r_zip);
+    set id=LAST_INSERT_ID();
+END$$
+DELIMITER ;
+
+

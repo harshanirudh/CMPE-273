@@ -10,11 +10,7 @@ export let S3config = {
 
 
 export let uploadProfilePics = (file) => {
-    S3FileUpload
-        .uploadFile(file, S3config)
-        .then(data => {
-            // console.log(data)
-            return data.location;
-        })
-        .catch(err => console.error(err))
+    
+    return S3FileUpload.uploadFile(file, S3config);
+        
 }

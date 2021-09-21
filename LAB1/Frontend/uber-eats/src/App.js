@@ -41,6 +41,12 @@ function App() {
             <Route exact path="/restaurantSingup">
               <RestaurantSignup></RestaurantSignup>
             </Route>
+            <Route exact path="/restaurantSingup/success">
+              <SignupStatus type="Success"></SignupStatus>
+            </Route>
+            <Route exact path="/restaurantSingup/error">
+              <SignupStatus type="error"></SignupStatus>
+            </Route>
             <Route exact path="/customerSignup">
               <CustomerSignup></CustomerSignup>
             </Route>
@@ -50,8 +56,8 @@ function App() {
             <Route exact path="/customerSignup/error">
               <SignupStatus type="error"></SignupStatus>
             </Route>
-            <Route exact path="/customer/profile/:profileId">
-              <CustomerProfile></CustomerProfile>
+            <Route exact path="/customer/profile/:profileId" component={CustomerProfile}>
+              
             </Route>
 
             <Route exact path="/restaurant/landing/:profileId">

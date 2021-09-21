@@ -65,7 +65,7 @@ export class CustomerSignup extends Component {
             }} validationSchema={custSignupValidator}  onSubmit={(values)=>this.AddNewCustomer(values)}>
                 <div className="container">
                     <h2 className="text-center">Customer Registration</h2>
-                    <Form className="form-inline">
+                    <Form className="form">
                         <div className="form-group">
                             <label >First Name:</label>
                             <Field type="text" className="form-control" placeholder="Ex Elon" id="fname" name="fname" />

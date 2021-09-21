@@ -1,27 +1,38 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import React, { useRef } from 'react'
+import React, { useRef,Component, createRef } from 'react'
 import {S3config} from './../SharedComponents/UploadS3'
 import S3FileUpload from 'react-s3';
-function DisheFormComponent(props) {
-    let imgbtntype=props.type==='add'?'Add':'Add/Edit';
-    let submitBtnType=props.type=='add'?'Save':'Edit'; 
-    let imgSrc = props.intialValues.dimg != undefined ? props.intialValues.dimg:'/dish.png'
-    let fileInput=useRef();
-    let handleAddButton=()=>{
-        fileInput.current.click();
-        console.log(fileInput)
+
+class DisheFormComponent extends Component {
+    constructor(props) {
+        super(props)
+        this.fileInput=createRef();
+        this.state = {
+             
+        }
     }
-    let sendFormDetails=(values)=>{
-        let img=fileInput.current.files[0]
+    
+     imgbtntype=this.props.type==='add'?'Add':'Add/Edit';
+     submitBtnType=this.props.type=='add'?'Save':'Edit'; 
+     imgSrc =this. props.intialValues.dimg != undefined ? this.props.intialValues.dimg:'/dish.png'
+     
+     handleAddButton=()=>{
+        this.fileInput.current.click();
+        console.log(this.fileInput)
+    }
+     sendFormDetails=(values)=>{
+         console.log(values)
+        let img=this.fileInput.current.files[0]
+        if(img){
         S3FileUpload.uploadFile(img,S3config).then((res)=>{
             values.dimag=res.location;
-            props.onFormSubmit(values)
+            this.props.onFormSubmit(values)
         })
-        
     }
-    console.log("props:",props)
+    }
+    render(){
     return (
-        <Formik initialValues={props.intialValues} onSubmit={(values)=>{sendFormDetails(values)}}>
+        <Formik initialValues={this.props.intialValues} onSubmit={(values)=>{this.sendFormDetails(values)}}>
 
             <div className="container">
                
@@ -31,13 +42,13 @@ function DisheFormComponent(props) {
                         </div>
                         <div className="col-sm-3 text-secondary">
                             <div className="text-center">
-                                <input className="form-control-sm" type='file'  ref={fileInput} accept="image/png, image/gif, image/jpeg" onClick={handleAddButton} />
+                                <input className="form-control-sm" type='file'  ref={this.fileInput} accept="image/png, image/gif, image/jpeg" onClick={this.handleAddButton} />
                             </div>
                             {/* <ErrorMessage name="dname" className="text-danger" component="div"></ErrorMessage> */}
                         </div>
                         <div className="col-sm-6 text-secondary card-columns">
                             <div className="card ">
-                                <img src={imgSrc} className="float-right card-img-top" ></img>
+                                <img src={this.imgSrc} className="float-right card-img-top" ></img>
                             </div>
                         </div>
                     </div>
@@ -88,12 +99,13 @@ function DisheFormComponent(props) {
                         </div>
                         <div className="col-sm-9 text-secondary">
                             <Field as="select" className="form-control" name="dcat" >
+                                {}
                                 <option value="" ></option>
-                                <option value="appetizer" >Appetizer</option>
-                                <option value="salads" >Salads</option>
-                                <option value="maincourse" >Main Course</option>
-                                <option value="desserts" >Desserts</option>
-                                <option value="beverages" >Beverages</option>
+                                <option value="1" >Appetizer</option>
+                                <option value="2" >Salads</option>
+                                <option value="3" >Main Course</option>
+                                <option value="4" >Desserts</option>
+                                <option value="5" >Beverages</option>
                             </Field>
                             <ErrorMessage name="dcat" className="text-danger" component="div"></ErrorMessage>
                         </div>
@@ -106,20 +118,21 @@ function DisheFormComponent(props) {
                         <div className="col-sm-9 text-secondary">
                             <Field as="select" className="form-control" name="dtype" >
                                 <option value="" ></option>
-                                <option value="veg" >Veg</option>
-                                <option value="vegan" >Vegan</option>
-                                <option value="nonveg" >Non Veg</option>
+                                <option value="1" >Veg</option>
+                                <option value="2" >Vegan</option>
+                                <option value="3" >Non Veg</option>
                             </Field>
                             <ErrorMessage name="dtype" className="text-danger" component="div"></ErrorMessage>
                         </div>
                     </div>
                     <div className="text-center">
-                    <button type="submit" className="btn btn-primary text-center">{submitBtnType}</button>
+                    <button type="submit" className="btn btn-primary text-center">{this.submitBtnType}</button>
                     </div>
                 </Form>
             </div>
         </Formik>
     )
+    }
 }
 
 export default DisheFormComponent
