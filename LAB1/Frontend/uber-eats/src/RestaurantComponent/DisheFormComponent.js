@@ -1,6 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import React, { useRef,Component, createRef } from 'react'
-import {S3config} from './../SharedComponents/UploadS3'
+import {uploadDishImages} from './../SharedComponents/UploadS3'
 import S3FileUpload from 'react-s3';
 
 class DisheFormComponent extends Component {
@@ -8,51 +8,72 @@ class DisheFormComponent extends Component {
         super(props)
         this.fileInput=createRef();
         this.state = {
-             
+            //  imgSrc:this.props.intialValues.dimg.length>0 ? this.props.intialValues.dimg:'/dish.png',
+             imageUpload:false
         }
     }
     
      imgbtntype=this.props.type==='add'?'Add':'Add/Edit';
      submitBtnType=this.props.type=='add'?'Save':'Edit'; 
-     imgSrc =this. props.intialValues.dimg != undefined ? this.props.intialValues.dimg:'/dish.png'
+    //  imgSrc =this.props.intialValues.dimg ? this.props.intialValues.dimg:'/dish.png'
      
-     handleAddButton=()=>{
-        this.fileInput.current.click();
-        console.log(this.fileInput)
+     handleAddButton=(e)=>{
+        let img=e.target.form[0].files[0];
+        if(img){
+        let [filename, ext] = img.name.split(".")
+        let newname = filename + new Date().valueOf() + "." + ext;
+        let newFile = new File([img], newname)
+        console.log(newFile)  
+            uploadDishImages(newFile).then((res)=>{
+                   console.log(res.location)
+                   this.props.intialValues.dimg=res.location;
+                   this.setState((prevState)=>({
+                       imageUpload:!prevState.imageUpload
+                   }))
+               })
+        }
+        
     }
      sendFormDetails=(values)=>{
          console.log(values)
-        let img=this.fileInput.current.files[0]
-        if(img){
-        S3FileUpload.uploadFile(img,S3config).then((res)=>{
-            values.dimag=res.location;
-            this.props.onFormSubmit(values)
-        })
+         values.dimg=this.props.intialValues.dimg.length>0 ? this.props.intialValues.dimg:'/dish.png'
+         this.props.onFormSubmit(values)
+
     }
+    setProfilePic(){
+        if(this.props.intialValues.dimg?.length>0)
+            return this.props.intialValues.dimg
+        else
+            return "/dish.png";
     }
     render(){
     return (
         <Formik initialValues={this.props.intialValues} onSubmit={(values)=>{this.sendFormDetails(values)}}>
 
             <div className="container">
-               
+            <Form>
                     <div className="row mb-3">
                         <div className="col-sm-3">
                             <label className="mb-0">Dish Image</label>
                         </div>
-                        <div className="col-sm-3 text-secondary">
+                        <div className="col-sm-2 text-secondary">
                             <div className="text-center">
-                                <input className="form-control-sm" type='file'  ref={this.fileInput} accept="image/png, image/gif, image/jpeg" onClick={this.handleAddButton} />
+                                <input className="form-control-sm" type='file'   accept="image/png, image/gif, image/jpeg"  />
+                                
                             </div>
                             {/* <ErrorMessage name="dname" className="text-danger" component="div"></ErrorMessage> */}
                         </div>
-                        <div className="col-sm-6 text-secondary card-columns">
+                        <div className="col-sm-3">
+                        <button className="btn btn-primary" type="button" onClick={(e)=>this.handleAddButton(e)}>Upload</button>
+                        </div>
+                        <div className="col-sm-4 text-secondary card-columns">
                             <div className="card ">
-                                <img src={this.imgSrc} className="float-right card-img-top" ></img>
+                                {/* <img src={this.state.imgSrc} className="float-right card-img-top" ></img> */}
+                                <img src={this.setProfilePic()} className="float-right card-img-top" ></img>
                             </div>
                         </div>
                     </div>
-                    <Form>
+                   
                     <div className="row mb-3">
                         <div className="col-sm-3">
                             <label className="mb-0">Dish Name</label>

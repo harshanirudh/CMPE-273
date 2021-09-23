@@ -14,3 +14,15 @@ export let uploadProfilePics = (file) => {
     return S3FileUpload.uploadFile(file, S3config);
         
 }
+export let uploadDishImages=(file)=>{
+    let dishConfig={}
+    Object.assign(dishConfig,S3config)
+    dishConfig.dirName="dishes/"
+    return S3FileUpload.uploadFile(file,dishConfig);
+}
+export let uploadRestImages=(file)=>{
+    let restConfig={}
+    Object.assign(restConfig,S3config)
+    restConfig.dirName="restImages/"
+    return S3FileUpload.uploadFile(file,restConfig);
+}

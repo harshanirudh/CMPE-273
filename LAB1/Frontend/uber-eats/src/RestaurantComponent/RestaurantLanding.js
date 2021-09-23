@@ -18,12 +18,12 @@ export class RestaurantLanding extends Component {
             <div className="container-fluid " >
                 <div className="row">
                 {/* fixed-top one */}
-                    <div className="col-sm-6 "> 
+                    <div className="col-sm-4 "> 
                         {/* <PhotoCollage></PhotoCollage> */}
-                        <PhotoViewer></PhotoViewer>
+                        <PhotoViewer restId={this.props.match.params.profileId}></PhotoViewer>
                     </div>
                     {/* offset-sm-6 two */}
-                    <div className="col-sm-6 ">
+                    <div className="col-sm-8 ">
                         <MenuList restId={this.props.match.params.profileId} ></MenuList>
                     </div>
                 </div>

@@ -12,6 +12,8 @@ import RestaurantProfile from './RestaurantComponent/RestaurantProfile';
 import RestaurantLanding from './RestaurantComponent/RestaurantLanding';
 import DishesDetailsComponent from './RestaurantComponent/DishesDetailsComponent';
 import { OrdersListComponent } from './RestaurantComponent/OrdersListComponent';
+import CustomerLanding from './CustomerComponent/CustomerLanding';
+import Home from './Home/Home';
 
 
 
@@ -26,6 +28,7 @@ function App() {
         </div>
         <div className="content">
           <Switch>
+            <Route exacth path="/home" component={Home}></Route>
             <Route exact path="/customer">
               <LoginComponent type="Customer" key="cust" path="customerSignup"></LoginComponent>
             </Route>
@@ -56,10 +59,8 @@ function App() {
             <Route exact path="/customerSignup/error">
               <SignupStatus type="error"></SignupStatus>
             </Route>
-            <Route exact path="/customer/profile/:profileId" component={CustomerProfile}>
-              
-            </Route>
-
+            <Route exact path="/customer/profile/:profileId" component={CustomerProfile}></Route>
+            <Route exact path="/customer/landing/:profileId" component={CustomerLanding}></Route>
             <Route exact path="/restaurant/landing/:profileId">
               <RestaurantLanding></RestaurantLanding>
             </Route>

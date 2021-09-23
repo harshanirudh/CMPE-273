@@ -1,5 +1,7 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { baseUrl } from '../apiConfig'
 import DisheFormComponent from './DisheFormComponent'
 export class DishesDetailsComponent extends Component {
     constructor(props) {
@@ -21,21 +23,42 @@ export class DishesDetailsComponent extends Component {
     }
     componentDidMount(){
         if(this.props.match.params.dishId!='new'){
-        this.formvals.dname="sample name"
-        this.formvals.ingre="ingre"
-        this.formvals.dprice="$10"
-        this.formvals.dtype="vegan"
-        this.formvals.dimg=""
-        // this.setState({formObj:this.formvals})
-        this.setState((state)=>{
-            console.log(state)
-            return {formObj:this.formvals}
+            let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish/'+this.props.match.params.dishId
+            axios.get(url).then((resp)=>{
+               let {DISH_NAME,INGREDIENTS,IMAGE,PRICE,DISH_DESCR,CATEGORY,DISH_TYPE} =resp.data[0];
+               this.formvals.dname=DISH_NAME;
+               this.formvals.ingre=INGREDIENTS?INGREDIENTS:"";
+               this.formvals.dimg=IMAGE?IMAGE:"";
+               this.formvals.dprice=PRICE?PRICE:"";
+               this.formvals.ddesc=DISH_DESCR?DISH_DESCR:"";
+               this.formvals.dcat=CATEGORY?CATEGORY:"";
+               this.formvals.dtype=DISH_TYPE?DISH_TYPE:"";
+               this.setState({formObj:this.formvals})
+            }).catch((err)=>{
+                console.log(err)
+            })
+        
+    }
+    }
+    handleNewDishData(values){
+        console.log(values)
+        let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish'
+        console.log(url)
+        axios.post(url,values).then((res)=>{
+            console.log(res.data);
+        }).catch((err)=>{
+            console.log(err)
         })
     }
-    }
-    handleFormData(values){
+    handleUpdateDishData(values){
         console.log(values)
-        //To-do API Calls to save
+        let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish/'+this.props.match.params.dishId;
+        console.log(url)
+        axios.put(url,values).then((res)=>{
+            console.log(res.data);
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
     render() {
         if(this.props.match.params.dishId==='new'){
@@ -43,7 +66,7 @@ export class DishesDetailsComponent extends Component {
                 <div className="container">
                     <div>
                         <h2 className="text-center">ADD NEW DISH</h2>
-                        <DisheFormComponent type="add" onFormSubmit={this.handleFormData} intialValues={this.state.formObj}></DisheFormComponent>
+                        <DisheFormComponent type="add" onFormSubmit={(e)=>this.handleNewDishData(e)} intialValues={this.state.formObj}></DisheFormComponent>
                     </div>
                 </div>
             )
@@ -52,7 +75,7 @@ export class DishesDetailsComponent extends Component {
             <div className="container">
             <div>
                 <h2 className="text-center">UPDATE DISH ID {this.props.match.params.dishId}</h2>
-                <DisheFormComponent type="edit" onFormSubmit={this.handleFormData} intialValues={this.state.formObj}></DisheFormComponent>
+                <DisheFormComponent type="edit" onFormSubmit={(e)=>this.handleUpdateDishData(e)} intialValues={this.state.formObj}></DisheFormComponent>
             </div>
         </div>
         )

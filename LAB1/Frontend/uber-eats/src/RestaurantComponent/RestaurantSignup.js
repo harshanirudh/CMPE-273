@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
 import { Redirect } from 'react-router';
+import COUNTRIES from '../SharedComponents/dropdowns';
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -100,7 +101,12 @@ export class RestaurantSignup extends Component {
                             </div>
                             <div className="form-group col-md-3">
                                 <label >Country</label>
-                                <Field type="text" className="form-control" placeholder="Ex India" id="country" name="country" />
+                                <Field as="select" className="form-control" placeholder="Ex India" id="country" name="country" >
+                                <option value=""></option>
+                                                        {COUNTRIES.map(country=>{
+                                                            return(<option key={country.name} value={country.name}>{country.name}</option>)
+                                                        })}
+                                 </Field>
                                 <ErrorMessage name="country" className="text-danger" component="div"></ErrorMessage>
                             </div>
                         </div>

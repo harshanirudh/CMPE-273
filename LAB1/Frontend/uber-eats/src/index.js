@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.css"
 import 'reactjs-popup/dist/index.css';
 import "react-image-gallery/styles/css/image-gallery.css";
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

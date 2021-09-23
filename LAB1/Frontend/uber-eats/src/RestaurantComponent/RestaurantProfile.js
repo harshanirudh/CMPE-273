@@ -4,6 +4,7 @@ import { Link, useParams, withRouter } from 'react-router-dom'
 import * as yup from 'yup'
 import { object } from 'yup/lib/locale';
 import PhotoCollage from '../SharedComponents/PhotoCollage';
+import COUNTRIES from '../SharedComponents/dropdowns';
 var { baseUrl } = require('../apiConfig')
 var axios = require("axios").default;
 let profileIntialValues = {
@@ -206,7 +207,12 @@ class RestaurantProfile extends Component {
                                                         <label className="mb-0">Country</label>
                                                     </div>
                                                     <div className="col-sm-9 text-secondary">
-                                                        <Field type="text" className="form-control" name="country" />
+                                                        <Field as="select" className="form-control" name="country">
+                                                        <option value=""></option>
+                                                        {COUNTRIES.map(country=>{
+                                                            return(<option key={country.name} value={country.name}>{country.name}</option>)
+                                                        })}
+                                                        </Field>
                                                         <ErrorMessage name="country" className="text-danger" component="div"></ErrorMessage>
                                                     </div>
                                                 </div>

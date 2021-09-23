@@ -2,6 +2,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import * as yup from 'yup'
+import COUNTRIES from '../SharedComponents/dropdowns';
 import { uploadProfilePics } from './../SharedComponents/UploadS3'
 var axios = require("axios").default;
 var { baseUrl } = require('../apiConfig')
@@ -63,8 +64,8 @@ class CustomerProfile extends Component {
         })
     }
     uploadProfilePhoto = (e) => {
-
         let file = e.target.form[0].files[0];
+        if(file){
         let [filename, ext] = file.name.split(".")
         let newname = filename + new Date().valueOf() + "." + ext;
         let newFile = new File([file], newname)
@@ -76,6 +77,7 @@ class CustomerProfile extends Component {
             this.setState({ custProfIntialValues: custProfIntialValues })
             console.log(this.state)
         })
+    }
     }
     setProfilePic(){
         if(this.state.custProfIntialValues.profile_pic?.length>0)
@@ -259,7 +261,12 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Country</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="country" />
+                                                    <Field as="select" className="form-control" name="country" >
+                                                        <option value=""></option>
+                                                        {COUNTRIES.map(country=>{
+                                                            return(<option key={country.name} value={country.name}>{country.name}</option>)
+                                                        })}
+                                                    </Field>
                                                     <ErrorMessage name="country" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
