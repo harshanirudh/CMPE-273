@@ -72,13 +72,26 @@ router.put('/customer/:id', custPutValidator, async (req, res) => {
     res.status(500).send(err);
   }
 })
-
+/**
+ * Get Customers Location from profile
+ */
+router.get('/customer/location/:id',async(req,res)=>{
+  try{
+    let locationQuery="select CITY as location from customer_users where cust_id=?"
+    let location=await pool.query(locationQuery,[req.params.id]);
+    res.status(200).send(location[0][0])
+  }catch(err){
+    console.log(err)
+    res.status(500).send(err)
+  }
+})
 
 /**
- * Get All restaurants
+ * Get All Unique restaurants and single image
  */
 router.get('/restarunt', (req, res) => {
-  let query = 'select * from restaurant_users';
+  let query = `select t1.*,t2.IMAGE_ID,t2.IMAGE from restaurant_users t1 left join(
+    select * from restaurant_images group by REST_ID ) t2 on t1.REST_ID=t2.REST_ID`;
   pool.execute(query).then((resp => {
     res.status(200).send(resp[0]);
   })).catch((err) => {
