@@ -18,7 +18,8 @@ let profileIntialValues = {
     country: '',
     zipcode: '',
     stime: '',
-    etime: ''
+    etime: '',
+    rdeliverymode:''
 }
 let restProfileValidator = yup.object({
     desc: yup.string().max(255, 'Max length 255'),
@@ -31,7 +32,8 @@ let restProfileValidator = yup.object({
     country: yup.string().max(40, 'Max 40'),
     zipcode: yup.string().max(5, 'Valid zipcode').min(5, 'Valid zipcode').matches(/^[0-9]+$/, 'Only digits'),
     stime: yup.string(),
-    etime: yup.string()
+    etime: yup.string(),
+    rdeliverymode:yup.string().required('Delivery Mode is required').min(1,'Delivery Mode is required')
 })
 class RestaurantProfile extends Component {
     
@@ -50,18 +52,19 @@ class RestaurantProfile extends Component {
         console.log(this.props.match.params.profileId)
         let url=baseUrl+'/users/restarunt/'+this.props.match.params.profileId
         axios.get(url).then((resp)=>{
-            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE}=resp.data[0]
-            profileIntialValues.city=CITY
-            profileIntialValues.country=COUNTRY;
-            profileIntialValues.email=EMAIL;
-            profileIntialValues.etime=END_TIME;
-            profileIntialValues.phone=PHONE;
-            profileIntialValues.desc=RDESCRIPTION;
-            profileIntialValues.rname=RNAME;
-            profileIntialValues.stime=START_TIME;
-            profileIntialValues.state=STATE;
-            profileIntialValues.add=STREET;
-            profileIntialValues.zipcode=ZIPCODE;
+            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data[0]
+            profileIntialValues.city=CITY?CITY:''
+            profileIntialValues.country=COUNTRY?COUNTRY:''
+            profileIntialValues.email=EMAIL?EMAIL:''
+            profileIntialValues.etime=END_TIME?END_TIME:''
+            profileIntialValues.phone=PHONE?PHONE:''
+            profileIntialValues.desc=RDESCRIPTION?RDESCRIPTION:''
+            profileIntialValues.rname=RNAME?RNAME:''
+            profileIntialValues.stime=START_TIME?START_TIME:''
+            profileIntialValues.state=STATE?STATE:''
+            profileIntialValues.add=STREET?STREET:''
+            profileIntialValues.zipcode=ZIPCODE?ZIPCODE:''
+            profileIntialValues.rdeliverymode=RDELIVERY_MODE?RDELIVERY_MODE:''
             // profileIntialValues=Object.assign(profileIntialValues,resp.data[0])
             this.setState({profileIntialValues:profileIntialValues})
             console.log(this.state)
@@ -226,7 +229,7 @@ class RestaurantProfile extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    {/* <div className="row "> */}
+                                                    
                                                     <div className="col-sm-3">
                                                         <label className="mb-0">Start Time</label>
                                                     </div>
@@ -234,8 +237,7 @@ class RestaurantProfile extends Component {
                                                         <Field type="time" className="form-control" name="stime" />
                                                         <ErrorMessage name="stime" className="text-danger" component="div"></ErrorMessage>
                                                     </div>
-                                                    {/* </div> */}
-                                                    {/* <div className="row "> */}
+                                                    
                                                     <div className="col-sm-3">
                                                         <label className="mb-0">End Time</label>
                                                     </div>
@@ -243,7 +245,21 @@ class RestaurantProfile extends Component {
                                                         <Field type="time" className="form-control " name="etime" />
                                                         <ErrorMessage name="etime" className="text-danger" component="div"></ErrorMessage>
                                                     </div>
-                                                    {/* </div> */}
+                                                    
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <div className="col-sm-3">
+                                                        <label className="mb-0">Delivery Mode</label>
+                                                    </div>
+                                                    <div className="col-sm-9 text-secondary">
+                                                        <Field as="select" className="form-control" name="rdeliverymode" >
+                                                            <option value=""></option>
+                                                            <option value="both">Both</option>
+                                                            <option value="pickup">Pickup</option>
+                                                            <option value="delivery">Delivery</option>
+                                                        </Field>
+                                                        <ErrorMessage name="rdeliverymode" className="text-danger" component="div"></ErrorMessage>
+                                                    </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-sm-3"></div>

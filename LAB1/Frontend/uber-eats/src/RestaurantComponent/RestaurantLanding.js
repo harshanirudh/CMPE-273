@@ -11,8 +11,21 @@ export class RestaurantLanding extends Component {
         }
         
     }
-   
-    
+    setRestID(){
+       if(this.props.viewBy==='customer'){
+            return this.props.restId
+       }else{
+           return this.props.match.params.profileId;
+       }
+
+    }
+    setViewBy(){
+        if(this.props.viewBy==='customer'){
+            return 'customer'
+       }else{
+           return 'restaurant'
+       }
+    }
     render() {
         return (
             <div className="container-fluid " >
@@ -20,11 +33,11 @@ export class RestaurantLanding extends Component {
                 {/* fixed-top one */}
                     <div className="col-sm-4 "> 
                         {/* <PhotoCollage></PhotoCollage> */}
-                        <PhotoViewer restId={this.props.match.params.profileId}></PhotoViewer>
+                        <PhotoViewer restId={this.setRestID()} viewBy={this.setViewBy()}></PhotoViewer>
                     </div>
                     {/* offset-sm-6 two */}
                     <div className="col-sm-8 ">
-                        <MenuList restId={this.props.match.params.profileId} ></MenuList>
+                        <MenuList restId={this.setRestID()} viewBy={this.setViewBy()}></MenuList>
                     </div>
                 </div>
             </div>

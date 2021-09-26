@@ -63,6 +63,23 @@ router.get('/:id/dishes',async(req,res)=>{
         res.status(500).send(err)
     }
 })
-// router.put('/')
+/**
+ * Get restIDs on dish name search
+ */
+
+router.post('/searchBy/dishes',async(req,res)=>{
+    try{
+        let searchRestByDish="select distinct(rest_id) from restaurant_dishes where dish_name like '%"+req.body.dishSeq+"%';"
+        console.log(req.body.dishSeq)
+        let result=await pool.query(searchRestByDish,[req.body.dishSeq]);
+        let rest_id=await result[0].map(rid=>{
+            return rid.rest_id
+        })
+        res.status(200).send({rest_id});
+    }catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+})
 
 module.exports =router

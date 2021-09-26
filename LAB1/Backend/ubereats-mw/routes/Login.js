@@ -1,5 +1,5 @@
 const { json } = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 var express = require('express');
 var validator = require('express-validator');
 const jwt = require('jsonwebtoken');

@@ -88,10 +88,11 @@ class PhotoViewer extends React.Component {
             // this.setState({images:images})
         }))
     }
-
+    renderAddButton=<button className="btn btn-primary " onClick={() => this.handleAddButton()}>Add Image</button>;
     render() {
         if (images.length === 0) {
             return (
+                this.props.viewBy==='customer'?<h4 className="text-info">No Images to be Shown</h4>: (
                 <div className="container-fluid">
                     <h2 className="text-center mb-4">Images</h2>
                     <br></br>
@@ -103,9 +104,11 @@ class PhotoViewer extends React.Component {
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <button className="btn btn-primary " onClick={() => this.handleAddButton()}>Add Image</button>
+                            
                         </div>
                     </div>
                 </div>
+                )
             )
         }
         return (
@@ -115,6 +118,8 @@ class PhotoViewer extends React.Component {
                     items={images} showIndex={true}
                     onClick={(e) => this.setState(this.handleClickEVent(e))} />
                 <br></br>
+                {this.props.viewBy==='customer'?'':(
+                <div>
                 <div className="row mb-3">
                     <div className="col-md-6 text-center">
                         <input type='file' ref={this.fileInput} />
@@ -128,6 +133,8 @@ class PhotoViewer extends React.Component {
                         <button className="btn btn-danger" onClick={this.handleDeleteButton}>Delete Image</button>
                     </div>
                 </div>
+                </div>
+                )}
             </div>
         )
     }

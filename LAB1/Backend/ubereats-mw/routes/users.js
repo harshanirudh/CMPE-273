@@ -1,5 +1,5 @@
 const { json } = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 var express = require('express');
 var validator = require('express-validator');
 
@@ -102,7 +102,7 @@ router.get('/restarunt', (req, res) => {
  * Get restaurant by restaurant ID
  */
 router.get('/restarunt/:id', (req, res) => {
-  let query = "select REST_ID,RNAME,EMAIL,STREET,CITY,STATE,COUNTRY,ZIPCODE,PHONE,RDESCRIPTION,START_TIME,END_TIME from restaurant_users where rest_id=?";
+  let query = "select REST_ID,RNAME,EMAIL,STREET,CITY,STATE,COUNTRY,ZIPCODE,PHONE,RDESCRIPTION,START_TIME,END_TIME,RDELIVERY_MODE from restaurant_users where rest_id=?";
   pool.execute(query, [req.params.id]).then((resp) => {
     res.status(200).send(resp[0]);
   }).catch((err) => {
@@ -142,13 +142,13 @@ router.post('/restaurant', restPostValidator, async (req, res) => {
  * Update Restaurant profile
  * 
  */
-const restPutValidator = validator.check(['add', 'city', 'country', 'email', 'rname', 'state', 'zipcode'], 'Bad Request').exists();
+const restPutValidator = validator.check(['add', 'city', 'country', 'email', 'rname', 'state', 'zipcode','rdeliverymode'], 'Bad Request').exists();
 router.put('/restaurant/:id', restPutValidator, async (req, res) => {
   try {
     validator.validationResult(req).throw();
-    let updateRestProfile = "update restaurant_users set rname=?,email=?,street=?,city=?,state=?,country=?,zipcode=?,phone=?,rdescription=?,start_time=?,end_time=? where rest_id=?"
-    let { add, city, state, country, zipcode, email, rname, desc, phone, stime, etime } = req.body
-    let result = await pool.query(updateRestProfile, [rname, email, add, city, state, country, zipcode, phone, desc, stime, etime, req.params.id])
+    let updateRestProfile = "update restaurant_users set rname=?,email=?,street=?,city=?,state=?,country=?,zipcode=?,phone=?,rdescription=?,start_time=?,end_time=? ,rdelivery_mode=? where rest_id=?"
+    let { add, city, state, country, zipcode, email, rname, desc, phone, stime, etime,rdeliverymode } = req.body
+    let result = await pool.query(updateRestProfile, [rname, email, add, city, state, country, zipcode, phone, desc, stime, etime,rdeliverymode, req.params.id])
     console.log(result)
     let affectedRows = await result[0].affectedRows
     res.status(200).json({ affectedRows })
