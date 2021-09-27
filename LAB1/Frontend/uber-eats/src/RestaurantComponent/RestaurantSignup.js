@@ -3,6 +3,7 @@ import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
 import { Redirect } from 'react-router';
 import COUNTRIES from '../SharedComponents/dropdowns';
+import NavComponent from '../SharedComponents/NavComponent';
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -60,6 +61,8 @@ export class RestaurantSignup extends Component {
             return <Redirect to={this.state.redirectTo}></Redirect>
         }
         return (
+            <div >
+            <NavComponent view="unknown"></NavComponent>
             <div className="container">
                 <h2 className="text-center">Restaurant Registration</h2>
                 <Formik initialValues={{
@@ -123,6 +126,7 @@ export class RestaurantSignup extends Component {
                         <button type="submit" className="btn btn-primary">Register</button>
                     </Form>
                 </Formik>
+            </div>
             </div>
         )
     }

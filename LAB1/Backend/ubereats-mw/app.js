@@ -8,6 +8,7 @@ var usersRouter = require('./routes/users');
 var loginRouter=require('./routes/Login')
 var restaurantDishRouter=require('./routes/Dishes')
 var restaurantImagesRouter=require('./routes/RestImages')
+var favouriteRouter=require('./routes/Favourites')
 const cors = require('cors');
 
 var app = express();
@@ -25,5 +26,5 @@ app.use('/users', usersRouter);
 app.use('/login',loginRouter)
 app.use('/restaurant',restaurantDishRouter)
 app.use('/restaurant/images',restaurantImagesRouter)
-
+app.use('/favourites',favouriteRouter);
 module.exports = app;

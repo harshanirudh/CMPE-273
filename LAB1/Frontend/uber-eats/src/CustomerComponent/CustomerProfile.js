@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import * as yup from 'yup'
 import COUNTRIES from '../SharedComponents/dropdowns';
+import NavComponent from '../SharedComponents/NavComponent';
 import { uploadProfilePics } from './../SharedComponents/UploadS3'
 var axios = require("axios").default;
 var { baseUrl } = require('../apiConfig')
@@ -123,15 +124,20 @@ class CustomerProfile extends Component {
             </div>
         }
         if (this.state.error) {
-            return <div className="container">
+            return  <div >
+            <NavComponent view="customer"></NavComponent>
+            <div className="container">
                 <br></br>
                 <div className="jumbotron">
                     <h1>Profile Update Failed</h1>
                     <p>Unable to update profile, something went wrong</p>
                 </div>
             </div>
+            </div>
         }
         return (
+            <div >
+            <NavComponent view="customer" cid={this.props.match.params.profileId}></NavComponent>
             <Formik initialValues={this.state.custProfIntialValues} validationSchema={this.custProfValidator} onSubmit={(values) => this.handleSave(values)}>
                 <div className="container">
                     <h2 className="text-center text-uppercase">Profile Details</h2>
@@ -286,6 +292,7 @@ class CustomerProfile extends Component {
                     </div>
                 </div>
             </Formik>
+            </div>
         )
 
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
 import { Redirect } from 'react-router';
+import NavComponent from '../SharedComponents/NavComponent';
 
 var axios = require("axios").default;
 
@@ -57,6 +58,8 @@ export class CustomerSignup extends Component {
             return <Redirect to={this.state.redirectTo}></Redirect>
         }
         return (
+            <div >
+            <NavComponent view="unknown"></NavComponent>
             <Formik initialValues={{
                 fname:'',
                 lname:'',
@@ -92,6 +95,7 @@ export class CustomerSignup extends Component {
                 
                 </div>
             </Formik>
+            </div>
         )
     }
 

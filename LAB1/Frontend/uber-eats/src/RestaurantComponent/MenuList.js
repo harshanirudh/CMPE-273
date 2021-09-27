@@ -20,38 +20,56 @@ export class MenuList extends Component {
             console.log(err)
         }
     }
-    //  dishes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    //  dishesList = 
+
     render() {
         return (
             <div>
                 <h2 className="text-center">Menu</h2>
-                <div className="text-center">
+
+                {this.props.viewBy=="customer"?'':(<div className="text-center">
                     <Link to={`/restaurant/${this.props.restId}/dish/new`} className="btn btn-primary text-center">Add New Dish</Link>
                 </div>
+                )}
+
                 <br></br>
                 <div className="container">
                 <div className=" card-columns" style={{display: 'inline-block'}}>
-                    {this.state.dishes.map((dish) => {
+                    { this.state.dishes.length>0 ?  this.state.dishes.map((dish) => {
                         return (
                                 <div className="card h-100" key={dish.DISH_ID}>
                                     <img className="card-img-top" src={dish.IMAGE} alt="dish image" />
                                     <div className="card bg-ligth ">
                                         <div className="card-body ">
                                             <div className="card-text">
-                                                {/* <h6>{dish.DISH_NAME}</h6> */}
-                                                <Link to={`/restaurant/${this.props.restId}/dish/${dish.DISH_ID}`} className="stretched-link">{dish.DISH_NAME}</Link>
+                                                {this.props.viewBy=="customer"?<h6>{dish.DISH_NAME}</h6>:(
+                                                    <Link to={`/restaurant/${this.props.restId}/dish/${dish.DISH_ID}`} className="stretched-link">{dish.DISH_NAME}</Link>
+                                                )}
                                                 <p className="text-left text-muted" >{dish.DISH_DESCR}</p>
+                                                <p className="">{dish.INGREDIANTS}</p>
                                                 <p className="text-left">Price: {dish.PRICE}</p>
                                             </div>
-                                            {/* <Link to={`/restaurant/${this.props.restId}/dish/${dish.DISH_ID}`} className="btn btn-primary  stretched-link">Edit dish</Link> */}
+                                            
                                         </div>
                                     </div>
                                 </div>
                             
                         )
-                    })}
+                    }):(
+                    ''
+                    )
+                    
+                    }
                 </div>
+                {(this.props.viewBy==="customer" && this.state.dishes.length<=0)?
+                (
+                    <div className="jumbotron jumbotron-fluid mt-4">
+                    <div className="container ">
+                        <h1 className="display-4 text-center">No Dishes</h1>
+                        <p className="lead text-center">Restaurant Has not uploaded anything in Menu</p>
+                    </div>
+                </div>
+                ):''
+            }
                 </div>
             </div>
         )

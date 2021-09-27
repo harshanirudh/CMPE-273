@@ -122,11 +122,11 @@ class DisheFormComponent extends Component {
                             <Field as="select" className="form-control" name="dcat" >
                                 {}
                                 <option value="" ></option>
-                                <option value="1" >Appetizer</option>
-                                <option value="2" >Salads</option>
-                                <option value="3" >Main Course</option>
-                                <option value="4" >Desserts</option>
-                                <option value="5" >Beverages</option>
+                                <option value="Appetizer" >Appetizer</option>
+                                <option value="Salads" >Salads</option>
+                                <option value="Main Course" >Main Course</option>
+                                <option value="Desserts" >Desserts</option>
+                                <option value="Beverages" >Beverages</option>
                             </Field>
                             <ErrorMessage name="dcat" className="text-danger" component="div"></ErrorMessage>
                         </div>
@@ -139,9 +139,9 @@ class DisheFormComponent extends Component {
                         <div className="col-sm-9 text-secondary">
                             <Field as="select" className="form-control" name="dtype" >
                                 <option value="" ></option>
-                                <option value="1" >Veg</option>
-                                <option value="2" >Vegan</option>
-                                <option value="3" >Non Veg</option>
+                                <option value="Veg" >Veg</option>
+                                <option value="Vegan" >Vegan</option>
+                                <option value="Non Veg" >Non Veg</option>
                             </Field>
                             <ErrorMessage name="dtype" className="text-danger" component="div"></ErrorMessage>
                         </div>

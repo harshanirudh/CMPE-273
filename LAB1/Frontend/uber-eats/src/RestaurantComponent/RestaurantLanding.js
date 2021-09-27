@@ -3,11 +3,16 @@ import PhotoCollage from '../SharedComponents/PhotoCollage'
 import PhotoViewer from '../SharedComponents/PhotoViewer'
 import MenuList from './MenuList'
 import {withRouter} from 'react-router-dom'
-
+import axios from 'axios'
+import { baseUrl } from '../apiConfig'
+import { Typography } from '@mui/material'
+import NavComponent from '../SharedComponents/NavComponent'
 export class RestaurantLanding extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            restName:''
+            
         }
         
     }
@@ -26,9 +31,19 @@ export class RestaurantLanding extends Component {
            return 'restaurant'
        }
     }
+    componentDidMount(){
+        let url=`${baseUrl}/users/restarunt/${this.setRestID()}`
+        axios.get(url).then((res)=>{
+            this.setState({restName:res.data[0]?.RNAME})
+        })
+    }
     render() {
         return (
+            <div >
+            <NavComponent view={this.setViewBy()} rid={this.setRestID()} cid={this.props.custId}></NavComponent>
             <div className="container-fluid " >
+                   <Typography variant="h4" align="center"> {this.state.restName}</Typography>
+                
                 <div className="row">
                 {/* fixed-top one */}
                     <div className="col-sm-4 "> 
@@ -40,6 +55,7 @@ export class RestaurantLanding extends Component {
                         <MenuList restId={this.setRestID()} viewBy={this.setViewBy()}></MenuList>
                     </div>
                 </div>
+            </div>
             </div>
         )
     }

@@ -6,41 +6,55 @@ import { baseUrl } from '../apiConfig'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Link } from 'react-router-dom';
+import NavComponent from '../SharedComponents/NavComponent';
 export class CustomerLanding extends Component {
     constructor(props) {
         super(props)
         this.masterRestaurantList = []
         this.searchCategory = createRef('');
+        this.favouritesRestIds=[]
         this.state = {
             restaurantsList: [],
             searchString: '',
-            deliveryFilter:''
+            deliveryFilter: '',
+            favouritesRestIds:[],
+            loading:false
         }
     }
 
     componentDidMount() {
         let url = `${baseUrl}/users/restarunt`
         let apiCustomerLocation = `${baseUrl}/users/customer/location/${this.props.match.params.profileId}`;
-        axios.all([axios.get(url), axios.get(apiCustomerLocation)]).then(resp => {
+        let getFavRestId=`${baseUrl}/favourites/customer/${this.props.match.params.profileId}`
+        axios.all([axios.get(url), axios.get(apiCustomerLocation),axios.get(getFavRestId)]).then(resp => {
 
             let restaurantsList = []
             restaurantsList = resp[0].data
-            let location = resp[1].data.location
+            let location = resp[1].data?.location
+            // this.favouritesRestIds=resp[2].data?.rest_ids
             let fList = restaurantsList.filter(item => {
                 let city = item.CITY.toString().toLowerCase();
-                return city === location.toString().toLowerCase()
+                return city === location?.toString().toLowerCase()
             })
             let sList = restaurantsList.filter(item => {
                 let city = item.CITY.toLowerCase();
-                return city != location.toString().toLowerCase()
+                return city != location?.toString().toLowerCase()
             })
             let finalList = [];
             finalList.push(...fList, ...sList)
             this.masterRestaurantList = finalList;
             console.log('first list', fList, 'Second list', sList)
-            this.setState({ restaurantsList: finalList })
+            this.setState(
+                { 
+                    restaurantsList: finalList ,
+                    favouritesRestIds:resp[2].data?.rest_ids
+                })
 
         })
     }
@@ -48,12 +62,12 @@ export class CustomerLanding extends Component {
     handleSearchText(e) {
         this.setState({ searchString: e.target.value })
     }
-    handleFilterToggle(e){
-        let filterList=this.masterRestaurantList.filter(i=>{
-            return (i.RDELIVERY_MODE==  e.target.value || i.RDELIVERY_MODE=='both')
+    handleFilterToggle(e) {
+        let filterList = this.masterRestaurantList.filter(i => {
+            return (i.RDELIVERY_MODE == e.target.value || i.RDELIVERY_MODE == 'both')
         })
         this.setState({ deliveryFilter: e.target.value })
-        this.setState({restaurantsList:filterList})
+        this.setState({ restaurantsList: filterList })
         console.log(e.target.value)
     }
     onSearchBy() {
@@ -64,11 +78,10 @@ export class CustomerLanding extends Component {
                 axios.post(url, { 'dishSeq': searchString }).then((res => {
                     let filterList = this.masterRestaurantList.filter(i => {
                         // Check if delivery/pickup toggle is selected, if selected check the delivery mode and return
-                        if(this.state.deliveryFilter.length>0)
-                            return (res.data.rest_id.includes(i.REST_ID)) && ((i.RDELIVERY_MODE== this.state.deliveryFilter) || (i.RDELIVERY_MODE=='both'))
-                        else
-                        {
-                           return res.data.rest_id.includes(i.REST_ID);
+                        if (this.state.deliveryFilter.length > 0)
+                            return (res.data.rest_id.includes(i.REST_ID)) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
+                        else {
+                            return res.data.rest_id.includes(i.REST_ID);
                         }
                     })
                     console.log(filterList)
@@ -77,12 +90,21 @@ export class CustomerLanding extends Component {
             }
             else if (this.searchCategory.current.value === 'restaurant') {
                 let filterList = this.masterRestaurantList.filter(i => {
-                    if(this.state.deliveryFilter.length<=0)
-                        return (i.RNAME.toUpperCase().includes(searchString.toUpperCase())) 
-                    else 
-                    return (i.RNAME.toUpperCase().includes(searchString.toUpperCase())) && ((i.RDELIVERY_MODE== this.state.deliveryFilter) || (i.RDELIVERY_MODE=='both'))
+                    if (this.state.deliveryFilter.length <= 0)
+                        return (i.RNAME.toUpperCase().includes(searchString.toUpperCase()))
+                    else
+                        return (i.RNAME.toUpperCase().includes(searchString.toUpperCase())) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
                 })
                 console.log(filterList)
+                this.setState({ restaurantsList: filterList })
+            }
+            else if (this.searchCategory.current.value == 'location') {
+                let filterList = this.masterRestaurantList.filter(i => {
+                    if (this.state.deliveryFilter.length <= 0)
+                        return i.CITY?.toUpperCase().includes(searchString.toUpperCase())
+                    else
+                        return (i.CITY?.toUpperCase().includes(searchString.toUpperCase())) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
+                })
                 this.setState({ restaurantsList: filterList })
             }
         } else {
@@ -102,22 +124,44 @@ export class CustomerLanding extends Component {
         <div className="container">
             <h5 className="text-danger"> No Restaurants to display</h5>
         </div>
-
+    setFavourite(restId){
+        let url=`${baseUrl}/favourites/add/${this.props.match.params.profileId}/${restId}`
+        this.setState({loading:true})
+        axios.post(url).then((res)=>{
+            let newArr=[restId,...this.state.favouritesRestIds]
+            this.setState({
+                loading:false,
+                favouritesRestIds:newArr
+            })  
+        }).catch((err)=>{
+            this.setState({loading:false})
+        })
+    }
+    getFavouriteIconColor(rest_id){
+        return this.state.favouritesRestIds.includes(rest_id)?'error':'info'
+    }
     render() {
-
+        if(this.state.loading==true){
+            return (
+                <div className="spinner-border"></div>
+            )
+        }
         return (
+            <div >
+                <NavComponent view="customer" cid={this.props.match.params.profileId}></NavComponent>
             <div className="container-fluid mt-2" >
                 {/* Welcome user {this.props.match.params.profileId} */}
                 <div className="row justify-content-center">
                     <select className="form-control col-sm-2" ref={this.searchCategory}>
                         <option value="restaurant">Restaurants</option>
                         <option value="dish">Dish</option>
+                        <option value="location">Location</option>
 
                     </select>
                     <input className="form-control-md col-sm-4" type="text" placeholder="Search.." name="search" onChange={(e) => this.handleSearchText(e)} />
                     <button type="submit" className="btn btn-primary" onClick={this.onSearchBy.bind(this)}>search</button>
                     <div className="col-sm-3">
-                        <ToggleButtonGroup color="info" value={this.state.deliveryFilter}exclusive onChange={this.handleFilterToggle.bind(this)}>
+                        <ToggleButtonGroup color="info" value={this.state.deliveryFilter} exclusive onChange={this.handleFilterToggle.bind(this)}>
                             <ToggleButton value="delivery" aria-label="left aligned">Delivery</ToggleButton>
                             <ToggleButton value="pickup" aria-label="left aligned">Pickup</ToggleButton>
                         </ToggleButtonGroup>
@@ -130,13 +174,21 @@ export class CustomerLanding extends Component {
                             return (
 
                                 <Card className="col-md-2 mb-3" key={item.REST_ID} style={{ margin: '10px' }}>
+                                    {/* <img src={this.setRestImage(item.IMAGE)} alt={item.RNAME} style={{ height: '150px', width: '200px' }} /> */}
+                                    <CardMedia
+                                        component="img"
+                                        height="150"
+                                        image={this.setRestImage(item.IMAGE)}
+                                    />
                                     <CardContent >
-                                        <img src={this.setRestImage(item.IMAGE)} alt={item.RNAME} style={{ height: '150px', width: '200px' }} />
-                                        <Link to={`/customer/${this.props.match.params.profileId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link>
+                                        <Link to={`/customer/${this.props.match.params.profileId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>
                                         <p >{item.RDELIVERY_MODE}</p>
+                                        <IconButton aria-label="add to favorites" onClick={(e)=>this.setFavourite(item.REST_ID)}>
+                                            <FavoriteIcon color={this.getFavouriteIconColor(item.REST_ID)}/>
+                                        </IconButton>
                                     </CardContent>
 
                                 </Card>
@@ -145,6 +197,7 @@ export class CustomerLanding extends Component {
                         })}
                     </div>
                 </div>
+            </div>
             </div>
         )
     }

@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { baseUrl } from '../apiConfig'
+import NavComponent from '../SharedComponents/NavComponent'
 import DisheFormComponent from './DisheFormComponent'
 export class DishesDetailsComponent extends Component {
     constructor(props) {
@@ -63,20 +64,26 @@ export class DishesDetailsComponent extends Component {
     render() {
         if(this.props.match.params.dishId==='new'){
             return (
+                <div >
+                <NavComponent view="restaurant" rid={this.props.match.params.restId}></NavComponent>
                 <div className="container">
                     <div>
                         <h2 className="text-center">ADD NEW DISH</h2>
                         <DisheFormComponent type="add" onFormSubmit={(e)=>this.handleNewDishData(e)} intialValues={this.state.formObj}></DisheFormComponent>
                     </div>
                 </div>
+                </div>
             )
         }
         return (
+            <div >
+            <NavComponent view="restaurant"></NavComponent>
             <div className="container">
             <div>
                 <h2 className="text-center">UPDATE DISH ID {this.props.match.params.dishId}</h2>
                 <DisheFormComponent type="edit" onFormSubmit={(e)=>this.handleUpdateDishData(e)} intialValues={this.state.formObj}></DisheFormComponent>
             </div>
+        </div>
         </div>
         )
     }

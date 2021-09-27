@@ -23,11 +23,8 @@ import CustomerRestComponent from './CustomerComponent/CustomerRestComponent';
 function App() {
   return (
     <Router>
-      <div className="App">
-        <div >
-        <NavComponent></NavComponent>
-        </div>
-        <div className="content">
+      
+        <div className="App">
           <Switch>
             <Route exacth path="/home" component={Home}></Route>
             <Route exact path="/customer">
@@ -73,7 +70,7 @@ function App() {
 
           </Switch>
         </div>
-      </div>
+      
     </Router>
   );
 }

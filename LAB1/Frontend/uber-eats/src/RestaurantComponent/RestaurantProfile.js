@@ -5,6 +5,7 @@ import * as yup from 'yup'
 import { object } from 'yup/lib/locale';
 import PhotoCollage from '../SharedComponents/PhotoCollage';
 import COUNTRIES from '../SharedComponents/dropdowns';
+import NavComponent from '../SharedComponents/NavComponent';
 var { baseUrl } = require('../apiConfig')
 var axios = require("axios").default;
 let profileIntialValues = {
@@ -100,24 +101,32 @@ class RestaurantProfile extends Component {
     }
     render() {
         if(this.state.updateDone===true){
-            return <div className="container">
+            return <div >
+            <NavComponent view="restaurant"></NavComponent>
+            <div className="container">
             <br></br>
             <div className="jumbotron">
                 <h1>Succesfully Updated profile</h1>
                 <button type="button" className="btn btn-primary" onClick={this.handleLandingPage}>Go Back to login page</button>
             </div>
         </div>
+        </div>
         }
         if (this.state.error) {
-            return <div className="container">
+            return <div >
+            <NavComponent view="restaurant"></NavComponent>
+            <div className="container">
                 <br></br>
                 <div className="jumbotron">
                     <h1>Profile Update Failed</h1>
                     <p>Unable to update profile, something went wrong</p>
                 </div>
             </div>
+            </div>
         }
         return (
+            <div >
+                <NavComponent view="restaurant" rid={this.props.match.params.profileId}></NavComponent>
             <Formik initialValues={profileIntialValues} validationSchema={restProfileValidator} onSubmit={this.handleSubmit.bind(this)}>
                 <div>
                     <div className="container">
@@ -278,6 +287,7 @@ class RestaurantProfile extends Component {
                     </div>
                 </div>
             </Formik>
+            </div>
         )
     }
 }
