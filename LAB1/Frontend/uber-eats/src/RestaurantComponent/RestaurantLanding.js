@@ -11,8 +11,8 @@ export class RestaurantLanding extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            restName:''
-            
+            restName:'',
+            counter:''
         }
         
     }
@@ -37,10 +37,13 @@ export class RestaurantLanding extends Component {
             this.setState({restName:res.data[0]?.RNAME})
         })
     }
+    getCounter(count){
+        this.setState({counter:count})
+    }
     render() {
         return (
             <div >
-            <NavComponent view={this.setViewBy()} rid={this.setRestID()} cid={this.props.custId}></NavComponent>
+            <NavComponent view={this.setViewBy()} rid={this.setRestID()} cid={this.props.custId} cartCounter={this.state.counter}></NavComponent>
             <div className="container-fluid " >
                    <Typography variant="h4" align="center"> {this.state.restName}</Typography>
                 
@@ -52,7 +55,7 @@ export class RestaurantLanding extends Component {
                     </div>
                     {/* offset-sm-6 two */}
                     <div className="col-sm-8 ">
-                        <MenuList restId={this.setRestID()} viewBy={this.setViewBy()}></MenuList>
+                        <MenuList restId={this.setRestID()} viewBy={this.setViewBy()} custId={this.props.custId} cartCounter={(count)=>this.getCounter(count)}></MenuList>
                     </div>
                 </div>
             </div>

@@ -70,6 +70,9 @@ export class CustomerLanding extends Component {
         this.setState({ restaurantsList: filterList })
         console.log(e.target.value)
     }
+    /**
+     * Search basesd on dish, location, restuaurants
+     */
     onSearchBy() {
         let searchString = this.state.searchString.trim();
         if (searchString.length > 0) {
@@ -111,7 +114,11 @@ export class CustomerLanding extends Component {
             this.setState({ restaurantsList: this.masterRestaurantList })
         }
     }
-
+    /**
+     * Takes Image Url and check if its present, if not sets to dish image in public folder
+     * @param {*} imageURL 
+     * @returns 
+     */
     setRestImage(imageURL) {
         if (imageURL && imageURL.length > 0) {
             return imageURL
@@ -120,10 +127,17 @@ export class CustomerLanding extends Component {
             return '/dish.png'
         }
     }
+    /**
+     * When there are no restuarant to display
+     */
     NoRestaurantsToDisplay =
         <div className="container">
             <h5 className="text-danger"> No Restaurants to display</h5>
         </div>
+        /**
+         * Takes Rest Id as param and inserts it into database, set state to trigger the color change
+         * @param {*} restId 
+         */
     setFavourite(restId){
         let url=`${baseUrl}/favourites/add/${this.props.match.params.profileId}/${restId}`
         this.setState({loading:true})
@@ -137,6 +151,11 @@ export class CustomerLanding extends Component {
             this.setState({loading:false})
         })
     }
+    /**
+     * Set color of favourite icon to red or blank
+     * @param {*} rest_id 
+     * @returns 
+     */
     getFavouriteIconColor(rest_id){
         return this.state.favouritesRestIds.includes(rest_id)?'error':'info'
     }

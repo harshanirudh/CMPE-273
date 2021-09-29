@@ -15,12 +15,17 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LogoutIcon from '@mui/icons-material/Logout';
+import store from '../Redux/store'
+import CheckoutDialog from '../CustomerComponent/CheckoutDialog';
+
 class NavComponent extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            isDrawerOpened: false
+            isDrawerOpened: false,
+            Counter:store.getState().cart.cartCounter,
+            openCheckout:false
         }
     }
     toggleDrawerStatus = () => {
@@ -33,13 +38,42 @@ class NavComponent extends Component {
             isDrawerOpened: false
         })
     }
-    
+    // static mapStateToProps=(state)=>{
+    //    return { counter:state.cartCounter}
+    // }
+    customerHomeUrl=`/customer/landing/${this.props.cid}`
     customerProfileUrl=`/customer/profile/${this.props.cid}`
+    customerFavouritesUrl=`/customer/${this.props.cid}/favourites`
+    
     restaurantProfileUrl=`/restaurant/profile/${this.props.rid}`
+    
+    subscriber=store.subscribe(()=>{
+        console.log(store.getState().cart.cartCounter)
+        this.setState({Counter:store.getState().cart.cartCounter})
+    })
+    openCheckoutBox(){
+        if(this.state.Counter){
+            this.setState({openCheckout:true})
+        }
+    }
+    handleClose=()=>{
+        this.setState({openCheckout:false})
+    }
+    renderCheckoutDialog=()=><CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose}></CheckoutDialog>
+
+
     customerMenuList = (
         <div
             onClick={this.closeDrawer}
             onKeyDown={this.closeDrawer}>
+            <Divider>
+                <List>
+                    <ListItem button key='Home' to={this.customerHomeUrl}component={Link}>
+                        <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                        <ListItemText primary='Home' />
+                    </ListItem>
+                </List>
+            </Divider>
             <Divider>
                 <List>
                     <ListItem button key='Profile' to={this.customerProfileUrl}component={Link}>
@@ -58,7 +92,7 @@ class NavComponent extends Component {
             </Divider>
             <Divider>
                 <List>
-                    <ListItem button key='Favourites' to='/home' component={Link}>
+                    <ListItem button key='Favourites' to={this.customerFavouritesUrl} component={Link}>
                         <ListItemIcon><FavoriteBorderIcon /></ListItemIcon>
                         <ListItemText primary='Favourites' />
                     </ListItem>
@@ -104,7 +138,9 @@ class NavComponent extends Component {
         </li>
     </ul>
     </nav>
-    customerNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
+    
+    customerNavBar=()=>{
+        return (<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
     <ul className="navbar-nav">
         <li className="nav-item active">
             <IconButton onClick={this.toggleDrawerStatus}>
@@ -117,13 +153,16 @@ class NavComponent extends Component {
     </ul>
     <ul className="nav navbar-nav navbar-right ml-auto">
         <li >
-            <IconButton><ShoppingCartIcon color="error" /><span className="badge badge-pill badge-light">4</span></IconButton>
+            <IconButton onClick={()=>this.openCheckoutBox()}><ShoppingCartIcon color="error" /><span className="badge badge-pill badge-light">{this.state.Counter?this.state.Counter:''}</span></IconButton>
+           {this.state.openCheckout?this.renderCheckoutDialog():''}
         </li>
         <li>
             <IconButton ><LogoutIcon color="info" /></IconButton>
         </li>
     </ul>
 </nav>
+        )
+    }
 restaurantNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
 <ul className="navbar-nav">
     <li className="nav-item active">
@@ -138,10 +177,11 @@ restaurantNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
 </nav>
     render() {
         const { isDrawerOpened } = this.state;
+        // console.log(this.props)
         return (
             <div>
                     {this.props.view == "unknown" ? this.unknownNavBar: ''}
-                    {this.props.view == "customer" ? this.customerNavBar : ''}
+                    {this.props.view == "customer" ? this.customerNavBar() : ''}
                     {this.props.view == "restaurant" ? this.restaurantNavBar : ''}
                 <div>
                     <Drawer
@@ -158,6 +198,6 @@ restaurantNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
     }
 }
 
-
 export default NavComponent
+// export default (NavComponent.mapStateToProps)(NavComponent)
 

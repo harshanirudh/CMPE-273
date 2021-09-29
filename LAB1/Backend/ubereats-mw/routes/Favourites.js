@@ -40,4 +40,18 @@ router.get('/customer/:custId',async(req,res)=>{
         res.status(500).send(err)
     }
 })
+/**
+ * Get All favourites restaurant details for a customer
+ */
+router.get('/details/customer/:custId',async(req,res)=>{
+    try{
+        let getAllFavforCust=`select t1.*,t2.IMAGE_ID,t2.IMAGE from restaurant_users t1 left join(
+            select * from restaurant_images group by REST_ID ) t2 on t1.REST_ID=t2.REST_ID where t1.rest_id in(select distinct(rest_id) from CUSTOMER_FAVOURITES where cust_id=?);`;
+        let result=await pool.query(getAllFavforCust,[req.params.custId]);
+        res.status(200).send(result[0])
+    }catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+})
 module.exports=router
