@@ -4,6 +4,9 @@ import * as yup from 'yup'
 import { Redirect } from 'react-router';
 import COUNTRIES from '../SharedComponents/dropdowns';
 import NavComponent from '../SharedComponents/NavComponent';
+import { customerSignUp, restaurantSignUp} from '../Redux/Signup/Signup-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -39,6 +42,14 @@ export class RestaurantSignup extends Component {
         }
     }
     
+    static mapStateToProps = state => {
+        return { SignUpForm: state.SignUpForm }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ customerSignUp, restaurantSignUp }, dispatch)
+    }
+
+
     addNewRest(values){
         let url = baseUrl + '/users/restaurant'
         axios.post(url, values).then(res => {
@@ -47,6 +58,7 @@ export class RestaurantSignup extends Component {
                 redirect:true,
                 redirectTo:'/restaurantSingup/success'
             })
+            this.props.restaurantSignUp(values)
         }).catch((err) => {
                 console.log(`error ${err}`)
                 this.setState({
@@ -132,4 +144,4 @@ export class RestaurantSignup extends Component {
     }
 }
 
-export default RestaurantSignup
+export default connect(RestaurantSignup.mapStateToProps,RestaurantSignup.mapDispatchToProps)(RestaurantSignup)

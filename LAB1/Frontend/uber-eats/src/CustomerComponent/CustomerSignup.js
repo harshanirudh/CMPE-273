@@ -3,7 +3,9 @@ import { Form, Field, Formik,ErrorMessage } from 'formik'
 import * as yup from 'yup'
 import { Redirect } from 'react-router';
 import NavComponent from '../SharedComponents/NavComponent';
-
+import { customerSignUp, restaurantSignUp} from '../Redux/Signup/Signup-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -34,6 +36,14 @@ export class CustomerSignup extends Component {
              redirectTo:''
         }
     }
+
+    static mapStateToProps = state => {
+        return { SignUpForm: state.SignUpForm }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ customerSignUp, restaurantSignUp }, dispatch)
+    }
+
     AddNewCustomer(values) {
     
         let url = baseUrl + '/users/customer'
@@ -43,6 +53,7 @@ export class CustomerSignup extends Component {
                 redirect:true,
                 redirectTo:'/customerSignup/success'
             })
+            this.props.customerSignUp(values);
         }).catch((err) => {
                 console.log(`error ${err}`)
                 this.setState({
@@ -102,4 +113,4 @@ export class CustomerSignup extends Component {
     
 }
 
-export default CustomerSignup
+export default connect(CustomerSignup.mapStateToProps,CustomerSignup.mapDispatchToProps)(CustomerSignup)

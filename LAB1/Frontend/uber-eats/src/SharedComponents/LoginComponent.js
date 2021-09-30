@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { Form, Field, Formik, ErrorMessage } from 'formik'
 import * as yup from 'yup';
 import NavComponent from './NavComponent';
+import { baseUrl } from '../apiConfig';
+import axios from 'axios'
+import { customerLogin, restaurantLogin } from '../Redux/Login/Login-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter } from 'react-router-dom'
 let loginValidator = yup.object({
     email: yup.string()
         .required('Email is Required').email('Enter Valid Email'),
@@ -10,7 +16,58 @@ let loginValidator = yup.object({
         .required('Password is required')
 })
 export class LoginComponent extends Component {
+    constructor(props) {
+        super(props)
 
+        this.state = {
+            invalidLogin: false
+        }
+    }
+
+
+    static mapStateToProps = state => {
+        return { Login: state.Login }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ customerLogin, restaurantLogin }, dispatch)
+    }
+
+    handleLogin = (values) => {
+        if (this.props.type == 'Customer') {
+            console.log("inside")
+            let customerAuthUrl = `${baseUrl}/login/customer`
+            axios.post(customerAuthUrl, values).then((resp) => {
+                let loginDetails = {
+                    isCustomerAuthenticated: resp.data.authenticated,
+                    isRestaurantAuthenticated: false,
+                    userEmail: values.email,
+                    id: resp.data.cust_id
+                }
+                this.props.customerLogin(loginDetails);
+                let successRedirectUrl = `/customer/landing/${resp.data.cust_id}`
+                this.props.history.push(successRedirectUrl);
+            })
+        }
+        else {
+            console.log("inside")
+            let restAuthUrl = `${baseUrl}/login/restaurant`
+            axios.post(restAuthUrl, values).then((resp) => {
+                let loginDetails = {
+                    isCustomerAuthenticated: false,
+                    isRestaurantAuthenticated: resp.data.authenticated,
+                    userEmail: values.email,
+                    id: resp.data.rest_id
+                }
+                this.props.restaurantLogin(loginDetails);
+                console.log(this.props)
+                let successRedirectUrl = `/restaurant/landing/${resp.data.rest_id}`
+                this.props.history.push(successRedirectUrl);
+            }).catch((err) => {
+                this.setState({ invalidLogin: true })
+            })
+
+        }
+    }
     render() {
         return (
 
@@ -19,12 +76,15 @@ export class LoginComponent extends Component {
                 <Formik initialValues={{
                     email: '',
                     pass: ''
-                }} validationSchema={loginValidator} onSubmit={(values => { console.log(values) })}>
+                }} validationSchema={loginValidator} onSubmit={(values => { this.handleLogin(values) })}>
 
 
                     <div className="container">
                         <h2 className="text-center">Login as {this.props.type}</h2>
-
+                            {this.state.invalidLogin===true?(
+                        <div class="alert alert-danger">
+                            <strong>Error!</strong> Invalid login
+                        </div>):""}
                         <Form >
                             <div className="form-group">
                                 <label >Email:</label>
@@ -47,5 +107,5 @@ export class LoginComponent extends Component {
         )
     }
 }
-
-export default LoginComponent
+const LoginReduxComponent = connect(LoginComponent.mapStateToProps, LoginComponent.mapDispatchToProps)(LoginComponent)
+export default withRouter(LoginReduxComponent)
