@@ -16,6 +16,7 @@ import CustomerLanding from './CustomerComponent/CustomerLanding';
 import Home from './Home/Home';
 import CustomerRestComponent from './CustomerComponent/CustomerRestComponent';
 import CustomerFavouritesList from './CustomerComponent/CustomerFavouritesList';
+import CheckoutComponent from './CustomerComponent/CheckoutComponent';
 
 
 
@@ -65,6 +66,7 @@ function App() {
             </Route>
             <Route exact path="/customer/:custId/restaurant/:restId" component={CustomerRestComponent}></Route>
             <Route exact path="/customer/:custId/favourites" component={CustomerFavouritesList}></Route>
+            <Route exact path="/customer/checkout/:custId" component={CheckoutComponent}></Route>
             <Route exact path="/restaurant/profile/:profileId">
               <RestaurantProfile></RestaurantProfile>
             </Route>

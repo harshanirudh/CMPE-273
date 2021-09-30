@@ -59,7 +59,7 @@ class NavComponent extends Component {
     handleClose=()=>{
         this.setState({openCheckout:false})
     }
-    renderCheckoutDialog=()=><CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose}></CheckoutDialog>
+    renderCheckoutDialog=()=><CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose} cid={this.props.cid}></CheckoutDialog>
 
 
     customerMenuList = (
