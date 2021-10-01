@@ -14,7 +14,8 @@ export class MenuList extends Component {
 
         this.state = {
             dishes: [],
-            counter: sessionStorage.getItem('counter') ? parseInt(sessionStorage.getItem('counter')) : 0
+            // counter: sessionStorage.getItem('counter')!=null ? parseInt(sessionStorage.getItem('counter')) : 0
+            toggleChange:false
         }
     }
     static mapStateToProps = state => {
@@ -35,6 +36,8 @@ export class MenuList extends Component {
     async add(dish) {
 
         let itemsPresent = JSON.parse(sessionStorage.getItem('cartItems'))
+        let tempCounter =sessionStorage.getItem('counter')!=null?parseInt(sessionStorage.getItem('counter')):0
+        console.log(tempCounter)
         if (itemsPresent) {
             let presentRestID = sessionStorage.getItem('restId')
             if (dish.REST_ID != presentRestID)
@@ -47,10 +50,12 @@ export class MenuList extends Component {
                     itemsPresent[index].quantity = 1 + itemsPresent[index].quantity;
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
                     this.props.incrementCounter();
-                    await this.setState(prevState => {
-                        return { counter: prevState.counter + 1 }
-                    })
-                    sessionStorage.setItem('counter', this.state.counter)
+                    // await this.setState(prevState => {
+                    //     return { counter: prevState.counter + 1 }
+                    // })
+                    tempCounter+=1
+                    sessionStorage.setItem('counter', JSON.stringify(tempCounter))
+                    this.setState(prevState => ({ toggleChange: !prevState.toggleChange }))
                     //  this.props.cartCounter(this.state.counter)
                 }
                 else {
@@ -58,10 +63,12 @@ export class MenuList extends Component {
                     itemsPresent.push(dish)
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
                     this.props.incrementCounter();
-                    await this.setState(prevState => {
-                        return { counter: prevState.counter + 1 }
-                    })
-                    sessionStorage.setItem('counter', this.state.counter)
+                    // await this.setState(prevState => {
+                    //     return { counter: prevState.counter + 1 }
+                    // })
+                    tempCounter+=1
+                    sessionStorage.setItem('counter', JSON.stringify(tempCounter))
+                    this.setState(prevState => ({ toggleChange: !prevState.toggleChange }))
                     //  this.props.cartCounter(this.state.counter)
                 }
             }
@@ -72,10 +79,12 @@ export class MenuList extends Component {
             sessionStorage.setItem('restId', this.props.restId);
             sessionStorage.setItem('custId', this.props.custId);
             this.props.incrementCounter();
-            await this.setState(prevState => {
-                return { counter: prevState.counter + 1 }
-            })
-            sessionStorage.setItem('counter', this.state.counter)
+            // await this.setState(prevState => {
+            //     return { counter: prevState.counter + 1 }
+            // })
+            tempCounter+=1
+            sessionStorage.setItem('counter', JSON.stringify(tempCounter))
+            this.setState(prevState => ({ toggleChange: !prevState.toggleChange }))
             //  this.props.cartCounter(this.state.counter)
 
         }
@@ -83,6 +92,7 @@ export class MenuList extends Component {
     }
     async remove(dish) {
         let itemsPresent = JSON.parse(sessionStorage.getItem('cartItems'))
+        let tempCounter =sessionStorage.getItem('counter')!=null?parseInt(sessionStorage.getItem('counter')):0
         if (itemsPresent) {
             let index = itemsPresent.findIndex(d => { return d.DISH_ID === dish.DISH_ID })
             if (index >= 0) {
@@ -91,28 +101,31 @@ export class MenuList extends Component {
                     itemsPresent.splice(index, 1)
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
                     this.props.decrementCounter();
-                    if (this.state.counter == 1) {
+                    if (tempCounter == 1) {
                         sessionStorage.removeItem('restId')
                         sessionStorage.removeItem('custId')
                         sessionStorage.removeItem('cartItems')
                     }
-                    await this.setState(prevState => {
-                        return { counter: prevState.counter - 1 }
-                    })
-                    sessionStorage.setItem('counter', this.state.counter)
+                    // await this.setState(prevState => {
+                    //     return { counter: prevState.counter - 1 }
+                    // })
+                    tempCounter-=1
+                    sessionStorage.setItem('counter', JSON.stringify(tempCounter))
                 } else {
                     itemsPresent[index].quantity = itemsPresent[index].quantity - 1;
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
                     this.props.decrementCounter();
-                    if (this.state.counter == 1) {
+                    if (tempCounter == 1) {
                         sessionStorage.removeItem('restId')
                         sessionStorage.removeItem('custId')
                         sessionStorage.removeItem('cartItems')
                     }
-                    await this.setState(prevState => {
-                        return { counter: prevState.counter - 1 }
-                    })
-                    sessionStorage.setItem('counter', this.state.counter)
+                    // await this.setState(prevState => {
+                    //     return { counter: prevState.counter - 1 }
+                    // })
+                    tempCounter-=1
+                    sessionStorage.setItem('counter', JSON.stringify(tempCounter))
+                    this.setState(prevState => ({ toggleChange: !prevState.toggleChange }))
                 }
             }
         } else {

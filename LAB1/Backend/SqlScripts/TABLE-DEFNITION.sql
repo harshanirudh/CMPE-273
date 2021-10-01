@@ -96,6 +96,15 @@ create table if not exists ORDERS_DETAILS(
     DISH_QUANTITY INT,
     PRICE INT
 );
+
+create table if not exists DELIVERY_ADDRESS(
+	cust_id int,
+    add_id int primary key auto_increment,
+    cname varchar(50),
+    address varchar(200),
+    city varchar(100),
+    zipcode varchar(10)
+)
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Add_New_Customer`(in c_fname varchar(50),in c_lname varchar(50),in c_email varchar(60),in c_pass char(128),out id int)
 BEGIN

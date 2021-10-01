@@ -68,12 +68,17 @@ class CheckoutDialog extends React.Component {
             console.log(index)
             temp.splice(index, 1);
             tempCounter -= 1;
-            if (tempCounter == 0)
-                sessionStorage.clear()
+            if (tempCounter == 0){
+
+                sessionStorage.removeItem('restId')
+                sessionStorage.removeItem('custId')
+                sessionStorage.removeItem('cartItems')
+
+            }
             else {
                 sessionStorage.setItem('cartItems', JSON.stringify(temp))
-                sessionStorage.setItem('counter', tempCounter)
             }
+            sessionStorage.setItem('counter', tempCounter)
             this.props.decrementCounter();
             this.setState({ items: temp })
         } else {
