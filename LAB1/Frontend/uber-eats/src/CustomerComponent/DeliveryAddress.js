@@ -123,7 +123,7 @@ export class DeliveryAddress extends Component {
                         <option value="">Select Address</option>
                     {this.state.addressList.map((i=>{
                         
-                        return <option value={i.add_id}>{i.address+','+i.city+','+i.zipcode}</option>
+                        return <option value={i.add_id} key={i.add_id}>{i.address+','+i.city+','+i.zipcode}</option>
                     }))}
                     </select>
                     <br/>

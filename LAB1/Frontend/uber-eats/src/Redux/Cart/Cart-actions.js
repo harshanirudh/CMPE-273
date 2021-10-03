@@ -11,3 +11,8 @@ export const decrementCounter=()=>{
         type: actionTypes.DECREMENT_COUNTER,
     }
 }
+export const resetCounter=()=>{
+    return{
+        type:actionTypes.RESET_COUNTER
+    }
+}

@@ -10,6 +10,7 @@ var restaurantDishRouter=require('./routes/Dishes')
 var restaurantImagesRouter=require('./routes/RestImages')
 var favouriteRouter=require('./routes/Favourites')
 var deliveryAddressRouter=require('./routes/DeliveryAddress')
+var ordersRouter=require('./routes/Orders')
 const cors = require('cors');
 
 var app = express();
@@ -29,4 +30,5 @@ app.use('/restaurant',restaurantDishRouter)
 app.use('/restaurant/images',restaurantImagesRouter)
 app.use('/favourites',favouriteRouter);
 app.use('/deliveryAddress',deliveryAddressRouter)
+app.use('/orders',ordersRouter)
 module.exports = app;

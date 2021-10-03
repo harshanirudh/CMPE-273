@@ -10,6 +10,9 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             return {cartCounter: state.cartCounter+1}
         case actionTypes.DECREMENT_COUNTER:
             return {cartCounter:state.cartCounter-1}
+        case actionTypes.RESET_COUNTER:
+            sessionStorage.clear()
+            return {cartCounter:0}
         default:
             return state;
     }

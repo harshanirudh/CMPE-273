@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
@@ -10,9 +10,12 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import NavComponent from '../SharedComponents/NavComponent';
 import { Field, Form, Formik } from 'formik';
+import { resetCounter } from '../Redux/Cart/Cart-actions'
 import axios from 'axios';
 import { baseUrl } from '../apiConfig';
 import DeliveryAddress from './DeliveryAddress';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
 
 export class CheckoutComponent extends Component {
     constructor(props) {
@@ -20,9 +23,19 @@ export class CheckoutComponent extends Component {
         this.selectedAddress="";
         
         this.state = {
-            deliveryMode:this.props.location.state.restDetails.RDELIVERY_MODE
+            deliveryMode:this.props.location.state.restDetails.RDELIVERY_MODE,
+            orderConfirmationOpen:false
         }
     }
+
+    static mapStateToProps = state => {
+        return { cartCounter: state.cartCounter }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ resetCounter }, dispatch)
+    }
+
+
     amount=0;
     handleDataFromChild=(data)=>{
         this.selectedAddress=data;
@@ -113,25 +126,55 @@ export class CheckoutComponent extends Component {
         })
         return amount
     }
-
+    openConfirmationBox(){
+        this.setState({orderConfirmationOpen:true})
+    }
+    closeConfirmationBox(){
+        this.props.resetCounter();
+        this.props.history.push(`/customer/orders/${this.props.match.params.custId}`)
+    }
     placeOrder=()=>{
         console.log(this.state.deliveryMode)
         if(this.state.deliveryMode==='delivery'){
             if(parseInt(this.selectedAddress)>=0){
                 console.log("valid")
+                let dateTime=new Date()
                 let orderDetails={
                     rest_id:this.props.location.state.restDetails.REST_ID,
                     cust_id:this.props.match.params.custId,
                     order_type:'delivery',
                     dishes:this.props.location.state.items,
-                    amount:this.calculateAmount(this.props.location.state.items)
+                    amount:this.calculateAmount(this.props.location.state.items),
+                    ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
+                    address:this.selectedAddress
                 }
                 console.log(orderDetails)
+                let url=`${baseUrl}/orders/new`
+                axios.post(url,orderDetails).then((res)=>{
+                    console.log(res.data)
+                    this.openConfirmationBox()
+                })
             }else{
                 alert('Please select valid Delivery Address')
             }
+            
         }else if(this.state.deliveryMode==='pickup'){
-
+            let dateTime=new Date()
+            let orderDetails={
+                rest_id:this.props.location.state.restDetails.REST_ID,
+                cust_id:this.props.match.params.custId,
+                order_type:'pickup',
+                dishes:this.props.location.state.items,
+                amount:this.calculateAmount(this.props.location.state.items),
+                ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
+                address:-1
+            }
+            console.log(orderDetails)
+                let url=`${baseUrl}/orders/new`
+                axios.post(url,orderDetails).then((res)=>{
+                    console.log(res.data)
+                    this.openConfirmationBox()
+                })
         }
     }
 
@@ -141,6 +184,18 @@ export class CheckoutComponent extends Component {
         const { RNAME, STREET, CITY, ZIPCODE, RDELIVERY_MODE } = this.props.location.state.restDetails;
         return (
             <div>
+                <Dialog
+                    open={this.state.orderConfirmationOpen}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth="true">
+                    <DialogTitle id="alert-dialog-title">{"Order Placed Succesfully"}</DialogTitle>
+                    <DialogContent></DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.closeConfirmationBox()}>Close</Button>
+                    </DialogActions>
+                </Dialog>
                 <NavComponent view="customer" cid={this.props.match.params.custId}></NavComponent>
                 <div className="row container-fluid mt-4">
                     <div className="col-md-6">
@@ -167,5 +222,5 @@ export class CheckoutComponent extends Component {
         )
     }
 }
-
-export default withRouter(CheckoutComponent)
+const CheckoutComponentWithRedux=connect(CheckoutComponent.mapStateToProps,CheckoutComponent.mapDispatchToProps)(CheckoutComponent)
+export default withRouter(CheckoutComponentWithRedux)

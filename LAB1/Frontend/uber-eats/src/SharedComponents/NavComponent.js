@@ -44,9 +44,10 @@ class NavComponent extends Component {
     customerHomeUrl=`/customer/landing/${this.props.cid}`
     customerProfileUrl=`/customer/profile/${this.props.cid}`
     customerFavouritesUrl=`/customer/${this.props.cid}/favourites`
+    customerOrdersUrl=`/customer/orders/${this.props.cid}`
     
     restaurantProfileUrl=`/restaurant/profile/${this.props.rid}`
-    
+    restaurantOrdersUrl=`/restaurant/${this.props.rid}/orderslist`
     subscriber=store.subscribe(()=>{
         console.log(store.getState().cart.cartCounter)
         this.setState({Counter:store.getState().cart.cartCounter})
@@ -84,7 +85,7 @@ class NavComponent extends Component {
             </Divider>
             <Divider>
                 <List>
-                    <ListItem button key='Orders' to='/home' component={Link}>
+                    <ListItem button key='Orders' to={this.customerOrdersUrl} component={Link}>
                         <ListItemIcon><KitchenIcon /></ListItemIcon>
                         <ListItemText primary='Orders' />
                     </ListItem>
@@ -115,7 +116,7 @@ class NavComponent extends Component {
             </Divider>
             <Divider>
                 <List>
-                    <ListItem button key='Orders' to='/home' component={Link}>
+                    <ListItem button key='Orders' to={this.restaurantOrdersUrl} component={Link}>
                         <ListItemIcon><KitchenIcon /></ListItemIcon>
                         <ListItemText primary='Orders' />
                     </ListItem>
