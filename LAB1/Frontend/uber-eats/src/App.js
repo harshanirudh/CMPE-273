@@ -18,6 +18,9 @@ import CustomerRestComponent from './CustomerComponent/CustomerRestComponent';
 import CustomerFavouritesList from './CustomerComponent/CustomerFavouritesList';
 import CheckoutComponent from './CustomerComponent/CheckoutComponent';
 import CustomerOrders from './CustomerComponent/CustomerOrders';
+import CustomerProtectedRoute from './SharedComponents/CustomerProtectedRoute';
+import ViewCustomerProfile from './RestaurantComponent/ViewCustomerProfile';
+import RestaurantProtectedRoute from './SharedComponents/RestaurantProtectedRoute'
 
 
 
@@ -29,6 +32,7 @@ function App() {
       
         <div className="App">
           <Switch>
+            {/* Unprotected Routes */}
             <Route exacth path="/home" component={Home}></Route>
             <Route exact path="/customer">
               <LoginComponent type="Customer" key="cust" path="customerSignup"></LoginComponent>
@@ -36,44 +40,40 @@ function App() {
             <Route exact path="/restaurant" >
               <LoginComponent type="Restaurant Owner" key="rest" path="restaurantSingup"></LoginComponent>
             </Route>
-            <Route exact path="/restaurant/:restId/dish/:dishId" >
-              <DishesDetailsComponent></DishesDetailsComponent>
-            </Route>
-            <Route exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}>
-              
-            </Route>
             <Route exact path="/restaurantSingup">
               <RestaurantSignup></RestaurantSignup>
             </Route>
+            <Route exact path="/customerSignup">
+              <CustomerSignup></CustomerSignup>
+            </Route>
+
+            {/* Restaurant Protected Routes */}
+            <RestaurantProtectedRoute exact path="/restaurant/:restId/dish/:dishId" render={(props)=><DishesDetailsComponent {...props}/>}></RestaurantProtectedRoute>
+            <RestaurantProtectedRoute exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}></RestaurantProtectedRoute>
             <Route exact path="/restaurantSingup/success">
               <SignupStatus type="Success"></SignupStatus>
             </Route>
             <Route exact path="/restaurantSingup/error">
               <SignupStatus type="error"></SignupStatus>
             </Route>
-            <Route exact path="/customerSignup">
-              <CustomerSignup></CustomerSignup>
-            </Route>
+            <RestaurantProtectedRoute exact path="/restaurant/landing/:profileId" component={RestaurantLanding}></RestaurantProtectedRoute>
+            <RestaurantProtectedRoute exact path="/restaurant/profile/:profileId" component={RestaurantProfile}></RestaurantProtectedRoute>
+            <RestaurantProtectedRoute exact path="/restaurant/:restId/view/customer/:custId" component={ViewCustomerProfile}></RestaurantProtectedRoute>
+
+            {/* Customer protected routes */}
             <Route exact path="/customerSignup/success">
               <SignupStatus type="Success"></SignupStatus>
             </Route>
             <Route exact path="/customerSignup/error">
               <SignupStatus type="error"></SignupStatus>
             </Route>
-            <Route exact path="/customer/profile/:profileId" component={CustomerProfile}></Route>
-            <Route exact path="/customer/landing/:profileId" component={CustomerLanding}></Route>
-            <Route exact path="/restaurant/landing/:profileId">
-              <RestaurantLanding></RestaurantLanding>
-            </Route>
-            <Route exact path="/customer/:custId/restaurant/:restId" component={CustomerRestComponent}></Route>
-            <Route exact path="/customer/:custId/favourites" component={CustomerFavouritesList}></Route>
-            <Route exact path="/customer/checkout/:custId" component={CheckoutComponent}></Route>
-            <Route exact path="/customer/orders/:custId" component={CustomerOrders}></Route>
-            <Route exact path="/restaurant/profile/:profileId">
-              <RestaurantProfile></RestaurantProfile>
-            </Route>
+            <CustomerProtectedRoute exact path="/customer/profile/:custId" component={CustomerProfile}></CustomerProtectedRoute>
+            <CustomerProtectedRoute exact path="/customer/landing/:custId" component={CustomerLanding}></CustomerProtectedRoute>
+            <CustomerProtectedRoute exact path="/customer/:custId/restaurant/:restId" component={CustomerRestComponent}></CustomerProtectedRoute>
+            <CustomerProtectedRoute exact path="/customer/:custId/favourites" component={CustomerFavouritesList}></CustomerProtectedRoute>
+            <CustomerProtectedRoute exact path="/customer/checkout/:custId" component={CheckoutComponent}></CustomerProtectedRoute>
+            <CustomerProtectedRoute exact path="/customer/orders/:custId" component={CustomerOrders}></CustomerProtectedRoute>
             
-
           </Switch>
         </div>
       

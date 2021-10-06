@@ -108,7 +108,7 @@ class PhotoViewer extends React.Component {
                         <br></br>
                         <div className="row mb-3">
                             <div className="col-md-6 text-center">
-                                <input type='file' ref={this.fileInput} />
+                                <input type='file' ref={this.fileInput} accept="image/png, image/gif, image/jpeg"/>
                             </div>
                         </div>
                         <div className="row mb-3">

@@ -1,11 +1,11 @@
-import { IconButton } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import axios from 'axios'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { baseUrl } from '../apiConfig'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { incrementCounter, decrementCounter } from '../Redux/Cart/Cart-actions'
+import { incrementCounter, decrementCounter ,resetCounter} from '../Redux/Cart/Cart-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 export class MenuList extends Component {
@@ -15,14 +15,16 @@ export class MenuList extends Component {
         this.state = {
             dishes: [],
             // counter: sessionStorage.getItem('counter')!=null ? parseInt(sessionStorage.getItem('counter')) : 0
-            toggleChange:false
+            toggleChange:false,
+            newOrder:false,
+            newDishToBeAdded:null
         }
     }
     static mapStateToProps = state => {
         return { cartCounter: state.cartCounter }
     }
     static mapDispatchToProps = dispatch => {
-        return bindActionCreators({ incrementCounter, decrementCounter }, dispatch)
+        return bindActionCreators({ incrementCounter, decrementCounter,resetCounter }, dispatch)
     }
     async componentDidMount() {
         try {
@@ -40,8 +42,10 @@ export class MenuList extends Component {
         console.log(tempCounter)
         if (itemsPresent) {
             let presentRestID = sessionStorage.getItem('restId')
-            if (dish.REST_ID != presentRestID)
-                alert('Do you want items to be discarded from your cart?')
+            if (dish.REST_ID != presentRestID){
+                // alert('Do you want items to be discarded from your cart?')
+                this.setState({newOrder:true,newDishToBeAdded:dish})
+            }
             else {
                 let index = itemsPresent.findIndex(d => { return d.DISH_ID === dish.DISH_ID })
                 // console.log(index)
@@ -133,11 +137,32 @@ export class MenuList extends Component {
             // sessionStorage.setItem('custId')
         }
     }
+    handleClose=()=>{
+        this.setState({newOrder:false,newDishToBeAdded:null})
+    }
+    createNewOrder=()=>{
+        sessionStorage.clear();
+        this.props.resetCounter();
+        this.add(this.state.newDishToBeAdded);
+        this.setState({newOrder:false,newDishToBeAdded:null})
+    }
     render() {
         const { incrementCounter, decrementCounter } = this.props
 
         return (
             <div>
+                <Dialog
+                    open={this.state.newOrder}
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth="true">
+                    <DialogTitle id="alert-dialog-title">{"Do You want to discard your cart items and add from another restauarant?"}</DialogTitle>
+                    <DialogContent></DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.createNewOrder()}>New Order</Button>
+                    </DialogActions>
+                </Dialog>
                 <h2 className="text-center">Menu</h2>
 
                 {this.props.viewBy == "customer" ? '' : (<div className="text-center">

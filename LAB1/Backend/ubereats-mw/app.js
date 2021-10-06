@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 var mysql=require('./db-config')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,8 +22,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-    origin: '*'
+    origin: 'http://localhost:3000',
+    credentials: true
 }));
+
+app.use(session({
+    secret              : 'Cmpe273lab1@ubereats',
+    resave              : false, // Forces the session to be saved back to the session store, even if the session was never modified during the request
+    saveUninitialized   : false, // Force to save uninitialized session to db. A session is uninitialized when it is new but not modified.
+    duration            : 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
+    activeDuration      :  5 * 60 * 1000
+}));
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login',loginRouter)

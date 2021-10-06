@@ -17,15 +17,17 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import store from '../Redux/store'
 import CheckoutDialog from '../CustomerComponent/CheckoutDialog';
-
+import HomeIcon from '@mui/icons-material/Home';
+import { withCookies, Cookies } from 'react-cookie';
+import {withRouter} from 'react-router-dom'
 class NavComponent extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             isDrawerOpened: false,
-            Counter:store.getState().cart.cartCounter,
-            openCheckout:false
+            Counter: store.getState().cart.cartCounter,
+            openCheckout: false
         }
     }
     toggleDrawerStatus = () => {
@@ -41,35 +43,46 @@ class NavComponent extends Component {
     // static mapStateToProps=(state)=>{
     //    return { counter:state.cartCounter}
     // }
-    customerHomeUrl=`/customer/landing/${this.props.cid}`
-    customerProfileUrl=`/customer/profile/${this.props.cid}`
-    customerFavouritesUrl=`/customer/${this.props.cid}/favourites`
-    customerOrdersUrl=`/customer/orders/${this.props.cid}`
-    
-    restaurantProfileUrl=`/restaurant/profile/${this.props.rid}`
-    restaurantOrdersUrl=`/restaurant/${this.props.rid}/orderslist`
-    subscriber=store.subscribe(()=>{
+    customerHomeUrl = `/customer/landing/${this.props.cid}`
+    customerProfileUrl = `/customer/profile/${this.props.cid}`
+    customerFavouritesUrl = `/customer/${this.props.cid}/favourites`
+    customerOrdersUrl = `/customer/orders/${this.props.cid}`
+
+    restaurantHomeUrl = `/restaurant/landing/${this.props.rid}`
+    restaurantProfileUrl = `/restaurant/profile/${this.props.rid}`
+    restaurantOrdersUrl = `/restaurant/${this.props.rid}/orderslist`
+    subscriber = store.subscribe(() => {
         console.log(store.getState().cart.cartCounter)
-        this.setState({Counter:store.getState().cart.cartCounter})
+        this.setState({ Counter: store.getState().cart.cartCounter })
     })
-    openCheckoutBox(){
-        if(this.state.Counter){
-            this.setState({openCheckout:true})
+    openCheckoutBox() {
+        if (this.state.Counter) {
+            this.setState({ openCheckout: true })
         }
     }
-    handleClose=()=>{
-        this.setState({openCheckout:false})
+    handleClose = () => {
+        this.setState({ openCheckout: false })
     }
-    renderCheckoutDialog=()=><CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose} cid={this.props.cid}></CheckoutDialog>
-
-
+    renderCheckoutDialog = () => <CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose} cid={this.props.cid}></CheckoutDialog>
+    handleCustomerLogout = () => {
+        let cookies = this.props.cookies;
+        cookies.remove('cookie', { path: '/' })
+        console.log(this.props.cookies)
+        this.props.history.push('/customer')
+    }
+    handleRestLogout=()=>{
+        let cookies = this.props.cookies;
+        cookies.remove('restCookie', { path: '/' })
+        console.log(this.props.cookies)
+        this.props.history.push('/restaurant')
+    }
     customerMenuList = (
         <div
             onClick={this.closeDrawer}
             onKeyDown={this.closeDrawer}>
             <Divider>
                 <List>
-                    <ListItem button key='Home' to={this.customerHomeUrl}component={Link}>
+                    <ListItem button key='Home' to={this.customerHomeUrl} component={Link}>
                         <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                         <ListItemText primary='Home' />
                     </ListItem>
@@ -77,7 +90,7 @@ class NavComponent extends Component {
             </Divider>
             <Divider>
                 <List>
-                    <ListItem button key='Profile' to={this.customerProfileUrl}component={Link}>
+                    <ListItem button key='Profile' to={this.customerProfileUrl} component={Link}>
                         <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                         <ListItemText primary='Profile' />
                     </ListItem>
@@ -108,6 +121,14 @@ class NavComponent extends Component {
             onKeyDown={this.closeDrawer}>
             <Divider>
                 <List>
+                    <ListItem button key='Home' to={this.restaurantHomeUrl} component={Link}>
+                        <ListItemIcon><HomeIcon /></ListItemIcon>
+                        <ListItemText primary='Home' />
+                    </ListItem>
+                </List>
+            </Divider>
+            <Divider>
+                <List>
                     <ListItem button key='Profile' to={this.restaurantProfileUrl} component={Link}>
                         <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                         <ListItemText primary='Profile' />
@@ -126,64 +147,69 @@ class NavComponent extends Component {
         </div>
 
     )
-    unknownNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
-    <ul className="navbar-nav">
-        <li className="nav-item active">
-            <Link className="nav-link" to='/'>Uber Eats</Link>
-        </li>
-        <li className="nav-item">
-            <Link className="nav-link" to="/restaurant">Restaurant</Link>
-        </li>
-        <li className="nav-item">
-            <Link className="nav-link" to="/customer">Customer</Link>
-        </li>
-    </ul>
+    unknownNavBar = <nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
+        <ul className="navbar-nav">
+            <li className="nav-item active">
+                <Link className="nav-link" to='/'>Uber Eats</Link>
+            </li>
+            <li className="nav-item">
+                <Link className="nav-link" to="/restaurant">Restaurant</Link>
+            </li>
+            <li className="nav-item">
+                <Link className="nav-link" to="/customer">Customer</Link>
+            </li>
+        </ul>
     </nav>
-    
-    customerNavBar=()=>{
+
+    customerNavBar = () => {
         return (<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
-    <ul className="navbar-nav">
-        <li className="nav-item active">
-            <IconButton onClick={this.toggleDrawerStatus}>
-                <MenuIcon color="info"  ></MenuIcon>
-            </IconButton>
-        </li>
-        <li className="nav-item active">
-            <Link className="nav-link" to='#'>Uber Eats</Link>
-        </li>
-    </ul>
-    <ul className="nav navbar-nav navbar-right ml-auto">
-        <li >
-            <IconButton onClick={()=>this.openCheckoutBox()}><ShoppingCartIcon color="error" /><span className="badge badge-pill badge-light">{this.state.Counter?this.state.Counter:''}</span></IconButton>
-           {this.state.openCheckout?this.renderCheckoutDialog():''}
-        </li>
-        <li>
-            <IconButton ><LogoutIcon color="info" /></IconButton>
-        </li>
-    </ul>
-</nav>
+            <ul className="navbar-nav">
+                <li className="nav-item active">
+                    <IconButton onClick={this.toggleDrawerStatus}>
+                        <MenuIcon color="info"  ></MenuIcon>
+                    </IconButton>
+                </li>
+                <li className="nav-item active">
+                    <Link className="nav-link" to='#'>Uber Eats</Link>
+                </li>
+            </ul>
+            <ul className="nav navbar-nav navbar-right ml-auto">
+                <li >
+                    <IconButton onClick={() => this.openCheckoutBox()}><ShoppingCartIcon color="error" /><span className="badge badge-pill badge-light">{this.state.Counter ? this.state.Counter : ''}</span></IconButton>
+                    {this.state.openCheckout ? this.renderCheckoutDialog() : ''}
+                </li>
+                <li>
+                    <IconButton onClick={this.handleCustomerLogout}><LogoutIcon color="info" /></IconButton>
+                </li>
+            </ul>
+        </nav>
         )
     }
-restaurantNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
-<ul className="navbar-nav">
-    <li className="nav-item active">
-        <IconButton onClick={this.toggleDrawerStatus}>
-            <MenuIcon color="info"  ></MenuIcon>
-        </IconButton>
-    </li>
-    <li className="nav-item active">
-        <Link className="nav-link" to='#'>Uber Eats</Link>
-    </li>
-</ul>
-</nav>
+    restaurantNavBar = <nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
+        <ul className="navbar-nav">
+            <li className="nav-item active">
+                <IconButton onClick={this.toggleDrawerStatus}>
+                    <MenuIcon color="info"  ></MenuIcon>
+                </IconButton>
+            </li>
+            <li className="nav-item active">
+                <Link className="nav-link" to='#'>Uber Eats</Link>
+            </li>
+        </ul>
+        <ul className="nav navbar-nav navbar-right ml-auto">
+            <li>
+                <IconButton onClick={this.handleRestLogout}><LogoutIcon color="info" /></IconButton>
+            </li>
+        </ul>
+    </nav>
     render() {
         const { isDrawerOpened } = this.state;
         // console.log(this.props)
         return (
             <div>
-                    {this.props.view == "unknown" ? this.unknownNavBar: ''}
-                    {this.props.view == "customer" ? this.customerNavBar() : ''}
-                    {this.props.view == "restaurant" ? this.restaurantNavBar : ''}
+                {this.props.view == "unknown" ? this.unknownNavBar : ''}
+                {this.props.view == "customer" ? this.customerNavBar() : ''}
+                {this.props.view == "restaurant" ? this.restaurantNavBar : ''}
                 <div>
                     <Drawer
                         variant="temporary"
@@ -199,6 +225,6 @@ restaurantNavBar=<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
     }
 }
 
-export default NavComponent
+export default withRouter(withCookies(NavComponent))
 // export default (NavComponent.mapStateToProps)(NavComponent)
 

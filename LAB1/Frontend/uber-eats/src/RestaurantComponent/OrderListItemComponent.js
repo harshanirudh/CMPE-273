@@ -4,6 +4,7 @@ import { Formik ,Form,Field} from 'formik'
 import React, { Component, createRef } from 'react'
 import { baseUrl } from '../apiConfig'
 import DoneIcon from '@mui/icons-material/Done';
+import { Link } from 'react-router-dom'
 
 export class OrderListItemComponent extends Component {
     constructor(props) {
@@ -23,6 +24,7 @@ export class OrderListItemComponent extends Component {
                 orderStatus:e.deliveryStatus,
                 openDialog:true
             })
+            this.props.update();
             console.log(this.state)
             // this.setState(prevState=>({
             //     orderStatus:e.deliveryStatus,
@@ -47,7 +49,7 @@ export class OrderListItemComponent extends Component {
                     <div className="row">
                         <div className="col-sm-2">
                             <p>Order ID: {order.ORDER_ID}</p>
-                            <Typography>View Customer</Typography>
+                            <Link to={`/restaurant/${order.REST_ID}/view/customer/${order.CUST_ID}`}>View Customer</Link>
                         </div>
                       
                         <div className="col-sm-3">

@@ -108,7 +108,16 @@ create table if not exists DELIVERY_ADDRESS(
     address varchar(200),
     city varchar(100),
     zipcode varchar(10)
-)
+);
+
+CREATE TABLE if not exists `customer_favourites` (
+  `CUST_ID` int DEFAULT NULL,
+  `REST_ID` int DEFAULT NULL,
+  `FAV_ID` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`FAV_ID`)
+) 
+
+
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Add_New_Customer`(in c_fname varchar(50),in c_lname varchar(50),in c_email varchar(60),in c_pass char(128),out id int)
 BEGIN

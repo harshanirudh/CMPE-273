@@ -6,6 +6,7 @@ import { object } from 'yup/lib/locale';
 import PhotoCollage from '../SharedComponents/PhotoCollage';
 import COUNTRIES from '../SharedComponents/dropdowns';
 import NavComponent from '../SharedComponents/NavComponent';
+import { withCookies, Cookies } from 'react-cookie';
 var { baseUrl } = require('../apiConfig')
 var axios = require("axios").default;
 let profileIntialValues = {
@@ -97,9 +98,10 @@ class RestaurantProfile extends Component {
         }
     }
     handleLandingPage=()=>{
-        this.props.history.push('/restaurant/landing/' + this.props.match.params.profileId)
+        this.props.history.push(`/restaurant/landing/${this.props.match.params.profileId}`)
     }
     render() {
+        
         if(this.state.updateDone===true){
             return <div >
             <NavComponent view="restaurant"></NavComponent>
@@ -107,7 +109,7 @@ class RestaurantProfile extends Component {
             <br></br>
             <div className="jumbotron">
                 <h1>Succesfully Updated profile</h1>
-                <button type="button" className="btn btn-primary" onClick={this.handleLandingPage}>Go Back to login page</button>
+                <button type="button" className="btn btn-primary" onClick={this.handleLandingPage}>Go Back to Home page</button>
             </div>
         </div>
         </div>
@@ -291,4 +293,4 @@ class RestaurantProfile extends Component {
         )
     }
 }
-export default withRouter(RestaurantProfile)
+export default withCookies(withRouter(RestaurantProfile))

@@ -1,3 +1,4 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
@@ -49,7 +50,7 @@ class CustomerProfile extends Component {
 
     handleSave(values) {
         console.log(values)
-        let url = baseUrl + '/users/customer/' + this.props.match.params.profileId;
+        let url = baseUrl + '/users/customer/' + this.props.match.params.custId;
         axios.put(url, values).then((resp) => {
             let rows = resp.data.affectedRows;
             if (rows > 0) {
@@ -90,7 +91,7 @@ class CustomerProfile extends Component {
         this.props.history.push("/customer/landing")
     }
     componentDidMount() {
-        let url = baseUrl + "/users/customers/" + this.props.match.params.profileId;
+        let url = baseUrl + "/users/customers/" + this.props.match.params.custId;
         console.log(url)
         axios.get(url).then((resp) => {
             console.log(resp.data[0])
@@ -113,50 +114,88 @@ class CustomerProfile extends Component {
             console.log(err);
         })
     }
-    render() {
-        if (this.state.updateDone === true) {
-            return <div className="container">
-                <br></br>
-                <div className="jumbotron">
-                    <h1>Succesfully Updated profile</h1>
-                    <button type="button" className="btn btn-primary" onClick={this.handleLandingPage}>Go Back to login page</button>
-                </div>
-            </div>
+    isDisabled(){
+        if(this.props?.viewBy==="restaurant"){
+            return true
         }
+        else{
+            return false
+        }
+    }
+    handleClose=(type)=>{
+        if(type=="update"){
+        this.setState({updateDone:false})
+        this.props.history.push(`/customer/landing/${this.props.match.params.custId}`)
+        }
+        else if(type==="error"){
+            this.setState({error:false})
+        }
+
+    }
+    render() {
+        // if (this.state.updateDone === true) {
+        //     return <div className="container">
+        //         <br></br>
+        //         <div className="jumbotron">
+        //             <h1>Succesfully Updated profile</h1>
+        //             <button type="button" className="btn btn-primary" onClick={this.handleLandingPage}>Go Back to login page</button>
+        //         </div>
+        //     </div>
+        // }
         if (this.state.error) {
             return  <div >
             <NavComponent view="customer"></NavComponent>
-            <div className="container">
-                <br></br>
-                <div className="jumbotron">
-                    <h1>Profile Update Failed</h1>
-                    <p>Unable to update profile, something went wrong</p>
-                </div>
-            </div>
+            <Dialog
+                    open={this.state.error}
+                    // onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth="true">
+                    <DialogTitle id="alert-dialog-title">{"Profile Updated Succesfully"}</DialogTitle>
+                    <DialogContent></DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose("error")}>Close</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         }
         return (
             <div >
-            <NavComponent view="customer" cid={this.props.match.params.profileId}></NavComponent>
-            <Formik initialValues={this.state.custProfIntialValues} validationSchema={this.custProfValidator} onSubmit={(values) => this.handleSave(values)}>
+            <Dialog
+                    open={this.state.updateDone}
+                    // onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth="true">
+                    <DialogTitle id="alert-dialog-title">{"Profile Updated Succesfully"}</DialogTitle>
+                    <DialogContent></DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>this.handleClose("update")}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+            {this.props?.viewBy==="restaurant"?
+            (<NavComponent view="restaurant" cid={this.props.custId} rid={this.props.restId}></NavComponent>):(
+                <NavComponent view="customer" cid={this.props.match.params.custId}></NavComponent>)
+                }
+            <Formik initialValues={this.state.custProfIntialValues} validationSchema={this.custProfValidator} onSubmit={(values) => this.handleSave(values)} >
                 <div className="container">
                     <h2 className="text-center text-uppercase">Profile Details</h2>
                     <br></br>
                     <div className="main-body">
-                        <Form>
+                        <Form >
                             <div className="row">
                                 <div className="col-lg-4">
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-flex flex-column align-items-center text-center">
                                                 <img src={this.setProfilePic()} alt="Admin" className="rounded-circle p-1 bg-primary" width="110" />
-                                                <div className="col-md-12">
+                                                {this.props?.viewBy==="restaurant"?'':(<div className="col-md-12">
                                                     <input type="file" className="form-control-sm" id="profilePic" name="profilePic" accept="image/png, image/gif, image/jpeg" />
                                                     <button type="button" className="btn-sm btn-primary" onClick={this.uploadProfilePhoto}> Upload</button>
-                                                </div>
+                                                </div>)}
                                                 <div className="mt-3">
                                                     <h4>About</h4>
-                                                    <Field className="form-control rounded-0" name="about" placeholder="Full Stack Developer Bay Area, San Francisco, CA" component="textarea" style={{ height: "120px", width: "250px" }} />
+                                                    <Field className="form-control rounded-0" name="about"  component="textarea" style={{ height: "120px", width: "250px" }} disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="about" className="text-danger" component="div"></ErrorMessage>
                                                     {/* <Field className="text-muted font-size-sm" value=""/>Bay Area, San Francisco, CA */}
                                                     {/* <button className="btn btn-primary">Follow</button>
@@ -177,7 +216,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">First Name</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="fname" />
+                                                    <Field type="text" className="form-control" name="fname" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="fname" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -186,7 +225,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Last Name</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="lname" />
+                                                    <Field type="text" className="form-control" name="lname" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="lname" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -195,7 +234,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Nickname</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="nickname" />
+                                                    <Field type="text" className="form-control" name="nickname" disabled={this.isDisabled()} />
                                                     {/* <ErrorMessage name="lname" className="text-danger" component="div"></ErrorMessage> */}
                                                 </div>
                                             </div>
@@ -204,7 +243,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Email</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="email" />
+                                                    <Field type="text" className="form-control" name="email"disabled={this.isDisabled()} />
                                                     <ErrorMessage name="email" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -213,7 +252,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Phone</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="phone" />
+                                                    <Field type="text" className="form-control" name="phone" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="phone" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -222,7 +261,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Date of Birth</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="date" className="form-control" name="dob" />
+                                                    <Field type="date" className="form-control" name="dob" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="dob" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -231,7 +270,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Address</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="add" />
+                                                    <Field type="text" className="form-control" name="add" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="add" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -240,7 +279,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">City</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="city" />
+                                                    <Field type="text" className="form-control" name="city" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="city" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -249,7 +288,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">State</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="state" />
+                                                    <Field type="text" className="form-control" name="state" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="state" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -258,7 +297,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Zipcode</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="text" className="form-control" name="zipcode" />
+                                                    <Field type="text" className="form-control" name="zipcode" disabled={this.isDisabled()}/>
                                                     <ErrorMessage name="zipcode" className="text-danger" component="div"></ErrorMessage>
                                                 </div>
                                             </div>
@@ -267,7 +306,7 @@ class CustomerProfile extends Component {
                                                     <label className="mb-0">Country</label>
                                                 </div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field as="select" className="form-control" name="country" >
+                                                    <Field as="select" className="form-control" name="country" disabled={this.isDisabled()}>
                                                         <option value=""></option>
                                                         {COUNTRIES.map(country=>{
                                                             return(<option key={country.name} value={country.name}>{country.name}</option>)
@@ -279,7 +318,7 @@ class CustomerProfile extends Component {
                                             <div className="row">
                                                 <div className="col-sm-3"></div>
                                                 <div className="col-sm-9 text-secondary">
-                                                    <Field type="submit" className="btn btn-primary px-4" value="Save Changes" />
+                                                    <Field type="submit" className="btn btn-primary px-4" value="Save Changes" disabled={this.isDisabled()}/>
                                                 </div>
                                             </div>
 

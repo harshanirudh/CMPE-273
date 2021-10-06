@@ -41,6 +41,7 @@ export class RestaurantLanding extends Component {
         this.setState({counter:count})
     }
     render() {
+        console.log(this.setRestID())
         return (
             <div >
             <NavComponent view={this.setViewBy()} rid={this.setRestID()} cid={this.props.custId} cartCounter={this.state.counter}></NavComponent>

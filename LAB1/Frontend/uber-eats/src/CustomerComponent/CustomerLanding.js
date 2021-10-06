@@ -30,8 +30,8 @@ export class CustomerLanding extends Component {
 
     componentDidMount() {
         let url = `${baseUrl}/users/restarunt`
-        let apiCustomerLocation = `${baseUrl}/users/customer/location/${this.props.match.params.profileId}`;
-        let getFavRestId=`${baseUrl}/favourites/customer/${this.props.match.params.profileId}`
+        let apiCustomerLocation = `${baseUrl}/users/customer/location/${this.props.match.params.custId}`;
+        let getFavRestId=`${baseUrl}/favourites/customer/${this.props.match.params.custId}`
         axios.all([axios.get(url), axios.get(apiCustomerLocation),axios.get(getFavRestId)]).then(resp => {
 
             let restaurantsList = []
@@ -139,7 +139,7 @@ export class CustomerLanding extends Component {
          * @param {*} restId 
          */
     setFavourite(restId){
-        let url=`${baseUrl}/favourites/add/${this.props.match.params.profileId}/${restId}`
+        let url=`${baseUrl}/favourites/add/${this.props.match.params.custId}/${restId}`
         this.setState({loading:true})
         axios.post(url).then((res)=>{
             let newArr=[restId,...this.state.favouritesRestIds]
@@ -167,9 +167,9 @@ export class CustomerLanding extends Component {
         }
         return (
             <div >
-                <NavComponent view="customer" cid={this.props.match.params.profileId}></NavComponent>
+                <NavComponent view="customer" cid={this.props.match.params.custId}></NavComponent>
             <div className="container-fluid mt-2" >
-                {/* Welcome user {this.props.match.params.profileId} */}
+                {/* Welcome user {this.props.match.params.custId} */}
                 <div className="row justify-content-center">
                     <select className="form-control col-sm-2" ref={this.searchCategory}>
                         <option value="restaurant">Restaurants</option>
@@ -200,7 +200,7 @@ export class CustomerLanding extends Component {
                                         image={this.setRestImage(item.IMAGE)}
                                     />
                                     <CardContent >
-                                        <Link to={`/customer/${this.props.match.params.profileId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
+                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>
