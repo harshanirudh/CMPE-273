@@ -48,7 +48,7 @@ function App() {
             </Route>
 
             {/* Restaurant Protected Routes */}
-            <RestaurantProtectedRoute exact path="/restaurant/:restId/dish/:dishId" render={(props)=><DishesDetailsComponent {...props}/>}></RestaurantProtectedRoute>
+            <Route exact path="/restaurant/:restId/dish/:dishId" component={DishesDetailsComponent}><DishesDetailsComponent></DishesDetailsComponent></Route>
             <RestaurantProtectedRoute exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}></RestaurantProtectedRoute>
             <Route exact path="/restaurantSingup/success">
               <SignupStatus type="Success"></SignupStatus>

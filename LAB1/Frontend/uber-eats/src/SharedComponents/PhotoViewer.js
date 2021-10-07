@@ -25,9 +25,7 @@ class PhotoViewer extends React.Component {
         console.log('clicked on image at index', this.imageGallery.getCurrentIndex());
         let index = this.imageGallery.getCurrentIndex();
         images.splice(index, 1);
-        this.setState((
-            images
-        ))
+        this.setState({images:[...images]})
 
     }
     async handleAddButton() {
@@ -43,7 +41,7 @@ class PhotoViewer extends React.Component {
             axios.post(url, { 'img': imgLocation }).then((res) => {
                 this.setState((prevState) => ({
                     imageToggle: !prevState.imageToggle,
-                    images: images
+                    images: [...images]
                 }))
                 console.log(`state :${this.state.imageToggle}`)
             }).catch((err) => {
@@ -141,9 +139,9 @@ class PhotoViewer extends React.Component {
                             <div className="col-md-6">
                                 <button className="btn btn-primary " onClick={() => this.handleAddButton()}>Add Image</button>
                             </div>
-                            <div className="col-md-6 text-center">
+                            {/* <div className="col-md-6 text-center">
                                 <button className="btn btn-danger" onClick={this.handleDeleteButton}>Delete Image</button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )}

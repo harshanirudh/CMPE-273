@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux'
 export class MenuList extends Component {
     constructor(props) {
         super(props)
-
+        this.masterDishesList=[]
         this.state = {
             dishes: [],
             // counter: sessionStorage.getItem('counter')!=null ? parseInt(sessionStorage.getItem('counter')) : 0
@@ -30,6 +30,7 @@ export class MenuList extends Component {
         try {
             let url = `${baseUrl}/restaurant/${this.props.restId}/dishes`;
             let resultList = await (await axios.get(url)).data;
+            this.masterDishesList=resultList;
             this.setState({ dishes: resultList })
         } catch (err) {
             console.log(err)
@@ -146,11 +147,49 @@ export class MenuList extends Component {
         this.add(this.state.newDishToBeAdded);
         this.setState({newOrder:false,newDishToBeAdded:null})
     }
+    handleFilter=(e)=>{
+        console.log(e.target.value)
+        let filterList;
+        switch(e.target.value){
+            case "all":
+                this.setState({dishes:this.masterDishesList})
+                break;
+            case "Veg":
+                filterList=this.masterDishesList.filter(dish=>{
+                    return dish.DISH_TYPE=="Veg"
+                })
+                this.setState({dishes:filterList})
+                break;
+            case "Non Veg":
+                filterList=this.masterDishesList.filter(dish=>{
+                    return dish.DISH_TYPE=="Non Veg"
+                })
+                this.setState({dishes:filterList})
+                break;
+            case "Vegan":
+                filterList=this.masterDishesList.filter(dish=>{
+                    return dish.DISH_TYPE=="Vegan"
+                })
+                this.setState({dishes:filterList})
+                break;
+        }
+    }
     render() {
         const { incrementCounter, decrementCounter } = this.props
 
         return (
             <div>
+                <div className="row">
+                <div className="col-sm-8"></div>
+                <div className="col-sm-4">
+                <select className="form-control" onChange={this.handleFilter}>
+                    <option value="all">All</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Non Veg">Non Veg</option>
+                    <option value="Vegan">Vegan</option>
+                </select>
+                </div>
+                
                 <Dialog
                     open={this.state.newOrder}
                     onClose={this.handleClose}
@@ -163,13 +202,15 @@ export class MenuList extends Component {
                         <Button onClick={()=>this.createNewOrder()}>New Order</Button>
                     </DialogActions>
                 </Dialog>
+                </div>
+                {/* <div className="col-sm-6"> */}
                 <h2 className="text-center">Menu</h2>
-
+                {/* </div> */}
                 {this.props.viewBy == "customer" ? '' : (<div className="text-center">
                     <Link to={`/restaurant/${this.props.restId}/dish/new`} className="btn btn-primary text-center">Add New Dish</Link>
                 </div>
                 )}
-
+                
                 <br></br>
                 <div className="container">
                     <div className=" card-columns" style={{ display: 'inline-block' }}>

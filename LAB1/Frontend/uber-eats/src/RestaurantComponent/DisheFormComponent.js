@@ -3,6 +3,7 @@ import React, { useRef, Component, createRef } from 'react'
 import { uploadDishImages } from './../SharedComponents/UploadS3'
 import { withCookies, Cookies } from 'react-cookie';
 import * as yup from 'yup'
+import { Avatar } from '@mui/material';
 class DisheFormComponent extends Component {
     constructor(props) {
         super(props)
@@ -78,11 +79,13 @@ class DisheFormComponent extends Component {
                             <div className="col-sm-3">
                                 <button className="btn btn-primary" type="button" onClick={(e) => this.handleAddButton(e)}>Upload</button>
                             </div>
-                            <div className="col-sm-4 text-secondary card-columns">
-                                <div className="card ">
-                                    {/* <img src={this.state.imgSrc} className="float-right card-img-top" ></img> */}
-                                    <img src={this.setProfilePic()} className="float-right card-img-top" ></img>
-                                </div>
+                            <div className="col-sm-4 text-secondary">
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    src={this.setProfilePic()}
+                                    sx={{ width: 80, height: 80 }}
+                                />
+                                
                             </div>
                         </div>
 

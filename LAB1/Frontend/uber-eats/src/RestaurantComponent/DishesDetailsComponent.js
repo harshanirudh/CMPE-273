@@ -27,6 +27,7 @@ export class DishesDetailsComponent extends Component {
         
     }
     componentDidMount(){
+        
         console.log("inside did mount")
         if(this.props.match.params.dishId!='new'){
             let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish/'+this.props.match.params.dishId
@@ -72,10 +73,13 @@ export class DishesDetailsComponent extends Component {
         this.props.history.push(`/restaurant/landing/${this.props.match.params.restId}`)
     }
     render() {
-        console.log(this.props.cookies.get('restCookie')?.authenticate)
-        if(this.props.cookies.get('restCookie')?.authenticate===false){
+        console.log(this.props.cookies.get('restCookie')?.authenticated)
+        if(this.props.cookies.get('restCookie')?.authenticated===undefined||false){
+            console.log(this.props.cookies.get('restCookie')?.authenticate)
+            // this.props.history.push('/restaurant')
             return <Redirect to="/restaurant"></Redirect>
         }
+        else{
         if(this.props.match.params.dishId==='new'){
             return (
                 <div >
@@ -84,7 +88,7 @@ export class DishesDetailsComponent extends Component {
                     // onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    fullWidth="true">
+                    fullWidth={true}>
                     <DialogTitle id="alert-dialog-title">{"Dish Added Succesful"}</DialogTitle>
                     <DialogContent></DialogContent>
                     <DialogActions>
@@ -109,7 +113,7 @@ export class DishesDetailsComponent extends Component {
                     // onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    fullWidth="true">
+                    fullWidth={true}>
                     <DialogTitle id="alert-dialog-title">{"Dish Update Succesful"}</DialogTitle>
                     <DialogContent></DialogContent>
                     <DialogActions>
@@ -126,6 +130,7 @@ export class DishesDetailsComponent extends Component {
         </div>
         )
     }
+}
 }
 
 export default withCookies(withRouter(DishesDetailsComponent))
