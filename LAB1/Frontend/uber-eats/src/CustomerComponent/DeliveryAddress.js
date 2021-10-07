@@ -27,7 +27,7 @@ export class DeliveryAddress extends Component {
                 zipcode: res[0]?.data[0]?.ZIPCODE
             }
             let otherAddress = res[1]?.data;
-            if (res[0].data[0].STREET.length > 0)
+            if (res[0].data[0]?.STREET?.length > 0)
                 otherAddress?.unshift(intialAddress);
             this.setState({ addressList: otherAddress });
         })
@@ -41,12 +41,16 @@ export class DeliveryAddress extends Component {
         city: yup.string().required("City is required"),
         zipcode: yup.string().required("ZipCode is required").max(5, 'Valid zipcode').min(5, 'Valid zipcode').matches(/^[0-9]+$/, 'Only digits')
     })
+    handleClose = () => {
+        console.log("close")
+        this.setState({ open: false })
+    }
     submitFormData = (values) => {
         let url = `${baseUrl}/deliveryAddress/add/${this.props.custId}`
         axios.post(url, values).then(res => {
             console.log(res.data)
             this.getAddressList()
-            this.handleclose()
+            this.handleClose()
         })
     }
     /**
@@ -58,10 +62,7 @@ export class DeliveryAddress extends Component {
     openAddressDialog = () => {
         this.setState({ open: true })
     }
-    handleClose = () => {
-        console.log("close")
-        this.setState({ open: false })
-    }
+    
     handleOnAddress = (e) => {
         // console.log(e.target.value);
         this.props.selectedAddress(e.target.value)
@@ -113,7 +114,7 @@ export class DeliveryAddress extends Component {
                                     </div>
                                     <DialogActions>
                                         <Button type="button" color="error" onClick={this.handleClose}>Close</Button>
-                                        <button className="btn btn-info" type="submit" onClick={this.saveNewAddress}>Save</button>
+                                        <button className="btn btn-info" type="submit" >Save</button>
 
                                     </DialogActions>
                                 </CardContent>
@@ -122,8 +123,6 @@ export class DeliveryAddress extends Component {
                         </Formik>
                     </Card>
                     </DialogContent>
-
-
 
                 </Dialog>
                 <CardHeader title="Delivery Address"></CardHeader>
