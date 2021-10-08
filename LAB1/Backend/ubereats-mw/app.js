@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000','http://54.183.13.45:3000/'],
     credentials: true
 }));
 

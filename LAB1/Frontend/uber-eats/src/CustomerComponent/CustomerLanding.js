@@ -183,6 +183,7 @@ export class CustomerLanding extends Component {
                         <ToggleButtonGroup color="info" value={this.state.deliveryFilter} exclusive onChange={this.handleFilterToggle.bind(this)}>
                             <ToggleButton value="delivery" aria-label="left aligned">Delivery</ToggleButton>
                             <ToggleButton value="pickup" aria-label="left aligned">Pickup</ToggleButton>
+                            <ToggleButton value="" aria-label="left aligned">Both</ToggleButton>
                         </ToggleButtonGroup>
                     </div>
                 </div>
@@ -204,7 +205,7 @@ export class CustomerLanding extends Component {
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>
-                                        <p >{item.RDELIVERY_MODE}</p>
+                                        {/* <p >Delivery :{item.RDELIVERY_MODE?.toUpperCase()}</p> */}
                                         <IconButton aria-label="add to favorites" onClick={(e)=>this.setFavourite(item.REST_ID)}>
                                             <FavoriteIcon color={this.getFavouriteIconColor(item.REST_ID)}/>
                                         </IconButton>

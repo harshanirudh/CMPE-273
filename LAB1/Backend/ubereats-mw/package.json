@@ -22,6 +22,7 @@
   "devDependencies": {
     "chai-http": "^4.3.0",
     "mocha": "^9.1.2",
+    "mocha-expect": "^1.0.3",
     "should": "^13.2.3"
   }
 }
