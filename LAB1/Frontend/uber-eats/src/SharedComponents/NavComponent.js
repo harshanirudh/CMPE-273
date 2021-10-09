@@ -162,7 +162,7 @@ class NavComponent extends Component {
     </nav>
 
     customerNavBar = () => {
-        return (<nav className="navbar navbar-expand-sm bg-dark navbar-dark ">
+        return (<nav className="navbar navbar-expand-sm bg-dark navbar-dark sticky-top ">
             <ul className="navbar-nav">
                 <li className="nav-item active">
                     <IconButton onClick={this.toggleDrawerStatus}>
@@ -206,7 +206,7 @@ class NavComponent extends Component {
         const { isDrawerOpened } = this.state;
         // console.log(this.props)
         return (
-            <div>
+            <div className="sticky-top">
                 {this.props.view == "unknown" ? this.unknownNavBar : ''}
                 {this.props.view == "customer" ? this.customerNavBar() : ''}
                 {this.props.view == "restaurant" ? this.restaurantNavBar : ''}
