@@ -99,7 +99,7 @@ export class CustomerOrders extends Component {
                     <div>
                         <select className="form-control col-sm-6 mt-4 ml-3" onChange={this.handleFilter}>
                             <option value="all">All Orders</option>
-                            <option value="new order">Order Recieved</option>
+                            <option value="new order">Order Confirmed</option>
                             <option value="orderPreparing">Preparing</option>
                             <option value="pickupReady">Pickup Ready</option>
                             <option value="picked up">Picked Up</option>

@@ -51,10 +51,10 @@ function App() {
             <Route exact path="/restaurant/:restId/dish/:dishId" component={DishesDetailsComponent}><DishesDetailsComponent></DishesDetailsComponent></Route>
             <RestaurantProtectedRoute exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}></RestaurantProtectedRoute>
             <Route exact path="/restaurantSingup/success">
-              <SignupStatus type="Success"></SignupStatus>
+              <SignupStatus type="Success" view="rest"></SignupStatus>
             </Route>
             <Route exact path="/restaurantSingup/error">
-              <SignupStatus type="error"></SignupStatus>
+              <SignupStatus type="error" view="rest"></SignupStatus>
             </Route>
             <RestaurantProtectedRoute exact path="/restaurant/landing/:profileId" component={RestaurantLanding}></RestaurantProtectedRoute>
             <RestaurantProtectedRoute exact path="/restaurant/profile/:profileId" component={RestaurantProfile}></RestaurantProtectedRoute>
@@ -62,10 +62,10 @@ function App() {
 
             {/* Customer protected routes */}
             <Route exact path="/customerSignup/success">
-              <SignupStatus type="Success"></SignupStatus>
+              <SignupStatus type="Success" view="cust"></SignupStatus>
             </Route>
             <Route exact path="/customerSignup/error">
-              <SignupStatus type="error"></SignupStatus>
+              <SignupStatus type="error" view="cust"></SignupStatus>
             </Route>
             <CustomerProtectedRoute exact path="/customer/profile/:custId" component={CustomerProfile}></CustomerProtectedRoute>
             <CustomerProtectedRoute exact path="/customer/landing/:custId" component={CustomerLanding}></CustomerProtectedRoute>

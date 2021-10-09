@@ -25,6 +25,28 @@ export class OrderListItem extends Component {
     handleCloseReciept = () => {
         this.setState({ openRecieptDialog: false })
     }
+    renderOrderStatus=(status)=>{
+        switch(status){
+            case "new order":
+                return "Order Confirmed"
+            // break;
+            case "orderPreparing":
+                return "Order Preparing"
+            // break;
+            case "pickupReady":
+                return "Pickup ready"
+            // break;
+            case "picked up":
+                return "Picked Up"
+            // break;
+            case "onTheWay":
+                return "On the way"
+            // break;
+            case "delivered":
+                return "Delivered"
+            // break;
+        }
+    }
     render() {
         const { order,address } = this.props
         let delivery_address=address.filter(i=>{
@@ -54,6 +76,7 @@ export class OrderListItem extends Component {
                                 {order.ORD_TYPE==='delivery'?(
                                     <Typography>Delivered Address:{delivery_address}</Typography>
                                 ):''}
+                                {this.renderOrderStatus(order.ORD_STATUS)}
                             </React.Fragment>
                         }
                     />

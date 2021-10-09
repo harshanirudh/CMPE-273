@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Link, withRouter } from 'react-router-dom'
 import { baseUrl } from '../apiConfig'
 import NavComponent from '../SharedComponents/NavComponent'
-import { Card, CardContent, CardMedia, IconButton } from '@mui/material'
+import { Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 export class CustomerFavouritesList extends Component {
 
@@ -35,6 +35,8 @@ export class CustomerFavouritesList extends Component {
             <div>
                 <NavComponent view="customer" cid={this.props.match.params.custId}></NavComponent>
                             <div className="container">
+                                    <Typography title="Favourites" variant="h3" display="flex" justifyContent="center" >Favourites</Typography>
+                                    <br/>
                                 <div className="row mt-2">
                 {this.state.restaurantsList.map((item, index) => {
                             return (

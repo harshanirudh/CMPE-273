@@ -177,15 +177,22 @@ export class CustomerLanding extends Component {
                         <option value="location">Location</option>
 
                     </select>
-                    <input className="form-control-md col-sm-4" type="text" placeholder="Search.." name="search" onChange={(e) => this.handleSearchText(e)} />
+                    <input className="form-control-md col-sm-3" type="text" placeholder="Search.." name="search" onChange={(e) => this.handleSearchText(e)} />
                     <button type="submit" className="btn btn-primary" onClick={this.onSearchBy.bind(this)}>search</button>
                     <div className="col-sm-3">
-                        <ToggleButtonGroup color="info" value={this.state.deliveryFilter} exclusive onChange={this.handleFilterToggle.bind(this)}>
+                        <ToggleButtonGroup color="info" value={this.state.deliveryFilter} exclusive onChange={this.handleFilterToggle.bind(this)} elevation="4">
                             <ToggleButton value="delivery" aria-label="left aligned">Delivery</ToggleButton>
                             <ToggleButton value="pickup" aria-label="left aligned">Pickup</ToggleButton>
                             <ToggleButton value="" aria-label="left aligned">Both</ToggleButton>
                         </ToggleButtonGroup>
                     </div>
+                    {/* <div className="col-sm-2">
+                    <select className="form-control " ref={this.searchCategory}>
+                        <option value="restaurant">Veg</option>
+                        <option value="dish">Non Veg</option>
+                        <option value="location">Vegan</option>
+                    </select>
+                    </div> */}
                 </div>
                 <div className="container-fluid">
                     <div className="row mt-2">
@@ -193,7 +200,7 @@ export class CustomerLanding extends Component {
                         {this.state.restaurantsList.map((item, index) => {
                             return (
 
-                                <Card className="col-md-2 mb-3" key={item.REST_ID} style={{ margin: '10px' }}>
+                                <Card className="col-md-2 mb-3" key={item.REST_ID} style={{ margin: '10px' }} elevation="3">
                                     {/* <img src={this.setRestImage(item.IMAGE)} alt={item.RNAME} style={{ height: '150px', width: '200px' }} /> */}
                                     <CardMedia
                                         component="img"

@@ -213,10 +213,10 @@ export class MenuList extends Component {
                 
                 <br></br>
                 <div className="container">
-                    <div className=" card-columns" style={{ display: 'inline-block' }}>
+                    <div className="row"  >
                         {this.state.dishes.length > 0 ? this.state.dishes.map((dish) => {
                             return (
-                                <div className="card h-100" key={dish.DISH_ID}>
+                                <div className="card h-100 col-sm-4 mt-2 " key={dish.DISH_ID}>
                                     <img className="card-img-top" src={dish.IMAGE} alt="dish image" />
                                     <div className="card bg-ligth ">
                                         <div className="card-body ">

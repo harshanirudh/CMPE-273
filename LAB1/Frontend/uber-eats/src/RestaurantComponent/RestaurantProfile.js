@@ -150,10 +150,10 @@ class RestaurantProfile extends Component {
                                                     </div>
                                                 </div>
                                                 <hr className="my-4" />
-                                                <ul>
+                                                {/* <ul>
                                                     <li><Link to="/restaurant/images">Images</Link></li>
                                                     <li><Link to="/restaurant/dishes">Dishes</Link></li>
-                                                </ul>
+                                                </ul> */}
                                             </div>
                                         </div>
                                     </div>
