@@ -83,7 +83,7 @@ class NavComponent extends Component {
             <Divider>
                 <List>
                     <ListItem button key='Home' to={this.customerHomeUrl} component={Link}>
-                        <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                        <ListItemIcon><HomeIcon /></ListItemIcon>
                         <ListItemText primary='Home' />
                     </ListItem>
                 </List>
