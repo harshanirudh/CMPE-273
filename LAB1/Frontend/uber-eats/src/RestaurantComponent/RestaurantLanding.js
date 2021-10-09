@@ -12,7 +12,8 @@ export class RestaurantLanding extends Component {
         super(props)
         this.state = {
             restName:'',
-            counter:''
+            counter:'',
+            restDetails:''
         }
         
     }
@@ -34,7 +35,10 @@ export class RestaurantLanding extends Component {
     componentDidMount(){
         let url=`${baseUrl}/users/restarunt/${this.setRestID()}`
         axios.get(url).then((res)=>{
-            this.setState({restName:res.data[0]?.RNAME})
+            this.setState({
+                restName:res.data[0]?.RNAME,
+                restDetails:res.data[0]
+            })
         })
     }
     getCounter(count){
@@ -47,7 +51,8 @@ export class RestaurantLanding extends Component {
             <NavComponent view={this.setViewBy()} rid={this.setRestID()} cid={this.props.custId} cartCounter={this.state.counter}></NavComponent>
             <div className="container-fluid " >
                    <Typography variant="h4" align="center"> {this.state.restName}</Typography>
-                
+                    <Typography variant="span" display="flex" justifyContent="center">{`${this.state.restDetails?.STREET} ,${this.state.restDetails.CITY}`} </Typography>
+                    {this.state.restDetails.PHONE?<Typography variant="span" display="flex" justifyContent="center">{`Ph: ${this.state.restDetails.PHONE}`} </Typography>:''}
                 <div className="row">
                 {/* fixed-top one */}
                     <div className="col-sm-4 "> 
