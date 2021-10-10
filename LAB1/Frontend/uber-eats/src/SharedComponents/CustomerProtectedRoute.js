@@ -9,8 +9,8 @@ function CustomerProtectedRoute({ component: Component, ...restOfProps }) {
   console.log(restOfProps)
   const custIdfromCookie=cookies.cookie?.cust_id
   const cust_id=restOfProps.computedMatch.params.custId
-  // const isUserIdSame=(custIdfromCookie==cust_id)
-  const isUserIdSame=true
+  const isUserIdSame=(custIdfromCookie==cust_id)
+  // const isUserIdSame=true
   console.log(isUserIdSame)
   console.log("this", isAuthenticated);
 

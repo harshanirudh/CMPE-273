@@ -21,6 +21,7 @@ import CustomerOrders from './CustomerComponent/CustomerOrders';
 import CustomerProtectedRoute from './SharedComponents/CustomerProtectedRoute';
 import ViewCustomerProfile from './RestaurantComponent/ViewCustomerProfile';
 import RestaurantProtectedRoute from './SharedComponents/RestaurantProtectedRoute'
+import Unauthorized from './SharedComponents/Unauthorized';
 
 
 
@@ -46,7 +47,7 @@ function App() {
             <Route exact path="/customerSignup">
               <CustomerSignup></CustomerSignup>
             </Route>
-
+            <Route exact path="/unauthorized" component={Unauthorized}> <Unauthorized/></Route>
             {/* Restaurant Protected Routes */}
             <Route exact path="/restaurant/:restId/dish/:dishId" component={DishesDetailsComponent}><DishesDetailsComponent></DishesDetailsComponent></Route>
             <RestaurantProtectedRoute exact path="/restaurant/:restId/orderslist" component={OrdersListComponent}></RestaurantProtectedRoute>

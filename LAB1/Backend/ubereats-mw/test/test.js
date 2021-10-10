@@ -4,7 +4,8 @@ var expect    = require("chai").expect;
 var chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 
-var app = 'http://localhost:8080'
+// var app = 'http://localhost:8080'
+var app= require('../bin/www')
 
 describe('Test scenario', function () {
   it('get restaurant users', function () {

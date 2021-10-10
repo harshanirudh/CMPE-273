@@ -2,8 +2,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import React, { Component, useEffect } from 'react'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import * as yup from 'yup'
-import { object } from 'yup/lib/locale';
-import PhotoCollage from '../SharedComponents/PhotoCollage';
 import COUNTRIES from '../SharedComponents/dropdowns';
 import NavComponent from '../SharedComponents/NavComponent';
 import { withCookies, Cookies } from 'react-cookie';
@@ -51,7 +49,7 @@ class RestaurantProfile extends Component {
 
     }
     componentDidMount() {
-        console.log(this.props.match.params.profileId)
+        // console.log(this.props.match.params.profileId)
         let url=baseUrl+'/users/restarunt/'+this.props.match.params.profileId
         axios.get(url).then((resp)=>{
             let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data[0]

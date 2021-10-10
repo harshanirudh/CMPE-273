@@ -92,7 +92,7 @@ class CustomerProfile extends Component {
     }
     componentDidMount() {
         let url = baseUrl + "/users/customers/" + this.props.match.params.custId;
-        console.log(url)
+        // console.log(url)
         axios.get(url).then((resp) => {
             console.log(resp.data[0])
             let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data[0];
@@ -150,7 +150,7 @@ class CustomerProfile extends Component {
                     // onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    fullWidth="true">
+                    fullWidth={true}>
                     <DialogTitle id="alert-dialog-title">{"Profile Updated Succesfully"}</DialogTitle>
                     <DialogContent></DialogContent>
                     <DialogActions>
@@ -166,7 +166,7 @@ class CustomerProfile extends Component {
                     // onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    fullWidth="true">
+                    fullWidth={true}>
                     <DialogTitle id="alert-dialog-title">{"Profile Updated Succesfully"}</DialogTitle>
                     <DialogContent></DialogContent>
                     <DialogActions>
@@ -337,4 +337,5 @@ class CustomerProfile extends Component {
     }
 }
 
+// export {CustomerProfile as PureCustomerProfile}
 export default withRouter(CustomerProfile)
