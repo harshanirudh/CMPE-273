@@ -82,4 +82,17 @@ router.post('/searchBy/dishes',async(req,res)=>{
     }
 })
 
+router.get('/searchBy/type/:type',async(req,res)=>{
+    try{
+        let searchRestByType="select distinct(rest_id) from uber_eats.restaurant_dishes where DISH_TYPE=?"
+        let result=await pool.query(searchRestByType,[req.params.type]);
+        let rest_id=await result[0].map(rid=>{
+            return rid.rest_id
+        })
+        res.status(200).send({rest_id});
+    }catch(err){
+        console.log(err)
+    }
+})
+
 module.exports =router

@@ -60,7 +60,7 @@ export class CheckoutComponent extends Component {
         <CardHeader title="Choose pickup/delivery"></CardHeader>
         <CardContent>
             
-            <button className="btn btn-info" onClick={()=> this.setState({deliveryMode:'delivery'})}>Delivery</button>
+            <button className="btn btn-info mr-2" onClick={()=> this.setState({deliveryMode:'delivery'})}>Delivery</button><span/>
             <button className="btn btn-info" onClick={()=>  this.setState({deliveryMode:'pickup'})}>Pickup</button>
         </CardContent>
     </card>
@@ -175,7 +175,8 @@ export class CheckoutComponent extends Component {
                     console.log(res.data)
                     this.openConfirmationBox()
                 })
-        }
+        }else if(this.state.deliveryMode==="both")
+            alert('Please select either Delivery/Pickup')
     }
 
 

@@ -48,7 +48,7 @@ export class CustomerFavouritesList extends Component {
                                         image={this.setRestImage(item.IMAGE)}
                                     />
                                     <CardContent >
-                                        <Link to={`/customer/${this.props.match.params.profileId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
+                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>

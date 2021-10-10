@@ -50,10 +50,11 @@ class DisheFormComponent extends Component {
     dishFormValidator = yup.object({
         dname: yup.string().required('Dish Name is required'),
         ingre: yup.string().required('Ingredients is required'),
-        dprice: yup.string().required('Price is required').matches(/^[0-9]+$/, 'Only digits'),
+        dprice: yup.string().required('Price is required').matches(/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/, 'Only digits'),
         ddesc: yup.string().required('Description is required'),
         dcat: yup.string().required('Category is Required'),
-        dtype: yup.string().required('Type is Required'),
+        dtype: yup.string(),
+        // .required('Type is Required'),
         dimg: yup.string()
     })
     render() {

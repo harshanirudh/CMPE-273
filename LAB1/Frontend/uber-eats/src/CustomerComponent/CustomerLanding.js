@@ -63,11 +63,17 @@ export class CustomerLanding extends Component {
         this.setState({ searchString: e.target.value })
     }
     handleFilterToggle(e) {
+        if(e.target.value!=""){
         let filterList = this.masterRestaurantList.filter(i => {
             return (i.RDELIVERY_MODE == e.target.value || i.RDELIVERY_MODE == 'both')
         })
         this.setState({ deliveryFilter: e.target.value })
         this.setState({ restaurantsList: filterList })
+    }
+    else{
+        this.setState({ deliveryFilter: e.target.value })
+        this.setState({ restaurantsList: this.masterRestaurantList })
+    }
         console.log(e.target.value)
     }
     /**
@@ -113,6 +119,22 @@ export class CustomerLanding extends Component {
         } else {
             this.setState({ restaurantsList: this.masterRestaurantList })
         }
+    }
+
+    handleTypeChange=(e)=>{
+        console.log(e.target.value)
+        if(e.target.value==='all'){
+            this.setState({restaurantsList:this.masterRestaurantList})
+        }else{
+        let url=`${baseUrl}/restaurant/searchBy/type/${e.target.value}`
+        axios.get(url).then(res=>{
+            let filterList=this.masterRestaurantList.filter(i=>{
+                console.log(res.data)
+                return res.data.rest_id?.includes(i.REST_ID)
+            })
+            this.setState({restaurantsList:filterList})
+        })
+    }
     }
     /**
      * Takes Image Url and check if its present, if not sets to dish image in public folder
@@ -171,13 +193,14 @@ export class CustomerLanding extends Component {
             <div className="container-fluid mt-2" >
                 {/* Welcome user {this.props.match.params.custId} */}
                 <div className="row justify-content-center">
+                    
                     <select className="form-control col-sm-2" ref={this.searchCategory}>
                         <option value="restaurant">Restaurants</option>
                         <option value="dish">Dish</option>
                         <option value="location">Location</option>
 
                     </select>
-                    <input className="form-control-md col-sm-3" type="text" placeholder="Search.." name="search" onChange={(e) => this.handleSearchText(e)} />
+                    <input className="form-control-md col-sm-4" type="text" placeholder="Search.." name="search" onChange={(e) => this.handleSearchText(e)} />
                     <button type="submit" className="btn btn-primary" onClick={this.onSearchBy.bind(this)}>search</button>
                     <div className="col-sm-3">
                         <ToggleButtonGroup color="info" value={this.state.deliveryFilter} exclusive onChange={this.handleFilterToggle.bind(this)} elevation="4">
@@ -186,13 +209,14 @@ export class CustomerLanding extends Component {
                             <ToggleButton value="" aria-label="left aligned">Both</ToggleButton>
                         </ToggleButtonGroup>
                     </div>
-                    {/* <div className="col-sm-2">
-                    <select className="form-control " ref={this.searchCategory}>
-                        <option value="restaurant">Veg</option>
-                        <option value="dish">Non Veg</option>
-                        <option value="location">Vegan</option>
+                    <div className="col-sm-2">
+                    <select className="form-control " name="type"onChange={this.handleTypeChange}>
+                        <option value="all">All</option>
+                        <option value="Veg">Veg</option>
+                        <option value="Non Veg">Non Veg</option>
+                        <option value="Vegan">Vegan</option>
                     </select>
-                    </div> */}
+                    </div>
                 </div>
                 <div className="container-fluid">
                     <div className="row mt-2">
