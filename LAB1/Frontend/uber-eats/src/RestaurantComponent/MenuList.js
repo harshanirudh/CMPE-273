@@ -226,7 +226,7 @@ export class MenuList extends Component {
                                                 )}
                                                 <p className="text-left text-muted" >{dish.DISH_DESCR}</p>
                                                 <p className="">{dish.INGREDIANTS}</p>
-                                                <p className="text-left">Price: {dish.PRICE}</p>
+                                                <p className="text-left">Price: ${dish.PRICE}</p>
                                             </div>
                                             {this.props.viewBy == "customer" ? (
                                                 <div>
