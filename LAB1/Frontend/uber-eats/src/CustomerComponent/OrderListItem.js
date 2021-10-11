@@ -76,7 +76,7 @@ export class OrderListItem extends Component {
                                 {order.ORD_TYPE==='delivery'?(
                                     <Typography>Delivered Address:{delivery_address}</Typography>
                                 ):''}
-                                {this.renderOrderStatus(order.ORD_STATUS)}
+                               <Typography> {this.renderOrderStatus(order.ORD_STATUS)}</Typography>
                             </React.Fragment>
                         }
                     />

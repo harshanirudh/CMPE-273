@@ -111,6 +111,7 @@ class CheckoutDialog extends React.Component {
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     {this.state.items.map((i, index) => {
                         amount = i.PRICE * i.quantity + amount
+                        amount=parseFloat(amount.toFixed(2))
                         return <ListItem alignItems="flex-start" key={i.DISH_ID}>
                             <ListItemAvatar>
                                 <Avatar alt={i.DISH_NAME} src={i.IMAGE} />
