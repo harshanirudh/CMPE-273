@@ -39,10 +39,22 @@ class PhotoViewer extends React.Component {
             console.log(imgLocation);
             let url = `${baseUrl}/restaurant/images/${this.props.restId}`
             axios.post(url, { 'img': imgLocation }).then((res) => {
-                this.setState((prevState) => ({
-                    imageToggle: !prevState.imageToggle,
-                    images: [...images]
-                }))
+                let obj={
+                    original:imgLocation,
+                    thumbnail:imgLocation
+                }
+                let newArr;
+                if(this.state.imagesArr.length==0){
+                    newArr=obj;
+                }else{
+                    newArr=[...this.state.imagesArr,obj]
+                }
+                // this.setState((prevState) => ({
+                //     imageToggle: !prevState.imageToggle,
+                //     imagesArr: newArr
+                // }))
+                this.setState({imagesArr:newArr})
+                window.location.reload();
                 console.log(`state :${this.state.imageToggle}`)
             }).catch((err) => {
                 console.log(err)
@@ -68,7 +80,7 @@ class PhotoViewer extends React.Component {
                     "thumbnail": imageObj.IMAGE
                 })
             })
-            this.setState({ images: images })
+            this.setState({ imagesArr: images })
         }))
     }
     componentDidUpdate() {
@@ -124,7 +136,7 @@ class PhotoViewer extends React.Component {
             <div className="container-fluid " style={{marginTop:"75px"}}>
                 {/* <h2 className="text-center mb-4">Images</h2> */}
                 <ImageGallery ref={i => this.imageGallery = i}
-                    items={images} showIndex={true}
+                    items={this.state.imagesArr} showIndex={true}
                     onClick={(e) => this.setState(this.handleClickEVent(e))} />
                 <br></br>
                 {this.props.viewBy === 'customer' ? '' : (
