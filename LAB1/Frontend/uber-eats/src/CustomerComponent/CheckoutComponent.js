@@ -78,12 +78,13 @@ export class CheckoutComponent extends Component {
     getShoppingCartDetails = () => {
         // this.state.items = 
 
-        // let amount = 0;
+        let amount = 0;
         return (
             <div>
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     {this.props.location.state.items.map((i, index) => {
-                        this.amount = i.PRICE * i.quantity + this.amount
+                        amount = i.PRICE * i.quantity + amount
+                        amount=parseFloat(amount.toFixed(2))
                         return <ListItem alignItems="flex-start" key={i.DISH_ID}>
                             <ListItemAvatar>
                                 <Avatar alt={i.DISH_NAME} src={i.IMAGE} />
@@ -115,7 +116,7 @@ export class CheckoutComponent extends Component {
                     })}
                     
                 </List>
-                <Typography style={{ display: 'flex', justifyContent: 'center' }} className="badge badge-primary"> Total Amount:  ${this.amount} </Typography>
+                <Typography style={{ display: 'flex', justifyContent: 'center' }} className="badge badge-primary"> Total Amount:  ${amount} </Typography>
             </div>
         )
     }
@@ -214,6 +215,8 @@ export class CheckoutComponent extends Component {
                                 <Typography> {ZIPCODE}</Typography>
                                 {this.getShoppingCartDetails()}
                                 <br />
+                                <label>Special Instructions</label>
+                                <input type="text" className="form-control"></input><br/>
                                 <button type="button" className="btn btn-danger" style={{ width: '100%', display: 'block' }} onClick={()=>{this.placeOrder()}}>Place Order</button>
                             </CardContent>
                         </Card>

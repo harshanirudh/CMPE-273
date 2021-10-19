@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 import { Avatar, Card, CardHeader, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
 import CustOrderReciept, { OrderListItem } from './OrderListItem'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import TablePagination from '@mui/material/TablePagination';
 export class CustomerOrders extends Component {
     constructor(props) {
         super(props)
@@ -13,7 +14,9 @@ export class CustomerOrders extends Component {
         this.state = {
             orderList: [],
             filter: 'all',
-            addressList: []
+            addressList: [],
+            page: 0,
+            rowsPerPage: 5
         }
     }
     getAddressList = () => {
@@ -90,7 +93,19 @@ export class CustomerOrders extends Component {
                 break;
         }
     }
+    handleChangePage = (event, newPage) => {
+        // setPage(newPage);
+        this.setState({ page: newPage })
+    };
 
+    handleChangeRowsPerPage = (event) => {
+        // setRowsPerPage(parseInt(event.target.value, 10));
+        // setPage(0);
+        this.setState({
+            rowsPerPage: parseInt(event.target.value, 10),
+            page: 0
+        })
+    };
     render() {
         return (
             <div>
@@ -114,9 +129,25 @@ export class CustomerOrders extends Component {
                         </select> */}
                     </div>
                     <Card>
-                        <CardHeader title={"Order History"}></CardHeader>
+                        <div className="row">
+                            <div className="col-md-6"><CardHeader title={"Order History"}></CardHeader></div>
+                            <div className="col-md-6"> 
+                            <TablePagination
+                                component="div"
+                                count={this.state.orderList.length}
+                                page={this.state.page}
+                                onPageChange={this.handleChangePage}
+                                rowsPerPage={this.state.rowsPerPage}
+                                onRowsPerPageChange={this.handleChangeRowsPerPage}
+                                rowsPerPageOptions={[2,5, 10]}
+                            /> 
+                            </div>
+                        </div>
                         <List sx={{ width: '100%', bgcolor: 'background.paper', justifyContent: 'center' }}>
-                            {this.state.orderList.map((order, index) => {
+                            {(this.state.rowsPerPage > 0
+                                ? this.state.orderList.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                : this.state.orderList
+                            ).map((order, index) => {
                                 return <OrderListItem order={order} key={order.ORDER_ID} address={this.state.addressList}></OrderListItem>
                             })}
                         </List>

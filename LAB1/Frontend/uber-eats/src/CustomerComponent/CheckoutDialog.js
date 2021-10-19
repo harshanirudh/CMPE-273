@@ -180,7 +180,7 @@ class CheckoutDialog extends React.Component {
                         {/* <Button color="success" onClick={this.handleCheckout} autoFocus>
                             Proceed to Checkout
                         </Button> */}
-                        {this.state.items.length > 0 ? <Link className="btn btn-info" to={{ pathname: `/customer/checkout/${this.props.cid}`, state: { items: this.state.items,restDetails:this.state.restaurantDetails } }}>Proceed to Checkout</Link> : ''}
+                        {this.state.items.length > 0 ? (<Link className="btn btn-info" to={{ pathname: `/customer/checkout/${this.props.cid}`, state: { items: this.state.items,restDetails:this.state.restaurantDetails } }} onClick={this.handleClose}>Proceed to Checkout</Link>) : ''}
 
                     </DialogActions>
                 </Dialog>

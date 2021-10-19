@@ -47,6 +47,10 @@ export class OrderListItem extends Component {
             // break;
         }
     }
+
+    handleCancelOrder=()=>{
+        console.log(this.props.order)
+    }
     render() {
         const { order,address } = this.props
         let delivery_address=address.filter(i=>{
@@ -81,6 +85,9 @@ export class OrderListItem extends Component {
                         }
                     />
                     <br />
+                    {order.ORD_STATUS==='new order'?
+                    (<button className="btn btn-info" onClick={() => this.handleCancelOrder()}>Cancel</button>):''}
+                    &nbsp;
                     <button className="btn btn-info" onClick={() => this.handleOpenReciept()}>View Reciept</button>
 
                     <Dialog
