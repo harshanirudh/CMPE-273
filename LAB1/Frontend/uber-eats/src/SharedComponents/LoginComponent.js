@@ -7,7 +7,9 @@ import { baseUrl } from '../apiConfig';
 import axios from 'axios'
 import {withRouter} from 'react-router-dom'
 import { withCookies, Cookies } from 'react-cookie';
-
+import { customerLogin, restaurantLogin } from '../Redux/Login/Login-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 let loginValidator = yup.object({
     email: yup.string()
@@ -24,18 +26,24 @@ export class LoginComponent extends Component {
         }
     }
 
+    static mapStateToProps = state => {
+        return { Login: state.Login }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ customerLogin, restaurantLogin }, dispatch)
+    }
     handleLogin = (values) => {
         if (this.props.type == 'Customer') {
             console.log("inside")
             let customerAuthUrl = `${baseUrl}/login/customer`
             axios.post(customerAuthUrl, values,{withCredentials: true}).then((resp) => {
-                // let loginDetails = {
-                //     isCustomerAuthenticated: resp.data.authenticated,
-                //     isRestaurantAuthenticated: false,
-                //     userEmail: values.email,
-                //     id: resp.data.cust_id
-                // }
-                // this.props.customerLogin(loginDetails);
+                let loginDetails = {
+                    isCustomerAuthenticated: resp.data.authenticated,
+                    isRestaurantAuthenticated: false,
+                    userEmail: values.email,
+                    id: resp.data.cust_id
+                }
+                this.props.customerLogin(loginDetails);
                 let customerCookie=this.props.cookies.get('cookie')
                 console.log(this.props.cookies.get('cookie'))
                 
@@ -49,13 +57,13 @@ export class LoginComponent extends Component {
             console.log("inside")
             let restAuthUrl = `${baseUrl}/login/restaurant`
             axios.post(restAuthUrl, values,{withCredentials: true}).then((resp) => {
-                // let loginDetails = {
-                //     isCustomerAuthenticated: false,
-                //     isRestaurantAuthenticated: resp.data.authenticated,
-                //     userEmail: values.email,
-                //     id: resp.data.rest_id
-                // }
-                // this.props.restaurantLogin(loginDetails);
+                let loginDetails = {
+                    isCustomerAuthenticated: false,
+                    isRestaurantAuthenticated: resp.data.authenticated,
+                    userEmail: values.email,
+                    id: resp.data.rest_id
+                }
+                this.props.restaurantLogin(loginDetails);
                 let restCookie=this.props.cookies.get('restCookie')
                 console.log(this.props)
                 let successRedirectUrl = `/restaurant/landing/${resp.data.rest_id}`
@@ -106,5 +114,5 @@ export class LoginComponent extends Component {
         )
     }
 }
-
-export default withCookies(withRouter(LoginComponent))
+const LoginReduxComponent = connect(LoginComponent.mapStateToProps, LoginComponent.mapDispatchToProps)(LoginComponent)
+export default withCookies(withRouter(LoginReduxComponent))
