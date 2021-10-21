@@ -15,7 +15,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LogoutIcon from '@mui/icons-material/Logout';
-import store from '../Redux/store'
+import {store} from '../Redux/store'
+import configureStore from '../Redux/store';
 import CheckoutDialog from '../CustomerComponent/CheckoutDialog';
 import HomeIcon from '@mui/icons-material/Home';
 import { withCookies, Cookies } from 'react-cookie';

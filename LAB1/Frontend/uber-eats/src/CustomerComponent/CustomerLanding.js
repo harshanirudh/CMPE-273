@@ -13,6 +13,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavComponent from '../SharedComponents/NavComponent';
+import {  saveRestaurantList} from '../Redux/Customer/Customer-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 export class CustomerLanding extends Component {
     constructor(props) {
         super(props)
@@ -27,7 +30,12 @@ export class CustomerLanding extends Component {
             loading:false
         }
     }
-
+    static mapStateToProps = state => {
+        return { Customer: state.Customer }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ saveRestaurantList }, dispatch)
+    }
     componentDidMount() {
         let url = `${baseUrl}/users/restarunt`
         let apiCustomerLocation = `${baseUrl}/users/customer/location/${this.props.match.params.custId}`;
@@ -49,6 +57,7 @@ export class CustomerLanding extends Component {
             let finalList = [];
             finalList.push(...fList, ...sList)
             this.masterRestaurantList = finalList;
+            this.props.saveRestaurantList(this.masterRestaurantList)
             console.log('first list', fList, 'Second list', sList)
             this.setState(
                 { 
@@ -253,5 +262,5 @@ export class CustomerLanding extends Component {
         )
     }
 }
-
-export default withRouter(CustomerLanding)
+const CustomerLandingReduxComponent = connect(CustomerLanding.mapStateToProps, CustomerLanding.mapDispatchToProps)(CustomerLanding)
+export default withRouter(CustomerLandingReduxComponent)

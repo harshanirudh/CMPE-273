@@ -11,12 +11,17 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import {Provider} from'react-redux';
-import store from './Redux/store';
+import {store,persiststore} from './Redux/store';
+import { PersistGate } from 'redux-persist/integration/react'
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+// const { store, persistor } = configureStore()
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
+    <PersistGate loading={null} persistor={persiststore}>
     <App />
+    </PersistGate>
   </Provider>
   </React.StrictMode>,
   document.getElementById('root')

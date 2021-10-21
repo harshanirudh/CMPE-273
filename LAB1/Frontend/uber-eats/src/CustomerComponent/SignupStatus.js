@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 import NavComponent from '../SharedComponents/NavComponent'
-import store from '../Redux/store'
+import {store} from '../Redux/store'
 
 function SignupStatus(props) {
     const [email, setemail] = useState("")
