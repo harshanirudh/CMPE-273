@@ -4,6 +4,9 @@ import { baseUrl } from '../apiConfig'
 import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as yup from 'yup'
+import {  saveDeliveryAddress} from '../Redux/Customer/Customer-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 export class DeliveryAddress extends Component {
     constructor(props) {
@@ -13,6 +16,12 @@ export class DeliveryAddress extends Component {
             addressList: [],
             open: false
         }
+    }
+    static mapStateToProps = state => {
+        return { Customer: state.Customer }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ saveDeliveryAddress }, dispatch)
     }
     getAddressList = () => {
         let getIntialAddress = `${baseUrl}/users/customers/${this.props.custId}`
@@ -29,6 +38,7 @@ export class DeliveryAddress extends Component {
             let otherAddress = res[1]?.data;
             if (res[0].data[0]?.STREET?.length > 0)
                 otherAddress?.unshift(intialAddress);
+            this.props.saveDeliveryAddress(otherAddress)
             this.setState({ addressList: otherAddress });
         })
     }
@@ -142,5 +152,5 @@ export class DeliveryAddress extends Component {
         )
     }
 }
-
-export default DeliveryAddress
+const DeliveryAddressReduxComponent = connect(DeliveryAddress.mapStateToProps, DeliveryAddress.mapDispatchToProps)(DeliveryAddress)
+export default DeliveryAddressReduxComponent

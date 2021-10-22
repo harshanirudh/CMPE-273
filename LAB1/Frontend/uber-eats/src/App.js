@@ -11,7 +11,7 @@ import CustomerProfile from './CustomerComponent/CustomerProfile';
 import RestaurantProfile from './RestaurantComponent/RestaurantProfile';
 import RestaurantLanding from './RestaurantComponent/RestaurantLanding';
 import DishesDetailsComponent from './RestaurantComponent/DishesDetailsComponent';
-import { OrdersListComponent } from './RestaurantComponent/OrdersListComponent';
+import OrdersListComponent  from './RestaurantComponent/OrdersListComponent';
 import CustomerLanding from './CustomerComponent/CustomerLanding';
 import Home from './Home/Home';
 import CustomerRestComponent from './CustomerComponent/CustomerRestComponent';

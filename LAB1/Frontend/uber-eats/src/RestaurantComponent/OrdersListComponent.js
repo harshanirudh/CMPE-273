@@ -5,6 +5,9 @@ import { baseUrl } from '../apiConfig'
 
 import NavComponent from '../SharedComponents/NavComponent'
 import OrderListItemComponent from './OrderListItemComponent'
+import { getROrdersList,updateROrdersList} from '../Redux/Restaurant/Restaurant-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 export class OrdersListComponent extends Component {
     constructor(props) {
         super(props)
@@ -18,10 +21,17 @@ export class OrdersListComponent extends Component {
 
     }
 
+    static mapStateToProps = state => {
+        return { Restaurant: state.Restaurant }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ getROrdersList,updateROrdersList }, dispatch)
+    }
     componentDidMount() {
        let url=`${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
        axios.get(url).then(res=>{
            this.masterOrdersList=res.data;
+           this.props.getROrdersList(res.data)
            this.setState({orders:res.data})
        })
     }
@@ -56,6 +66,7 @@ export class OrdersListComponent extends Component {
         let url=`${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
        axios.get(url).then(res=>{
            this.masterOrdersList=res.data;
+           this.props.updateROrdersList(res.data)
            this.setState({orders:res.data})
            this.filter(this.state.filter)
        })
@@ -89,5 +100,5 @@ export class OrdersListComponent extends Component {
 
     }
 }
-
-export default withRouter(OrdersListComponent)
+const OrdersListReduxComponent = connect(OrdersListComponent.mapStateToProps, OrdersListComponent.mapDispatchToProps)(OrdersListComponent)
+export default withRouter(OrdersListReduxComponent)

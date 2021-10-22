@@ -6,6 +6,7 @@ import { baseUrl } from '../apiConfig'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { incrementCounter, decrementCounter ,resetCounter} from '../Redux/Cart/Cart-actions'
+import { getDishesList } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 export class MenuList extends Component {
@@ -21,16 +22,20 @@ export class MenuList extends Component {
         }
     }
     static mapStateToProps = state => {
-        return { cartCounter: state.cartCounter }
+        return { 
+            cartCounter: state.cartCounter,
+            Restaurant: state.Restaurant
+             }
     }
     static mapDispatchToProps = dispatch => {
-        return bindActionCreators({ incrementCounter, decrementCounter,resetCounter }, dispatch)
+        return bindActionCreators({ incrementCounter, decrementCounter,resetCounter,getDishesList }, dispatch)
     }
     async componentDidMount() {
         try {
             let url = `${baseUrl}/restaurant/${this.props.restId}/dishes`;
             let resultList = await (await axios.get(url)).data;
             this.masterDishesList=resultList;
+            this.props.getDishesList(resultList)
             this.setState({ dishes: resultList })
         } catch (err) {
             console.log(err)

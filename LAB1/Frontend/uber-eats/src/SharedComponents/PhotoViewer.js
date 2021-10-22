@@ -3,6 +3,9 @@ import React from 'react'
 import ImageGallery from 'react-image-gallery';
 import { baseUrl } from '../apiConfig';
 import { uploadRestImages } from './UploadS3';
+import {getRImages } from '../Redux/Restaurant/Restaurant-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 let images = [];
 
@@ -15,6 +18,12 @@ class PhotoViewer extends React.Component {
             imagesArr: images,
             imageToggle: false
         }
+    }
+    static mapStateToProps = state => {
+        return { Restaurant: state.Restaurant }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ getRImages }, dispatch)
     }
     handleClickEVent = (e) => {
         // let index = this._imageGallery.getCurrentIndex();
@@ -80,6 +89,7 @@ class PhotoViewer extends React.Component {
                     "thumbnail": imageObj.IMAGE
                 })
             })
+            this.props.getRImages(images)
             this.setState({ imagesArr: images })
         }))
     }
@@ -161,5 +171,5 @@ class PhotoViewer extends React.Component {
         )
     }
 }
-
-export default PhotoViewer
+const PhotoViewereReduxComponent = connect(PhotoViewer.mapStateToProps, PhotoViewer.mapDispatchToProps)(PhotoViewer)
+export default PhotoViewereReduxComponent

@@ -7,6 +7,9 @@ import { Avatar, Card, CardHeader, Divider, List, ListItem, ListItemAvatar, List
 import CustOrderReciept, { OrderListItem } from './OrderListItem'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import TablePagination from '@mui/material/TablePagination';
+import {  getAllOrders} from '../Redux/Customer/Customer-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 export class CustomerOrders extends Component {
     constructor(props) {
         super(props)
@@ -18,6 +21,12 @@ export class CustomerOrders extends Component {
             page: 0,
             rowsPerPage: 5
         }
+    }
+    static mapStateToProps = state => {
+        return { Customer: state.Customer }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ getAllOrders }, dispatch)
     }
     getAddressList = () => {
         let getIntialAddress = `${baseUrl}/users/customers/${this.props.match.params.custId}`
@@ -43,6 +52,7 @@ export class CustomerOrders extends Component {
             this.masterOrderList = res.data
             console.log(res.data)
             this.setState({ orderList: res.data })
+            this.props.getAllOrders(res.data)
         })
     }
     handleFilter = (e) => {
@@ -157,5 +167,5 @@ export class CustomerOrders extends Component {
         )
     }
 }
-
-export default withRouter(CustomerOrders)
+const CustomerOrdersReduxComponent = connect(CustomerOrders.mapStateToProps, CustomerOrders.mapDispatchToProps)(CustomerOrders)
+export default withRouter(CustomerOrdersReduxComponent)

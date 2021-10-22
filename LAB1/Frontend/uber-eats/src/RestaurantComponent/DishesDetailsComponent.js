@@ -6,6 +6,9 @@ import { baseUrl } from '../apiConfig'
 import NavComponent from '../SharedComponents/NavComponent'
 import DisheFormComponent from './DisheFormComponent'
 import { withCookies } from 'react-cookie'
+import {saveDishDetails,getDishDetails } from '../Redux/Restaurant/Restaurant-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 export class DishesDetailsComponent extends Component {
     constructor(props) {
         super(props)
@@ -26,6 +29,12 @@ export class DishesDetailsComponent extends Component {
        
         
     }
+    static mapStateToProps = state => {
+        return { Restaurant: state.Restaurant }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ saveDishDetails,getDishDetails }, dispatch)
+    }
     componentDidMount(){
         
         console.log("inside did mount")
@@ -40,6 +49,7 @@ export class DishesDetailsComponent extends Component {
                this.formvals.ddesc=DISH_DESCR?DISH_DESCR:"";
                this.formvals.dcat=CATEGORY?CATEGORY:"";
                this.formvals.dtype=DISH_TYPE?DISH_TYPE:"";
+               this.props.getDishDetails(this.formvals)
                this.setState({formObj:this.formvals})
             }).catch((err)=>{
                 console.log(err)
@@ -53,6 +63,7 @@ export class DishesDetailsComponent extends Component {
         console.log(url)
         axios.post(url,values).then((res)=>{
             console.log(res.data);
+            this.props.saveDishDetails(values)
             this.setState({add:true})
         }).catch((err)=>{
             console.log(err)
@@ -64,6 +75,7 @@ export class DishesDetailsComponent extends Component {
         console.log(url)
         axios.put(url,values).then((res)=>{
             console.log(res.data);
+            this.props.saveDishDetails(values)
            this.setState({update:true})
         }).catch((err)=>{
             console.log(err)
@@ -132,5 +144,5 @@ export class DishesDetailsComponent extends Component {
     }
 }
 }
-
-export default withCookies(withRouter(DishesDetailsComponent))
+const DishesDetailsReduxComponent = connect(DishesDetailsComponent.mapStateToProps, DishesDetailsComponent.mapDispatchToProps)(DishesDetailsComponent)
+export default withCookies(withRouter(DishesDetailsReduxComponent))

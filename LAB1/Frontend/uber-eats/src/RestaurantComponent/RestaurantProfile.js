@@ -5,6 +5,9 @@ import * as yup from 'yup'
 import COUNTRIES from '../SharedComponents/dropdowns';
 import NavComponent from '../SharedComponents/NavComponent';
 import { withCookies, Cookies } from 'react-cookie';
+import {saveProfileDetails ,getProfileDetails} from '../Redux/Restaurant/Restaurant-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 var { baseUrl } = require('../apiConfig')
 var axios = require("axios").default;
 let profileIntialValues = {
@@ -48,6 +51,12 @@ class RestaurantProfile extends Component {
 
 
     }
+    static mapStateToProps = state => {
+        return { Restaurant: state.Restaurant }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ saveProfileDetails,getProfileDetails }, dispatch)
+    }
     componentDidMount() {
         // console.log(this.props.match.params.profileId)
         let url=baseUrl+'/users/restarunt/'+this.props.match.params.profileId
@@ -66,6 +75,7 @@ class RestaurantProfile extends Component {
             profileIntialValues.zipcode=ZIPCODE?ZIPCODE:''
             profileIntialValues.rdeliverymode=RDELIVERY_MODE?RDELIVERY_MODE:''
             // profileIntialValues=Object.assign(profileIntialValues,resp.data[0])
+            this.props.getProfileDetails(profileIntialValues)
             this.setState({profileIntialValues:profileIntialValues})
             console.log(this.state)
         })
@@ -81,6 +91,7 @@ class RestaurantProfile extends Component {
             if (rows == 1) {
                 // alert('Succesfully Updated')
                 // this.props.history.push('/restaurant/landing/' + this.props.match.params.profileId)
+                this.props.saveProfileDetails(values)
                 this.setState({updateDone:true})
             }
             else {
@@ -291,4 +302,5 @@ class RestaurantProfile extends Component {
         )
     }
 }
-export default withCookies(withRouter(RestaurantProfile))
+const RestaurantProfileReduxComponent = connect(RestaurantProfile.mapStateToProps, RestaurantProfile.mapDispatchToProps)(RestaurantProfile)
+export default withCookies(withRouter(RestaurantProfileReduxComponent))

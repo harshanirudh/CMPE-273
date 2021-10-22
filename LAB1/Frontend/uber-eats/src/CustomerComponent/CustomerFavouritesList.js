@@ -5,6 +5,9 @@ import { baseUrl } from '../apiConfig'
 import NavComponent from '../SharedComponents/NavComponent'
 import { Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { getFavouritesRest} from '../Redux/Customer/Customer-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 export class CustomerFavouritesList extends Component {
 
     constructor(props) {
@@ -14,11 +17,17 @@ export class CustomerFavouritesList extends Component {
             restaurantsList:[]
         }
     }
-    
+    static mapStateToProps = state => {
+        return { Customer: state.Customer }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ getFavouritesRest }, dispatch)
+    }
     componentDidMount(){
         let url=`${baseUrl}/favourites/details/customer/${this.props.match.params.custId}`
         axios.get(url).then((resp)=>{
              console.log(resp.data)
+             this.props.getFavouritesRest(resp.data.map(i=>i.REST_ID))
              this.setState({restaurantsList:resp.data})
         })
     }
@@ -68,5 +77,5 @@ export class CustomerFavouritesList extends Component {
     }
 }
 
-
-export default withRouter(CustomerFavouritesList)
+const CustomerFavouritesListReduxComponent = connect(CustomerFavouritesList.mapStateToProps, CustomerFavouritesList.mapDispatchToProps)(CustomerFavouritesList)
+export default withRouter(CustomerFavouritesListReduxComponent)

@@ -13,7 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavComponent from '../SharedComponents/NavComponent';
-import {  saveRestaurantList} from '../Redux/Customer/Customer-actions'
+import {  saveRestaurantList,getRestaurantList,getFavouritesRest,addToFavourites} from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 export class CustomerLanding extends Component {
@@ -34,7 +34,7 @@ export class CustomerLanding extends Component {
         return { Customer: state.Customer }
     }
     static mapDispatchToProps = dispatch => {
-        return bindActionCreators({ saveRestaurantList }, dispatch)
+        return bindActionCreators({ saveRestaurantList,getRestaurantList,getFavouritesRest ,addToFavourites}, dispatch)
     }
     componentDidMount() {
         let url = `${baseUrl}/users/restarunt`
@@ -57,7 +57,8 @@ export class CustomerLanding extends Component {
             let finalList = [];
             finalList.push(...fList, ...sList)
             this.masterRestaurantList = finalList;
-            this.props.saveRestaurantList(this.masterRestaurantList)
+            this.props.getRestaurantList(this.masterRestaurantList)
+            this.props.getFavouritesRest(resp[2].data?.rest_ids)
             console.log('first list', fList, 'Second list', sList)
             this.setState(
                 { 
@@ -174,6 +175,7 @@ export class CustomerLanding extends Component {
         this.setState({loading:true})
         axios.post(url).then((res)=>{
             let newArr=[restId,...this.state.favouritesRestIds]
+            this.props.addToFavourites(newArr)
             this.setState({
                 loading:false,
                 favouritesRestIds:newArr

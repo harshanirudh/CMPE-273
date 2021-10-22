@@ -6,6 +6,9 @@ import * as yup from 'yup'
 import COUNTRIES from '../SharedComponents/dropdowns';
 import NavComponent from '../SharedComponents/NavComponent';
 import { uploadProfilePics } from './../SharedComponents/UploadS3'
+import {  saveCustomerProfile,getCustomerProfile} from '../Redux/Customer/Customer-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 var axios = require("axios").default;
 var { baseUrl } = require('../apiConfig')
 
@@ -36,7 +39,12 @@ class CustomerProfile extends Component {
             error: false
         }
     }
-
+    static mapStateToProps = state => {
+        return { Customer: state.Customer }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ saveCustomerProfile,getCustomerProfile }, dispatch)
+    }
     custProfValidator = yup.object({
         about: yup.string().max(120, 'Max Chars 120'),
         fname: yup.string().required('First Name is required').max(50, 'Max Length 50'),
@@ -55,6 +63,7 @@ class CustomerProfile extends Component {
             let rows = resp.data.affectedRows;
             if (rows > 0) {
                 console.log("Success")
+                this.props.saveCustomerProfile(values)
                 this.setState({ updateDone: true })
             }
             else {
@@ -109,6 +118,7 @@ class CustomerProfile extends Component {
             custProfIntialValues.dob = DOB?DOB:"";
             custProfIntialValues.nickname = NICKNAME?NICKNAME:"";
             custProfIntialValues.profile_pic = PROFILE_PIC;
+            this.props.getCustomerProfile(custProfIntialValues)
             this.setState({ custProfIntialValues: custProfIntialValues })
         }).catch((err) => {
             console.log(err);
@@ -338,4 +348,5 @@ class CustomerProfile extends Component {
 }
 
 // export {CustomerProfile as PureCustomerProfile}
-export default withRouter(CustomerProfile)
+const CustomerProfileReduxComponent = connect(CustomerProfile.mapStateToProps, CustomerProfile.mapDispatchToProps)(CustomerProfile)
+export default withRouter(CustomerProfileReduxComponent)
