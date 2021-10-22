@@ -16,3 +16,19 @@ export const resetCounter=()=>{
         type:actionTypes.RESET_COUNTER
     }
 }
+export const addToCart=(list)=>{
+    return{
+        type:actionTypes.ADD_TO_CART,
+        payload:{
+            list:list
+        }
+    }
+}
+export const removeFromCart=(list)=>{
+    return{
+        type:actionTypes.REMOVE_FROM_CART,
+        payload:{
+            list:list
+        }
+    }
+}

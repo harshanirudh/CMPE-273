@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { baseUrl } from '../apiConfig'
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { incrementCounter, decrementCounter ,resetCounter} from '../Redux/Cart/Cart-actions'
+import { incrementCounter, decrementCounter ,resetCounter,addToCart,removeFromCart} from '../Redux/Cart/Cart-actions'
 import { getDishesList } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -28,7 +28,7 @@ export class MenuList extends Component {
              }
     }
     static mapDispatchToProps = dispatch => {
-        return bindActionCreators({ incrementCounter, decrementCounter,resetCounter,getDishesList }, dispatch)
+        return bindActionCreators({ incrementCounter, decrementCounter,resetCounter,getDishesList,addToCart,removeFromCart }, dispatch)
     }
     async componentDidMount() {
         try {
@@ -59,6 +59,7 @@ export class MenuList extends Component {
                     console.log('items', itemsPresent, 'index', index)
                     itemsPresent[index].quantity = 1 + itemsPresent[index].quantity;
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
+                    this.props.addToCart(itemsPresent)
                     this.props.incrementCounter();
                     // await this.setState(prevState => {
                     //     return { counter: prevState.counter + 1 }
@@ -72,6 +73,7 @@ export class MenuList extends Component {
                     dish.quantity = 1;
                     itemsPresent.push(dish)
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
+                    this.props.addToCart(itemsPresent)
                     this.props.incrementCounter();
                     // await this.setState(prevState => {
                     //     return { counter: prevState.counter + 1 }
@@ -88,6 +90,7 @@ export class MenuList extends Component {
             sessionStorage.setItem('cartItems', JSON.stringify(itemToBeAdded));
             sessionStorage.setItem('restId', this.props.restId);
             sessionStorage.setItem('custId', this.props.custId);
+            this.props.addToCart(itemToBeAdded)
             this.props.incrementCounter();
             // await this.setState(prevState => {
             //     return { counter: prevState.counter + 1 }
@@ -110,6 +113,7 @@ export class MenuList extends Component {
                 if (itemsPresent[index].quantity == 1) {
                     itemsPresent.splice(index, 1)
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
+                    this.props.removeFromCart(itemsPresent)
                     this.props.decrementCounter();
                     if (tempCounter == 1) {
                         sessionStorage.removeItem('restId')
@@ -124,6 +128,7 @@ export class MenuList extends Component {
                 } else {
                     itemsPresent[index].quantity = itemsPresent[index].quantity - 1;
                     sessionStorage.setItem('cartItems', JSON.stringify(itemsPresent))
+                    this.props.removeFromCart(itemsPresent)
                     this.props.decrementCounter();
                     if (tempCounter == 1) {
                         sessionStorage.removeItem('restId')
