@@ -2,7 +2,7 @@ var express = require('express');
 var validator = require('express-validator');
 
 var router = express.Router();
-var pool = require('./../db-config')
+var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 
 router.post('/add/:custId',async(req,res)=>{

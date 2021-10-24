@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('./../db-config')
+var pool = require('./../db-config').connectionPool.promise()
 
 router.post('/add/:custId/:restId',async(req,res)=>{
     try{

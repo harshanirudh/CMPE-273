@@ -1,29 +1,35 @@
 var express = require('express');
 var validator = require('express-validator');
+const Restaurant = require('../models/RestaurantModel');
 
 var router = express.Router();
-var pool = require('./../db-config')
+var pool = require('./../db-config').connectionPool.promise()
 
-router.post('/:restId',async(req,res)=>{
-    try{
-        let saveNewImage="set @id = 0;CALL uber_eats.SP_ADD_NEW_IMAGE(?,?,@id);select @id;";
-        let result=await pool.query(saveNewImage,[req.params.restId,req.body.img])
-        result=await Object.values(JSON.parse(JSON.stringify(result)))
-        res.status(201).json(result[0][2][0])
-    }catch(err){
+router.post('/:restId', async (req, res) => {
+    try {
+        Restaurant.findById(req.params.restId).then((result)=>{
+            console.log(result)
+            result.IMAGE.push(req.body.img)
+            result.save();
+            res.send(result)
+        }).catch(err=>{
+            console.log(err)
+            res.send(err)
+        })
+
+    } catch (err) {
         console.log(err)
         res.status(500).send(err)
     }
 })
-router.get('/:restId',async(req,res)=>{
-    try{
-        let getAllImagesForRest="select * from uber_eats.RESTAURANT_IMAGES where rest_id=?"
-        let result=await pool.query(getAllImagesForRest,[req.params.restId]);
-        res.status(200).send(result[0])
-    }catch(err){
+router.get('/:restId', async (req, res) => {
+    try {
+        let result=await Restaurant.findById(req.params.restId).select('IMAGE')
+        res.send(result);
+    } catch (err) {
         console.log(err);
         res.status(500).send(err);
     }
 })
 
-module.exports =router
+module.exports = router
