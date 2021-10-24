@@ -1,20 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
-
+var favourites=require('../models/CustomerFavouritesModel');
+const RestaurantModel = require('../models/RestaurantModel');
 router.post('/add/:custId/:restId',async(req,res)=>{
     try{
-    let saveToFav='set @id = 0;call uber_eats.SP_Add_New_FAV(?,?,@id);select @id;'
-    let result= await pool.query(saveToFav,[req.params.custId,req.params.restId])
-    let resp = await Object.values(JSON.parse(JSON.stringify(result)));
-    console.log(resp[0][2][0])
-    res.status(201).json(resp[0][2][0]);
+    const fav=new favourites({
+        CUST_ID:req.params.custId,
+        REST_ID:req.params.restId
+    })
+    let result=await fav.save()
+    res.send(result)
     }catch(err){
         console.log(err)
         res.status(500).send(err)
     }
 })
-
+/**
+ * To be converted to mongo
+ */
 router.delete('/delete/:favId',async(req,res)=>{
     try{
         let removeFav="delete from CUSTOMER_FAVOURITES where fav_id=?"
@@ -29,12 +33,8 @@ router.delete('/delete/:favId',async(req,res)=>{
 
 router.get('/customer/:custId',async(req,res)=>{
     try{
-        let getAllFavforCust="select distinct(rest_id) from CUSTOMER_FAVOURITES where cust_id=? ";
-        let result=await pool.query(getAllFavforCust,[req.params.custId]);
-        let rest_ids=await result[0].map(i=>{
-            return i.rest_id
-        })
-        res.status(200).send({rest_ids})
+        let result=await favourites.find({CUST_ID:req.params.custId}).distinct('REST_ID');
+        res.send(result)
     }catch(err){
         console.log(err)
         res.status(500).send(err)
@@ -45,10 +45,11 @@ router.get('/customer/:custId',async(req,res)=>{
  */
 router.get('/details/customer/:custId',async(req,res)=>{
     try{
-        let getAllFavforCust=`select t1.*,t2.IMAGE_ID,t2.IMAGE from restaurant_users t1 left join(
-            select * from restaurant_images group by REST_ID ) t2 on t1.REST_ID=t2.REST_ID where t1.rest_id in(select distinct(rest_id) from CUSTOMER_FAVOURITES where cust_id=?);`;
-        let result=await pool.query(getAllFavforCust,[req.params.custId]);
-        res.status(200).send(result[0])
+        let restIDArr=await favourites.find({CUST_ID:req.params.custId}).distinct('REST_ID');
+        let result=await RestaurantModel.find({'_id':{
+            $in:restIDArr
+        }})
+        res.send(result)
     }catch(err){
         console.log(err)
         res.status(500).send(err)
