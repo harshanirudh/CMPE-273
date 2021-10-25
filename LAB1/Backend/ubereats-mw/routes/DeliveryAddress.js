@@ -1,5 +1,6 @@
 var express = require('express');
 var validator = require('express-validator');
+const DeliveryAddressModel = require('../models/DeliveryAddressModel');
 
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
@@ -7,14 +8,18 @@ var service = require('./../services/users-service');
 
 router.post('/add/:custId',async(req,res)=>{
     try{
-    
-    let saveNewAdd='set @id = 0;call uber_eats.SP_ADD_NEW_DELIVERY_ADDRESS(?,?,?,?,?,@id);select @id;'
     let {name,add,city,zipcode}=req.body
-    let result=await pool.query(saveNewAdd,[req.params.custId,name,add,city,zipcode,]);
-    let id=await Object.values(JSON.parse(JSON.stringify(result)));
-    console.log(id[0][2][0])
-    res.status(201).json(id[0][2][0]);
-    }catch(err){
+    const delAdd=new DeliveryAddressModel({
+        CUST_ID:req.params.custId,
+        CNAME:name,
+        ADDRESS:add,
+        CITY:city,
+        ZIPCODE:zipcode
+    })
+    let result=await delAdd.save({new:true})
+    res.status(201).send(result)
+    }
+    catch(err){
         console.log(err);
         res.status(500).send(err)
     }
@@ -22,9 +27,8 @@ router.post('/add/:custId',async(req,res)=>{
 
 router.get('/:custId',async(req,res)=>{
     try{
-        let getAllAdd="select * from DELIVERY_ADDRESS where cust_id=?"
-        let result=await pool.query(getAllAdd,[req.params.custId]);
-        res.status(200).send(result[0])
+        let result=await DeliveryAddressModel.find({CUST_ID:req.params.custId})
+        res.send(result)
     }catch(err){
         console.log(err)
         res.status(500).send(err)
