@@ -142,6 +142,7 @@ export class CheckoutComponent extends Component {
                 let dateTime=new Date()
                 let orderDetails={
                     rest_id:this.props.location.state.restDetails.REST_ID,
+                    rname:this.props.location.state.restDetails.RNAME,
                     cust_id:this.props.match.params.custId,
                     order_type:'delivery',
                     dishes:this.props.location.state.items,
@@ -163,6 +164,7 @@ export class CheckoutComponent extends Component {
             let dateTime=new Date()
             let orderDetails={
                 rest_id:this.props.location.state.restDetails.REST_ID,
+                rname:this.props.location.state.restDetails.RNAME,
                 cust_id:this.props.match.params.custId,
                 order_type:'pickup',
                 dishes:this.props.location.state.items,
