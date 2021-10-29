@@ -58,12 +58,12 @@ export class CustomerLanding extends Component {
             finalList.push(...fList, ...sList)
             this.masterRestaurantList = finalList;
             this.props.getRestaurantList(this.masterRestaurantList)
-            this.props.getFavouritesRest(resp[2].data?.rest_ids)
+            this.props.getFavouritesRest(resp[2].data)
             console.log('first list', fList, 'Second list', sList)
             this.setState(
                 { 
                     restaurantsList: finalList ,
-                    favouritesRestIds:resp[2].data?.rest_ids
+                    favouritesRestIds:resp[2].data
                 })
 
         })
@@ -235,7 +235,7 @@ export class CustomerLanding extends Component {
                         {this.state.restaurantsList.map((item, index) => {
                             return (
 
-                                <Card className="col-md-2 mb-3" key={item.REST_ID} style={{ margin: '10px' }} elevation="3">
+                                <Card className="col-md-2 mb-3" key={item._id} style={{ margin: '10px' }} elevation="3">
                                     {/* <img src={this.setRestImage(item.IMAGE)} alt={item.RNAME} style={{ height: '150px', width: '200px' }} /> */}
                                     <CardMedia
                                         component="img"
@@ -243,13 +243,13 @@ export class CustomerLanding extends Component {
                                         image={this.setRestImage(item.IMAGE)}
                                     />
                                     <CardContent >
-                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
+                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item._id}`}><h5 > {item.RNAME} </h5></Link> 
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>
                                         {/* <p >Delivery :{item.RDELIVERY_MODE?.toUpperCase()}</p> */}
-                                        <IconButton aria-label="add to favorites" onClick={(e)=>this.setFavourite(item.REST_ID)}>
-                                            <FavoriteIcon color={this.getFavouriteIconColor(item.REST_ID)}/>
+                                        <IconButton aria-label="add to favorites" onClick={(e)=>this.setFavourite(item._id)}>
+                                            <FavoriteIcon color={this.getFavouriteIconColor(item._id)}/>
                                         </IconButton>
                                     </CardContent>
 

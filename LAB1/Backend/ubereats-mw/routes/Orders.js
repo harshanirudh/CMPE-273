@@ -9,71 +9,69 @@ var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 const {verifyUser}=require('./Login')
 const passport=require('passport');
+var kafka = require('../kafka/client');
 /**
  * Save New Order
  */
 router.post('/new',async(req,res)=>{
-    try{
-    // let saveNewOrder="set @id = 0;CALL uber_eats.SP_ADD_NEW_ORDER(?,?,?,?,?,?,?,?,@id);select @id;";
-    // let result=await pool.query(saveNewOrder,[rest_id,cust_id,'new order',order_type,amount,JSON.stringify(dishes),ts,address]);
-    // result=await Object.values(JSON.parse(JSON.stringify(result)))
-    // res.status(201).json(result[0][2][0])
-    let {rest_id,rname,cust_id,order_type,amount,dishes,ts,address}=req.body
-    const order=new OrdersModel({
-        REST_ID:rest_id,
-        RNAME:rname,
-        CUST_ID:cust_id,
-        ORD_STATUS:'new order',
-        ORD_TYPE:order_type,
-        AMOUNT:amount,
-        DISH_DETAILS:dishes,
-        ORD_TIMESTAMP:ts,
-        ORD_DEL_ADDRESS:address
-    })
-    let result=await order.save({new:true})
-    res.send(result)
-    }catch(err){
-        console.log(err)
-        res.status(500).send(err)
-    }
+    let payload = {
+        params: req.params,
+        body: req.body
+      }
+      kafka.make_request('save_order', payload, function (err, results) {
+        if (err) {
+          console.log("Inside err of save_order kafka make_request", err);
+          res.status(500).json(err)
+        } else {
+          console.log("Inside succes of save_order kakka make_request");
+          res.status(200).send(results)
+        }
 })
-router.get('/customer/:custId',passport.authenticate('jwt', { session: false }),async(req,res)=>{
-    try{
-        // let getAllOrdersPerCustomer="SELECT t2.RNAME,t1.* FROM uber_eats.orders t1 inner join restaurant_users t2 on t1.rest_id=t2.rest_id where t1.cust_id=?;"
-        // let result=await pool.query(getAllOrdersPerCustomer,[req.params.custId])
-        // res.status(200).send(result[0]);
-        let temp=await OrdersModel.find({CUST_ID:req.params.custId})
-        res.send(temp)
-    
-    }catch(err){
-        console.log(err)
-        res.status(500).send(err)
-    }
+})
+router.get('/customer/:custId',async(req,res)=>{
+    let payload = {
+        params: req.params,
+        body: req.body
+      }
+      kafka.make_request('get_orders_customer', payload, function (err, results) {
+        if (err) {
+          console.log("Inside err of get_orders_customer kafka make_request", err);
+          res.status(500).json(err)
+        } else {
+          console.log("Inside succes of get_orders_customer kakka make_request");
+          res.status(200).send(results)
+        }
+})
 })
 
 router.get('/restaurant/:restId',async(req,res)=>{
-    try{
-        // let getAllOrdersPerRestaurant="SELECT t2.RNAME,t1.* FROM uber_eats.orders t1 inner join restaurant_users t2 on t1.rest_id=t2.rest_id where t1.REST_ID=?;"
-        // let result=await pool.query(getAllOrdersPerRestaurant,[req.params.restId])
-        // res.status(200).send(result[0]);
-        let result=await OrdersModel.find({REST_ID:req.params.restId})
-        res.send(result);
-
-    }catch(err){
-        console.log(err)
-        res.status(500).send(err)
-    }
+    let payload = {
+        params: req.params,
+        body: req.body
+      }
+      kafka.make_request('get_orders_restaurant', payload, function (err, results) {
+        if (err) {
+          console.log("Inside err of save_restImage kafka make_request", err);
+          res.status(500).json(err)
+        } else {
+          console.log("Inside succes of save_restImage kakka make_request");
+          res.status(200).send(results)
+        }
+})
 })
 module.exports=router
 router.put('/edit/:orderId',async(req,res)=>{
-    try{
-        // let updateStatus="update uber_eats.orders set ORD_STATUS=? where ORDER_ID=?"
-        // let result=await pool.query(updateStatus,[req.body.status,req.params.orderId])
-        // res.status(200).send({affectedRows:result[0].affectedRows})
-        let result=await OrdersModel.findByIdAndUpdate(req.params.orderId,{ORD_STATUS:req.body.status},{new:true})
-        res.send(result)
-    }catch(err){
-        console.log(err)
-        res.status(500).send(err)
-    }
+    let payload = {
+        params: req.params,
+        body: req.body
+      }
+      kafka.make_request('update_orderStatus', payload, function (err, results) {
+        if (err) {
+          console.log("Inside err of save_restImage kafka make_request", err);
+          res.status(500).json(err)
+        } else {
+          console.log("Inside succes of save_restImage kakka make_request");
+          res.status(200).send(results)
+        }
+})
 })

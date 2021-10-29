@@ -103,11 +103,11 @@ class CustomerProfile extends Component {
         let url = baseUrl + "/users/customers/" + this.props.match.params.custId;
         // console.log(url)
         axios.get(url).then((resp) => {
-            console.log(resp.data[0])
-            let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data[0];
+            console.log(resp.data)
+            let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data;
             custProfIntialValues.about = ABOUT ? ABOUT : "";
             custProfIntialValues.city = CITY?CITY:"";
-            custProfIntialValues.country = COUNTRY;
+            custProfIntialValues.country = COUNTRY?COUNTRY:"";
             custProfIntialValues.email = EMAIL;
             custProfIntialValues.fname = FNAME;
             custProfIntialValues.lname = LNAME;

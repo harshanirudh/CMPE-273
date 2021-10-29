@@ -36,8 +36,8 @@ export class RestaurantLanding extends Component {
         let url=`${baseUrl}/users/restarunt/${this.setRestID()}`
         axios.get(url).then((res)=>{
             this.setState({
-                restName:res.data[0]?.RNAME,
-                restDetails:res.data[0]
+                restName:res.data?.RNAME,
+                restDetails:res.data
             })
         })
     }

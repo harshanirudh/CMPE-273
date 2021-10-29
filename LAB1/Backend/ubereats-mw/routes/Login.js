@@ -12,66 +12,58 @@ const CustomerModel=require('../models/CustomerModel')
 const passport=require('passport');
 const RestaurantModel = require('../models/RestaurantModel');
 const loginValidator = validator.check(['email', 'pass'], 'Bad Request').exists()
+var kafka = require('../kafka/client');
 
 router.post('/customer', loginValidator, async (req, res) => {
-    let authenticated = false;
-    let customerRole="CUSTOMER"
     try {
         validator.validationResult(req).throw();
-        let { email, pass } = req.body
-        let result=await CustomerModel.findOne({EMAIL:email}).select(["PASS","CUST_ID"])
-        console.log(result)
-        let hash = result?.PASS
-        let cust_id= result?._id
-        if (hash) {
-            authenticated = await bcrypt.compare(pass, hash)
-            console.log(authenticated)
-            if(authenticated){ 
-                let token=jwt.sign({user:email,role:customerRole},config.JWT_SECRET)
-                res.status(200) 
-                res.send({ authenticated ,cust_id,token})
-            }else {
-                res.status(403)
-                res.send({ authenticated ,cust_id,token:null})
-            }
-        } else {
-            res.status(403).json({ authenticated })
+        let payload = {
+          params: req.params,
+          body: req.body
         }
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
+        kafka.make_request('login_customer', payload, function (err, results) {
+          if (err) {
+            console.log("Inside err of save_customer kafka make_request", err);
+            res.status(500).json(err)
+          } else {
+            console.log("Inside succes of save_customer kakka make_request");
+            if(results.authenticated===true)
+                res.status(200)
+            else
+                res.status(403)
+            res.send(results)
+          }
+    
+        });
+      } catch (err) {
+        res.status(400).send(err)
+      }
 })
 
 router.post('/restaurant', loginValidator, async (req, res) => {
-    let authenticated = false;
-    let restRole="RESTAURANT"
     try {
         validator.validationResult(req).throw();
-        // restGetUserPass = "select pass,rest_id from restaurant_users where email=?";
-        let { email, pass } = req.body
-        // let result = await pool.query(restGetUserPass, [email])
-        let result=await RestaurantModel.findOne({EMAIL:email}).select(["PASS","CUST_ID"])
-        let hash = result?.PASS
-        let rest_id= result?._id
-        if (hash) {
-            authenticated = await bcrypt.compare(pass, hash)
-            console.log(authenticated)
-            if(authenticated){ 
-                let token=jwt.sign({user:email,role:restRole},config.JWT_SECRET)
-                res.status(200)
-                res.send({ authenticated ,rest_id,token})
-            }else{
-                res.status(403)
-                res.send({ authenticated ,rest_id,token:null})
-            }
-        } else {
-            res.status(403).json({ authenticated })
+        let payload = {
+          params: req.params,
+          body: req.body
         }
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
+        kafka.make_request('login_restaurant', payload, function (err, results) {
+          if (err) {
+            console.log("Inside err of login_restaurant kafka make_request", err);
+            res.status(500).json(err)
+          } else {
+            console.log("Inside succes of login_restaurant kakka make_request");
+            if(results.authenticated===true)
+                res.status(200)
+            else
+                res.status(403)
+            res.send(results)
+          }
+    
+        });
+      } catch (err) {
+        res.status(400).send(err)
+      }
 })
 module.exports = router;
 exports.verifyUser = passport.authenticate("jwt", { session: false })

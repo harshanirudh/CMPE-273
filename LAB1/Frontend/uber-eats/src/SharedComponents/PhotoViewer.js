@@ -81,7 +81,7 @@ class PhotoViewer extends React.Component {
         console.log('Calling get images from didmount')
         this.getAllImages().then((res => {
             images = [] //make array empty
-            res.data.map((imageObj) => {
+            res.data?.IMAGE.map((imageObj) => {
                 images.push({
                     "REST_ID": imageObj.REST_ID,
                     "IMAGE_ID": imageObj.IMAGE_ID,
@@ -97,7 +97,7 @@ class PhotoViewer extends React.Component {
         console.log('Calling get images from didupdate')
         this.getAllImages().then((res => {
             images = []
-            res.data.map((imageObj) => {
+            res.data?.IMAGE.map((imageObj) => {
                 images.push({
                     "REST_ID": imageObj.REST_ID,
                     "IMAGE_ID": imageObj.IMAGE_ID,

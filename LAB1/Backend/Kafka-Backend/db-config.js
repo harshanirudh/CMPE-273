@@ -9,12 +9,12 @@ const mysql=require('mysql2');
 //     multipleStatements: true
 
 // });
-var connectionPool=mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    password:'BiryaniBois@1008',
-    database:'uber_eats',
-})
+// var connectionPool=mysql.createConnection({
+//     host:'localhost',
+//     user:'root',
+//     password:'BiryaniBois@1008',
+//     database:'uber_eats',
+// })
 // var connectionPool=mysql.createPool({
 //     host:'ubereats-harshaanirudh.ct8qfik9jl0i.us-west-1.rds.amazonaws.com',
 //     user:'admin',
@@ -29,7 +29,7 @@ const mongoose=require("mongoose")
 const uri = "mongodb+srv://root:BiryaniBois@uber-eats-harsha.og8pb.mongodb.net/uber-eats?retryWrites=true&w=majority";
 const connection=mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true , maxPoolSize: 2 });
 module.exports={
-    connection,
-    connectionPool
+    connection
+    // connectionPool
 }
 // module.exports=connectionPool.promise();

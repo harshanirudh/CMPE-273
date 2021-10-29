@@ -92,11 +92,11 @@ class CheckoutDialog extends React.Component {
         }
     }
     componentDidMount() {
-        let restId = parseInt(sessionStorage.getItem('restId'));
+        let restId = (sessionStorage.getItem('restId'));
         if (restId) {
             let getRestaurantDetails = `${baseUrl}/users/restarunt/${restId}`;
             axios.get(getRestaurantDetails).then((resp) => {
-                this.setState({restaurantDetails:resp.data[0]})
+                this.setState({restaurantDetails:resp.data})
             }).catch((err) => {
                 console.log(err);
             })

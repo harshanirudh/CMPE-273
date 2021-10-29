@@ -15,6 +15,7 @@ const LoginReducer = (state = INITIAL_STATE, action) => {
                 isRestaurantAuthenticated:false,
                 userEmail:action.payload.customerLogin.userEmail,
                 id:action.payload.customerLogin.id,
+                token:action.payload.customerLogin.token
             }
         case actionTypes.LOGIN_RESTAURANT:
              return {
@@ -22,20 +23,23 @@ const LoginReducer = (state = INITIAL_STATE, action) => {
                 isRestaurantAuthenticated: action.payload.restaurantLogin.isRestaurantAuthenticated,
                 userEmail:action.payload.restaurantLogin.userEmail,
                 id:action.payload.restaurantLogin.id,
+                token:action.payload.customerLogin.token
             }
         case actionTypes.LOGOUT_CUSTOMER:
             return{
                 isCustomerAuthenticated:false,
                 isRestaurantAuthenticated:false,
                 userEmail:null,
-                id:null
+                id:null,
+                token:null
             }
             case actionTypes.LOGOUT_RESTAURANT:
                 return{
                     isCustomerAuthenticated:false,
                     isRestaurantAuthenticated:false,
                     userEmail:null,
-                    id:null
+                    id:null,
+                    token:null
                 }
         default:
             return state;

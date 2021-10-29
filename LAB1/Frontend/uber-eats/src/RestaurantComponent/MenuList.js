@@ -226,13 +226,13 @@ export class MenuList extends Component {
                     <div className="row"  >
                         {this.state.dishes.length > 0 ? this.state.dishes.map((dish) => {
                             return (
-                                <div className="card h-100 col-sm-4 mt-2 " key={dish.DISH_ID}>
+                                <div className="card h-100 col-sm-4 mt-2 " key={dish._id}>
                                     <img className="card-img-top" src={dish.IMAGE} alt="dish image" />
                                     <div className="card bg-ligth ">
                                         <div className="card-body ">
                                             <div className="card-text">
                                                 {this.props.viewBy == "customer" ? <h6>{dish.DISH_NAME}</h6> : (
-                                                    <Link to={`/restaurant/${this.props.restId}/dish/${dish.DISH_ID}`} className="stretched-link">{dish.DISH_NAME}</Link>
+                                                    <Link to={`/restaurant/${this.props.restId}/dish/${dish._id}`} className="stretched-link">{dish.DISH_NAME}</Link>
                                                 )}
                                                 <p className="text-left text-muted" >{dish.DISH_DESCR}</p>
                                                 <p className="">{dish.INGREDIANTS}</p>

@@ -41,7 +41,8 @@ export class LoginComponent extends Component {
                     isCustomerAuthenticated: resp.data.authenticated,
                     isRestaurantAuthenticated: false,
                     userEmail: values.email,
-                    id: resp.data.cust_id
+                    id: resp.data.cust_id,
+                    token:resp.data.token
                 }
                 this.props.customerLogin(loginDetails);
                 let customerCookie=this.props.cookies.get('cookie')
@@ -61,7 +62,9 @@ export class LoginComponent extends Component {
                     isCustomerAuthenticated: false,
                     isRestaurantAuthenticated: resp.data.authenticated,
                     userEmail: values.email,
-                    id: resp.data.rest_id
+                    id: resp.data.rest_id,
+                    token:resp.data.token
+                
                 }
                 this.props.restaurantLogin(loginDetails);
                 let restCookie=this.props.cookies.get('restCookie')
