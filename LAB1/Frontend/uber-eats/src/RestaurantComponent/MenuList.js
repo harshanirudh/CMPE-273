@@ -53,7 +53,7 @@ export class MenuList extends Component {
                 this.setState({newOrder:true,newDishToBeAdded:dish})
             }
             else {
-                let index = itemsPresent.findIndex(d => { return d.DISH_ID === dish.DISH_ID })
+                let index = itemsPresent.findIndex(d => { return d._id === dish._id })
                 // console.log(index)
                 if (index >= 0) {
                     console.log('items', itemsPresent, 'index', index)
@@ -107,7 +107,7 @@ export class MenuList extends Component {
         let itemsPresent = JSON.parse(sessionStorage.getItem('cartItems'))
         let tempCounter =sessionStorage.getItem('counter')!=null?parseInt(sessionStorage.getItem('counter')):0
         if (itemsPresent) {
-            let index = itemsPresent.findIndex(d => { return d.DISH_ID === dish.DISH_ID })
+            let index = itemsPresent.findIndex(d => { return d._id === dish._id })
             if (index >= 0) {
                 //When we get the dish to be deleted
                 if (itemsPresent[index].quantity == 1) {

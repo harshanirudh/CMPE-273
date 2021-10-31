@@ -54,10 +54,10 @@ export class OrderListItem extends Component {
     render() {
         const { order,address } = this.props
         let delivery_address=address.filter(i=>{
-            return i.add_id==order.ORD_DEL_ADDRESS
+            return i._id==order.ORD_DEL_ADDRESS
         })
-        delivery_address=delivery_address[0]?.address+" "+delivery_address[0]?.city+" "+delivery_address[0]?.zipcode
-        console.log(delivery_address)
+        delivery_address=delivery_address[0]?.ADDRESS+" "+delivery_address[0]?.CITY+" "+delivery_address[0]?.ZIPCODE
+        console.log(address)
         return (
             <div>
                 <ListItem alignItems="flex-start">
@@ -65,7 +65,7 @@ export class OrderListItem extends Component {
                                    <Avatar alt="Remy Sharp" src={order.} />
                                  </ListItemAvatar> */}
                     <ListItemText
-                        primary={"ORDER ID:" + order.ORDER_ID}
+                        primary={"ORDER ID:" + order._id}
                         secondary={
                             <React.Fragment>
                                 <Typography
@@ -78,7 +78,7 @@ export class OrderListItem extends Component {
                                 </Typography>
                                 {order.ORD_TIMESTAMP}
                                 {order.ORD_TYPE==='delivery'?(
-                                    <Typography>Delivered Address:{delivery_address}</Typography>
+                                    <Typography>Delivered Address:{order.ORD_DEL_ADDRESS}</Typography>
                                 ):''}
                                <Typography> {this.renderOrderStatus(order.ORD_STATUS)}</Typography>
                             </React.Fragment>

@@ -30,13 +30,13 @@ export class DeliveryAddress extends Component {
             let list = [];
             console.log(res[0])
             let intialAddress = {
-                add_id: 0,
-                address: res[0]?.data[0]?.STREET,
-                city: res[0]?.data[0]?.CITY,
-                zipcode: res[0]?.data[0]?.ZIPCODE
+                _id: 0,
+                ADDRESS: res[0]?.data?.STREET,
+                CITY: res[0]?.data?.CITY,
+                ZIPCODE: res[0]?.data?.ZIPCODE
             }
             let otherAddress = res[1]?.data;
-            if (res[0].data[0]?.STREET?.length > 0)
+            if (res[0].data?.STREET?.length > 0)
                 otherAddress?.unshift(intialAddress);
             this.props.saveDeliveryAddress(otherAddress)
             this.setState({ addressList: otherAddress });
@@ -142,7 +142,7 @@ export class DeliveryAddress extends Component {
                         <option value="">Select Address</option>
                         {this.state.addressList.map((i => {
 
-                            return <option value={i._id} key={i._id}>{i.address + ',' + i.city + ',' + i.zipcode}</option>
+                            return <option value={i.ADDRESS + ',' + i.CITY + ',' + i.ZIPCODE} key={i._id}>{i.ADDRESS + ',' + i.CITY + ',' + i.ZIPCODE}</option>
                         }))}
                     </select>
                     <br />

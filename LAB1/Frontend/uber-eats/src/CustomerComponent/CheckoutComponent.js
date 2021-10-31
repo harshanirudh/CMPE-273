@@ -46,7 +46,7 @@ export class CheckoutComponent extends Component {
      * JSX for pickup
      */
      
-    pickup = <card>
+    pickup = <Card>
         <CardHeader title="Pickup from "></CardHeader>
         <CardContent >
             <Typography>Restaurant Address</Typography>
@@ -54,7 +54,7 @@ export class CheckoutComponent extends Component {
             <Typography component={"h3"}>{this.props.location.state.restDetails.RNAME}</Typography>
             <Typography component={"h4"}>{this.props.location.state.restDetails.STREET}</Typography>
         </CardContent>
-    </card>
+    </Card>
 
     chooseType=<card>
         <CardHeader title="Choose pickup/delivery"></CardHeader>
@@ -137,11 +137,12 @@ export class CheckoutComponent extends Component {
     placeOrder=()=>{
         console.log(this.state.deliveryMode)
         if(this.state.deliveryMode==='delivery'){
-            if(parseInt(this.selectedAddress)>=0){
+            console.log((this.selectedAddress))
+            if((this.selectedAddress)!==undefined||null){
                 console.log("valid")
                 let dateTime=new Date()
                 let orderDetails={
-                    rest_id:this.props.location.state.restDetails.REST_ID,
+                    rest_id:this.props.location.state.restDetails._id,
                     rname:this.props.location.state.restDetails.RNAME,
                     cust_id:this.props.match.params.custId,
                     order_type:'delivery',
@@ -163,14 +164,14 @@ export class CheckoutComponent extends Component {
         }else if(this.state.deliveryMode==='pickup'){
             let dateTime=new Date()
             let orderDetails={
-                rest_id:this.props.location.state.restDetails.REST_ID,
+                rest_id:this.props.location.state.restDetails._id,
                 rname:this.props.location.state.restDetails.RNAME,
                 cust_id:this.props.match.params.custId,
                 order_type:'pickup',
                 dishes:this.props.location.state.items,
                 amount:this.calculateAmount(this.props.location.state.items),
                 ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
-                address:-1
+                address:null
             }
             console.log(orderDetails)
                 let url=`${baseUrl}/orders/new`

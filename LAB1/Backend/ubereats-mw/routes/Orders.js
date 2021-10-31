@@ -67,10 +67,10 @@ router.put('/edit/:orderId',async(req,res)=>{
       }
       kafka.make_request('update_orderStatus', payload, function (err, results) {
         if (err) {
-          console.log("Inside err of save_restImage kafka make_request", err);
+          console.log("Inside err of update order status kafka make_request", err);
           res.status(500).json(err)
         } else {
-          console.log("Inside succes of save_restImage kakka make_request");
+          console.log("Inside succes of update order status kakka make_request");
           res.status(200).send(results)
         }
 })

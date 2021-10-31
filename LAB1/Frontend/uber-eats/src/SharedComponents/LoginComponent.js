@@ -67,11 +67,12 @@ export class LoginComponent extends Component {
                 
                 }
                 this.props.restaurantLogin(loginDetails);
-                let restCookie=this.props.cookies.get('restCookie')
+                // let restCookie=this.props.cookies.get('restCookie')
                 console.log(this.props)
                 let successRedirectUrl = `/restaurant/landing/${resp.data.rest_id}`
                 this.props.history.push(successRedirectUrl);
             }).catch((err) => {
+                console.log("error",err)
                 this.setState({ invalidLogin: true })
             })
 

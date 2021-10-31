@@ -9,6 +9,7 @@ import { withCookies } from 'react-cookie'
 import {saveDishDetails,getDishDetails } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { store } from '../Redux/store'
 export class DishesDetailsComponent extends Component {
     constructor(props) {
         super(props)
@@ -85,8 +86,9 @@ export class DishesDetailsComponent extends Component {
         this.props.history.push(`/restaurant/landing/${this.props.match.params.restId}`)
     }
     render() {
-        console.log(this.props.cookies.get('restCookie')?.authenticated)
-        if(this.props.cookies.get('restCookie')?.authenticated===undefined||false){
+        // console.log(this.props.cookies.get('restCookie')?.authenticated)
+        console.log(store.getState().Login.isRestaurantAuthenticated)
+        if(store.getState().Login.isRestaurantAuthenticated===undefined||false){
             console.log(this.props.cookies.get('restCookie')?.authenticate)
             // this.props.history.push('/restaurant')
             return <Redirect to="/restaurant"></Redirect>
@@ -135,7 +137,7 @@ export class DishesDetailsComponent extends Component {
             <NavComponent view="restaurant" rid={this.props.match.params.restId}></NavComponent>
             <div className="container">
             <div>
-                <h2 className="text-center">UPDATE DISH ID {this.props.match.params.dishId}</h2>
+                <h2 className="text-center">UPDATE DISH {this.state.formObj.dname}</h2>
                 <DisheFormComponent type="edit" onFormSubmit={(e)=>this.handleUpdateDishData(e)} intialValues={this.state.formObj}></DisheFormComponent>
             </div>
         </div>

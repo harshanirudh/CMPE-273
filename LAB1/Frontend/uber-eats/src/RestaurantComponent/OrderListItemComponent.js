@@ -16,7 +16,7 @@ export class OrderListItemComponent extends Component {
         }
     }
     handleUpdate(e){
-        let orderUpdateUrl=`${baseUrl}/orders/edit/${this.props.order.ORDER_ID}`
+        let orderUpdateUrl=`${baseUrl}/orders/edit/${this.props.order._id}`
         console.log(e.deliveryStatus)
         let data={status:e.deliveryStatus}
         axios.put(orderUpdateUrl,data).then(res=>{
@@ -39,16 +39,17 @@ export class OrderListItemComponent extends Component {
     }
     render() {
         const{order}=this.props
+        console.log("Order status for order id",order._id,order.ORD_STATUS)
         return (
             <div>
                 <Formik initialValues={{
                     deliveryStatus:this.state.orderStatus
                     }} onSubmit={(e)=>this.handleUpdate(e)}>
                     <Form>
-                <li className="list-group-item" key={order.ORDER_ID}>
+                <li className="list-group-item" key={order._id}>
                     <div className="row">
                         <div className="col-sm-2">
-                            <p>Order ID: {order.ORDER_ID}</p>
+                            <p>Order ID: {order._id}</p>
                             <Link to={`/restaurant/${order.REST_ID}/view/customer/${order.CUST_ID}`}>View Customer</Link>
                         </div>
                       
@@ -63,7 +64,7 @@ export class OrderListItemComponent extends Component {
                         <div className="col-sm-3">
 
 
-                            {order.type === 'pickup' ?
+                            {order.ORD_TYPE === 'pickup' ?
                                 <div>
                                     <Field name="deliveryStatus" className="form-control" as="select">
                                         <option value="new order">Order Recieved</option>

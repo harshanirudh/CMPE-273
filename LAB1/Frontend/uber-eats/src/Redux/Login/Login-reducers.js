@@ -23,7 +23,7 @@ const LoginReducer = (state = INITIAL_STATE, action) => {
                 isRestaurantAuthenticated: action.payload.restaurantLogin.isRestaurantAuthenticated,
                 userEmail:action.payload.restaurantLogin.userEmail,
                 id:action.payload.restaurantLogin.id,
-                token:action.payload.customerLogin.token
+                token:action.payload.restaurantLogin.token
             }
         case actionTypes.LOGOUT_CUSTOMER:
             return{

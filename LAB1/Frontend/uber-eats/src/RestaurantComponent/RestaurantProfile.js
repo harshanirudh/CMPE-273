@@ -61,7 +61,7 @@ class RestaurantProfile extends Component {
         // console.log(this.props.match.params.profileId)
         let url=baseUrl+'/users/restarunt/'+this.props.match.params.profileId
         axios.get(url).then((resp)=>{
-            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data[0]
+            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data
             profileIntialValues.city=CITY?CITY:''
             profileIntialValues.country=COUNTRY?COUNTRY:''
             profileIntialValues.email=EMAIL?EMAIL:''

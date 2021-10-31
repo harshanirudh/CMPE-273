@@ -8,13 +8,16 @@ import OrderListItemComponent from './OrderListItemComponent'
 import { getROrdersList,updateROrdersList} from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import TablePagination from '@mui/material/TablePagination';
 export class OrdersListComponent extends Component {
     constructor(props) {
         super(props)
         this.masterOrdersList=[]
         this.state = {
             orders: [],
-            filter:"all"
+            filter:"all",
+            page: 0,
+            rowsPerPage: 5
         }
         console.log(this.props.match.params.restId)
 
@@ -71,6 +74,20 @@ export class OrdersListComponent extends Component {
            this.filter(this.state.filter)
        })
     }
+
+    handleChangePage = (event, newPage) => {
+        // setPage(newPage);
+        this.setState({ page: newPage })
+    };
+
+    handleChangeRowsPerPage = (event) => {
+        // setRowsPerPage(parseInt(event.target.value, 10));
+        // setPage(0);
+        this.setState({
+            rowsPerPage: parseInt(event.target.value, 10),
+            page: 0
+        })
+    };
     render() {
 
         return (
@@ -85,12 +102,24 @@ export class OrdersListComponent extends Component {
                     <option value="delivered">Delivered Order</option>
                     <option value="cancelled">Cancelled Order</option>
                 </select>
+                <TablePagination
+                                component="div"
+                                count={this.state.orders.length}
+                                page={this.state.page}
+                                onPageChange={this.handleChangePage}
+                                rowsPerPage={this.state.rowsPerPage}
+                                onRowsPerPageChange={this.handleChangeRowsPerPage}
+                                rowsPerPageOptions={[2,5, 10]}
+                            /> 
                 </div>
                 <ul className="list-group">
                     {
-                        this.state.orders.map((order) => {
+                        (this.state.rowsPerPage > 0
+                            ? this.state.orders.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                            : this.state.orders)
+                        .map((order) => {
                             console.log(order);
-                            return <OrderListItemComponent order={order} key={order.ORDER_ID} update={this.handleChildUpdate}></OrderListItemComponent>
+                            return <OrderListItemComponent order={order} key={order._id} update={this.handleChildUpdate}></OrderListItemComponent>
                         })}
                     
                 </ul>
