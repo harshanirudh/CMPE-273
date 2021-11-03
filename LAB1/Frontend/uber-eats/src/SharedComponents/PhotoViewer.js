@@ -83,10 +83,10 @@ class PhotoViewer extends React.Component {
             images = [] //make array empty
             res.data?.IMAGE?.map((imageObj) => {
                 images.push({
-                    "REST_ID": imageObj.REST_ID,
-                    "IMAGE_ID": imageObj.IMAGE_ID,
-                    "original": imageObj.IMAGE,
-                    "thumbnail": imageObj.IMAGE
+                    // "REST_ID": imageObj.,
+                    "IMAGE_ID": imageObj,
+                    "original": imageObj,
+                    "thumbnail": imageObj
                 })
             })
             this.props.getRImages(images)
