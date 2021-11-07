@@ -5,8 +5,10 @@ const Restaurant = require('../models/RestaurantModel');
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var kafka = require('../kafka/client');
+var passport=require('passport');
+const { checkAuth } = require('../JwtStrategy');
 
-router.post('/:restId', async (req, res) => {
+router.post('/:restId',checkAuth, async (req, res) => {
     let payload = {
         params: req.params,
         body: req.body
@@ -21,7 +23,7 @@ router.post('/:restId', async (req, res) => {
         }
 })
 })
-router.get('/:restId', async (req, res) => {
+router.get('/:restId',passport.authenticate('jwt', { session: false }), async (req, res) => {
     let payload = {
         params: req.params,
         body: req.body

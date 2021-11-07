@@ -6,8 +6,9 @@ var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../JwtStrategy');
 
-router.post('/add/:custId',async(req,res)=>{
+router.post('/add/:custId',checkAuth,async(req,res)=>{
     // try{
     // let {name,add,city,zipcode}=req.body
     // const delAdd=new DeliveryAddressModel({
@@ -41,7 +42,7 @@ router.post('/add/:custId',async(req,res)=>{
 });
 
 
-router.get('/:custId',async(req,res)=>{
+router.get('/:custId',checkAuth,async(req,res)=>{
     // try{
     //     let result=await DeliveryAddressModel.find({CUST_ID:req.params.custId})
     //     res.send(result)

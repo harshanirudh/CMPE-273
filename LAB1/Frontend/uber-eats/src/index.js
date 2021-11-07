@@ -13,6 +13,7 @@ import '@fontsource/roboto/700.css'
 import {Provider} from'react-redux';
 import {store,persiststore} from './Redux/store';
 import { PersistGate } from 'redux-persist/integration/react'
+import axios from 'axios'
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
 // const { store, persistor } = configureStore()
 
@@ -31,3 +32,14 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+axios.interceptors.request.use(req => {
+  // Important: request interceptors **must** return the request.
+  req.headers['Authorization']='jwt '+store.getState().Login.token
+  console.log(`From Interceptor ${req.method} `,req.headers);
+    return req;
+  });
+  axios.interceptors.response.use(res=>{
+    console.log(`From Interceptor `,res.data);
+    return res;
+  })

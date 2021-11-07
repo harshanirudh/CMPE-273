@@ -7,34 +7,48 @@ let userTopics = ['get_customer_byId', 'save_customer', 'update_customer', 'get_
 let RestImages=['save_restImage','get_restImage']
 let orderTopics=['save_order','get_orders_customer','get_orders_restaurant','update_orderStatus']
 let loginTopics=['login_customer','login_restaurant']
+let deliveryAddressTopics=['post_delivery_address','get_delivery_address']
+let favouriteTopics=['save_favourites','get_favourites_custId','get_favourites_details_custId']
 producer.on("ready", function () {
     /**
      * Create Dish Topics
      */
-    // producer.createTopics(dishTopics,false,function (err,data){
-    //     console.log(data)
-    //     console.log(err)
-    // })
+    producer.createTopics(dishTopics,false,function (err,data){
+        console.log(data)
+        console.log(err)
+    })
 
     /**
      * Create User topics
      */
-    // producer.createTopics(userTopics, false, function (err, data) {
-    //     console.log(data)
-    //     console.log("Error", err)
-    // })
+    producer.createTopics(userTopics, false, function (err, data) {
+        console.log(data)
+        console.log("Error", err)
+    })
     /**Create Rest Images topics */
-    // producer.createTopics(RestImages,false,function(err,data){
-    //     console.log(data)
-    //     console.log("error",err)
-    // })
+    producer.createTopics(RestImages,false,function(err,data){
+        console.log(data)
+        console.log("error",err)
+    })
     /**Create Orders topics */
-    // producer.createTopics(orderTopics,false,function(err,data){
-    //     console.log(data)
-    //     console.log("error",err)
-    // })
+    producer.createTopics(orderTopics,false,function(err,data){
+        console.log(data)
+        console.log("error",err)
+    })
     /**Create login topics */
     producer.createTopics(loginTopics,false,function(err,data){
+        console.log(data)
+        console.log("error",err)
+    })
+
+    /**Create deliveryAddressTopics */
+    producer.createTopics(deliveryAddressTopics,false,function(err,data){
+        console.log(data)
+        console.log("error",err)
+    })
+
+    /**Create favouriteTopics */
+    producer.createTopics(favouriteTopics,false,function(err,data){
         console.log(data)
         console.log("error",err)
     })

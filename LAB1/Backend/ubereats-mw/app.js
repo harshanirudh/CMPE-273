@@ -15,6 +15,11 @@ var ordersRouter=require('./routes/Orders')
 const cors = require('cors');
 
 var app = express();
+const passport = require('passport');
+const { auth } = require('./JwtStrategy');
+// Passport middleware
+auth()
+app.use(passport.initialize());
 
 app.use(logger('dev'));
 app.use(express.json());

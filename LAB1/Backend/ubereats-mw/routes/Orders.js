@@ -8,12 +8,14 @@ var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 const {verifyUser}=require('./Login')
-const passport=require('passport');
+const passport=require('passport')
 var kafka = require('../kafka/client');
+const {checkAuth}  = require("../JwtStrategy")
+// const passport = require("passport");
 /**
  * Save New Order
  */
-router.post('/new',async(req,res)=>{
+router.post('/new',checkAuth,async(req,res)=>{
     let payload = {
         params: req.params,
         body: req.body
@@ -28,7 +30,7 @@ router.post('/new',async(req,res)=>{
         }
 })
 })
-router.get('/customer/:custId',async(req,res)=>{
+router.get('/customer/:custId',checkAuth,async(req,res)=>{
     let payload = {
         params: req.params,
         body: req.body
@@ -44,7 +46,7 @@ router.get('/customer/:custId',async(req,res)=>{
 })
 })
 
-router.get('/restaurant/:restId',async(req,res)=>{
+router.get('/restaurant/:restId',passport.authenticate("jwt", { session: false }),async(req,res)=>{
     let payload = {
         params: req.params,
         body: req.body
@@ -60,7 +62,7 @@ router.get('/restaurant/:restId',async(req,res)=>{
 })
 })
 module.exports=router
-router.put('/edit/:orderId',async(req,res)=>{
+router.put('/edit/:orderId',checkAuth,async(req,res)=>{
     let payload = {
         params: req.params,
         body: req.body

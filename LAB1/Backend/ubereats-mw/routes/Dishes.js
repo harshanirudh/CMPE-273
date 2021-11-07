@@ -7,8 +7,9 @@ var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../JwtStrategy');
 
-router.post('/:id/dish',async(req,res)=>{
+router.post('/:id/dish',checkAuth,async(req,res)=>{
     
     let payload={
         params:req.params,
@@ -28,7 +29,7 @@ router.post('/:id/dish',async(req,res)=>{
 /**
  * Update Restaurant dish by ID
  */
-router.put('/:id/dish/:dishId',async(req,res)=>{
+router.put('/:id/dish/:dishId',checkAuth,async(req,res)=>{
     
     let payload={
         params:req.params,
@@ -49,7 +50,7 @@ router.put('/:id/dish/:dishId',async(req,res)=>{
 /**
  * Get a dish by id and restaurant id
  */
-router.get('/:id/dish/:dishId',async(req,res)=>{
+router.get('/:id/dish/:dishId',checkAuth,async(req,res)=>{
     
     let payload={
         params:req.params,
@@ -66,7 +67,7 @@ router.get('/:id/dish/:dishId',async(req,res)=>{
     });
 })
 
-router.get('/:id/dishes',async(req,res)=>{
+router.get('/:id/dishes',checkAuth,async(req,res)=>{
    
     let payload={
         params:req.params,
@@ -86,7 +87,7 @@ router.get('/:id/dishes',async(req,res)=>{
  * Get restIDs on dish name search
  */
 
-router.post('/searchBy/dishes',async(req,res)=>{
+router.post('/searchBy/dishes',checkAuth,async(req,res)=>{
    
     let payload={
         params:req.params,
@@ -103,7 +104,7 @@ router.post('/searchBy/dishes',async(req,res)=>{
     });
 })
 
-router.get('/searchBy/type/:type',async(req,res)=>{
+router.get('/searchBy/type/:type',checkAuth,async(req,res)=>{
     
     let payload={
         params:req.params,

@@ -17,7 +17,7 @@ exports.handle_customer_login=async function handle_customer_login(req,callback)
             authenticated = await bcrypt.compare(pass, hash)
             console.log(authenticated)
             if(authenticated){ 
-                let token=jwt.sign({user:email,role:customerRole},config.JWT_SECRET)
+                let token=jwt.sign({user:email,role:customerRole,id:cust_id},config.JWT_SECRET)
                 // res.status(200) 
                 callback(null,{ authenticated ,cust_id,token})
             }else {
@@ -45,7 +45,7 @@ exports.handle_restaurant_login=async function handle_restaurant_login(req,callb
             authenticated = await bcrypt.compare(pass, hash)
             console.log(authenticated)
             if(authenticated){ 
-                let token=jwt.sign({user:email,role:restRole},config.JWT_SECRET)
+                let token=jwt.sign({user:email,role:restRole,id:rest_id},config.JWT_SECRET)
                 // res.status(200)
                 callback(null,{ authenticated ,rest_id,token})
             }else{

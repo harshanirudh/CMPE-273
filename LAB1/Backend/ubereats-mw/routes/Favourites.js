@@ -4,7 +4,8 @@ var pool = require('./../db-config').connectionPool.promise()
 var favourites=require('../models/CustomerFavouritesModel');
 const RestaurantModel = require('../models/RestaurantModel');
 var kafka = require('../kafka/client');
-router.post('/add/:custId/:restId',async(req,res)=>{
+const { checkAuth } = require('../JwtStrategy');
+router.post('/add/:custId/:restId',checkAuth,async(req,res)=>{
     // try{
     // const fav=new favourites({
     //     CUST_ID:req.params.custId,
@@ -35,7 +36,7 @@ router.post('/add/:custId/:restId',async(req,res)=>{
 /**
  * To be converted to mongo
  */
-router.delete('/delete/:favId',async(req,res)=>{
+router.delete('/delete/:favId',checkAuth,async(req,res)=>{
     // try{
     //     let removeFav="delete from CUSTOMER_FAVOURITES where fav_id=?"
     //     let result=await pool.query(removeFav,[req.params.favId]);
@@ -62,7 +63,7 @@ router.delete('/delete/:favId',async(req,res)=>{
     // });
 })
 
-router.get('/customer/:custId',async(req,res)=>{
+router.get('/customer/:custId',checkAuth,async(req,res)=>{
     // try{
     //     let result=await favourites.find({CUST_ID:req.params.custId}).distinct('REST_ID');
     //     res.send(result)
@@ -88,7 +89,7 @@ router.get('/customer/:custId',async(req,res)=>{
 /**
  * Get All favourites restaurant details for a customer
  */
-router.get('/details/customer/:custId',async(req,res)=>{
+router.get('/details/customer/:custId',checkAuth,async(req,res)=>{
     // try{
     //     let restIDArr=await favourites.find({CUST_ID:req.params.custId}).distinct('REST_ID');
     //     let result=await RestaurantModel.find({'_id':{
