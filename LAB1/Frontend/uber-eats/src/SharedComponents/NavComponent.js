@@ -21,6 +21,9 @@ import CheckoutDialog from '../CustomerComponent/CheckoutDialog';
 import HomeIcon from '@mui/icons-material/Home';
 import { withCookies, Cookies } from 'react-cookie';
 import {withRouter} from 'react-router-dom'
+import { customerLogout, restaurantLogout } from '../Redux/Login/Login-actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 class NavComponent extends Component {
     constructor(props) {
         super(props)
@@ -30,6 +33,12 @@ class NavComponent extends Component {
             Counter: store.getState().cart.cartCounter,
             openCheckout: false
         }
+    }
+    static mapStateToProps = state => {
+        return { Login: state.Login }
+    }
+    static mapDispatchToProps = dispatch => {
+        return bindActionCreators({ customerLogout, restaurantLogout }, dispatch)
     }
     toggleDrawerStatus = () => {
         this.setState({
@@ -67,14 +76,16 @@ class NavComponent extends Component {
     renderCheckoutDialog = () => <CheckoutDialog openCheckout={this.state.openCheckout} closeCheckout={this.handleClose} cid={this.props.cid}></CheckoutDialog>
     handleCustomerLogout = () => {
         let cookies = this.props.cookies;
-        cookies.remove('cookie', { path: '/' })
-        console.log(this.props.cookies)
+        // cookies.remove('cookie', { path: '/' })
+        // console.log(this.props.cookies)
+        this.props.customerLogout();
         this.props.history.push('/customer')
     }
     handleRestLogout=()=>{
         let cookies = this.props.cookies;
-        cookies.remove('restCookie', { path: '/' })
-        console.log(this.props.cookies)
+        // cookies.remove('restCookie', { path: '/' })
+        // console.log(this.props.cookies)
+        this.props.restaurantLogout();
         this.props.history.push('/restaurant')
     }
     customerMenuList = (
@@ -225,7 +236,7 @@ class NavComponent extends Component {
         )
     }
 }
-
-export default withRouter(withCookies(NavComponent))
+const NavReduxComp=connect(NavComponent.mapStateToProps,NavComponent.mapDispatchToProps)(NavComponent)
+export default withRouter(withCookies(NavReduxComp))
 // export default (NavComponent.mapStateToProps)(NavComponent)
 
