@@ -24,7 +24,8 @@ export class CheckoutComponent extends Component {
         
         this.state = {
             deliveryMode:this.props.location.state.restDetails.RDELIVERY_MODE,
-            orderConfirmationOpen:false
+            orderConfirmationOpen:false,
+            specialInstructions:''
         }
     }
 
@@ -149,7 +150,8 @@ export class CheckoutComponent extends Component {
                     dishes:this.props.location.state.items,
                     amount:this.calculateAmount(this.props.location.state.items),
                     ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
-                    address:this.selectedAddress
+                    address:this.selectedAddress,
+                    specialInstructions:this.state.specialInstructions
                 }
                 console.log(orderDetails)
                 let url=`${baseUrl}/orders/new`
@@ -171,7 +173,8 @@ export class CheckoutComponent extends Component {
                 dishes:this.props.location.state.items,
                 amount:this.calculateAmount(this.props.location.state.items),
                 ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
-                address:null
+                address:null,
+                specialInstructions:this.state.specialInstructions
             }
             console.log(orderDetails)
                 let url=`${baseUrl}/orders/new`
@@ -182,7 +185,10 @@ export class CheckoutComponent extends Component {
         }else if(this.state.deliveryMode==="both")
             alert('Please select either Delivery/Pickup')
     }
-
+    handleSpecialInstructions=(e)=>{
+        console.log(e.target.value)
+        this.setState({specialInstructions:e.target.value})
+    }
 
     render() {
         // console.log(this.props.location)
@@ -219,7 +225,7 @@ export class CheckoutComponent extends Component {
                                 {this.getShoppingCartDetails()}
                                 <br />
                                 <label>Special Instructions</label>
-                                <input type="text" className="form-control"></input><br/>
+                                <input type="text" className="form-control" onChange={this.handleSpecialInstructions}></input><br/>
                                 <button type="button" className="btn btn-danger" style={{ width: '100%', display: 'block' }} onClick={()=>{this.placeOrder()}}>Place Order</button>
                             </CardContent>
                         </Card>

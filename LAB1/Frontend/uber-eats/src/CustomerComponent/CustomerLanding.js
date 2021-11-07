@@ -95,12 +95,13 @@ export class CustomerLanding extends Component {
             if (this.searchCategory.current.value === 'dish') {
                 let url = `${baseUrl}/restaurant/searchBy/dishes`
                 axios.post(url, { 'dishSeq': searchString }).then((res => {
+                    console.log(this.masterRestaurantList)
                     let filterList = this.masterRestaurantList.filter(i => {
                         // Check if delivery/pickup toggle is selected, if selected check the delivery mode and return
                         if (this.state.deliveryFilter.length > 0)
-                            return (res.data.rest_id.includes(i.REST_ID)) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
+                            return (res.data.rest_id.includes(i._id)) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
                         else {
-                            return res.data.rest_id.includes(i.REST_ID);
+                            return res.data.rest_id.includes(i._id);
                         }
                     })
                     console.log(filterList)
@@ -140,7 +141,7 @@ export class CustomerLanding extends Component {
         axios.get(url).then(res=>{
             let filterList=this.masterRestaurantList.filter(i=>{
                 console.log(res.data)
-                return res.data.rest_id?.includes(i.REST_ID)
+                return res.data.rest_id?.includes(i._id)
             })
             this.setState({restaurantsList:filterList})
         })

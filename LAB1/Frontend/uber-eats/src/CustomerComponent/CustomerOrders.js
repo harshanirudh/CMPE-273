@@ -7,7 +7,7 @@ import { Avatar, Card, CardHeader, Divider, List, ListItem, ListItemAvatar, List
 import CustOrderReciept, { OrderListItem } from './OrderListItem'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import TablePagination from '@mui/material/TablePagination';
-import {  getAllOrders} from '../Redux/Customer/Customer-actions'
+import { getAllOrders } from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 export class CustomerOrders extends Component {
@@ -101,6 +101,12 @@ export class CustomerOrders extends Component {
                 })
                 this.setState({ orderList: filteredList, filter: "delivered" }, () => console.log(this.state))
                 break;
+            case "cancelled":
+                filteredList = this.masterOrderList.filter(order => {
+                    return order.ORD_STATUS === "cancelled"
+                })
+                this.setState({ orderList: filteredList, filter: "cancelled" }, () => console.log(this.state))
+                break;
         }
     }
     handleChangePage = (event, newPage) => {
@@ -130,6 +136,7 @@ export class CustomerOrders extends Component {
                             <option value="picked up">Picked Up</option>
                             <option value="onTheWay">On the way</option>
                             <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
                         </select>
                         {/* <select className="form-control">
                             <option value="new order">Order Recieved</option>
@@ -141,16 +148,16 @@ export class CustomerOrders extends Component {
                     <Card>
                         <div className="row">
                             <div className="col-md-6"><CardHeader title={"Order History"}></CardHeader></div>
-                            <div className="col-md-6"> 
-                            <TablePagination
-                                component="div"
-                                count={this.state.orderList.length}
-                                page={this.state.page}
-                                onPageChange={this.handleChangePage}
-                                rowsPerPage={this.state.rowsPerPage}
-                                onRowsPerPageChange={this.handleChangeRowsPerPage}
-                                rowsPerPageOptions={[2,5, 10]}
-                            /> 
+                            <div className="col-md-6">
+                                <TablePagination
+                                    component="div"
+                                    count={this.state.orderList.length}
+                                    page={this.state.page}
+                                    onPageChange={this.handleChangePage}
+                                    rowsPerPage={this.state.rowsPerPage}
+                                    onRowsPerPageChange={this.handleChangeRowsPerPage}
+                                    rowsPerPageOptions={[2, 5, 10]}
+                                />
                             </div>
                         </div>
                         <List sx={{ width: '100%', bgcolor: 'background.paper', justifyContent: 'center' }}>

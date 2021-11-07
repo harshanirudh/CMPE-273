@@ -8,7 +8,8 @@ export class OrderListItem extends Component {
         super(props)
 
         this.state = {
-            openRecieptDialog: false
+            openRecieptDialog: false,
+            orderStatus:this.props.order.ORD_STATUS
         }
     }
     componentDidMount(){
@@ -50,6 +51,11 @@ export class OrderListItem extends Component {
 
     handleCancelOrder=()=>{
         console.log(this.props.order)
+        const orderId=this.props.order._id
+        axios.put(`${baseUrl}/orders/edit/${orderId}`,{status:'cancelled'}).then(res=>{
+            console.log(res);
+            this.setState({orderStatus:"cancelled"})
+        })
     }
     render() {
         const { order,address } = this.props
@@ -85,7 +91,7 @@ export class OrderListItem extends Component {
                         }
                     />
                     <br />
-                    {order.ORD_STATUS==='new order'?
+                    {this.state.orderStatus==='new order'?
                     (<button className="btn btn-info" onClick={() => this.handleCancelOrder()}>Cancel</button>):''}
                     &nbsp;
                     <button className="btn btn-info" onClick={() => this.handleOpenReciept()}>View Reciept</button>
@@ -100,6 +106,7 @@ export class OrderListItem extends Component {
                         <DialogContent>
                             <Typography>Amount ${order.AMOUNT}</Typography>
                             <Typography className="text-uppercase">Status: {order.ORD_STATUS}</Typography>
+                            <Typography >Instructions: {order?.SPECIAL_INSTRUCTIONS}</Typography>
                             <List>
                                 {order.DISH_DETAILS.map(dish => {
                                     return <ListItem alignItems="flex-start">

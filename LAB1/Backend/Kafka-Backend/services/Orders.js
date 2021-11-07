@@ -1,7 +1,7 @@
 const OrdersModel = require('../models/OrdersModel');
 exports.handle_save_new_order=async function handle_save_new_order(req,callback){
     try{
-        let {rest_id,rname,cust_id,order_type,amount,dishes,ts,address}=req.body
+        let {rest_id,rname,cust_id,order_type,amount,dishes,ts,address,specialInstructions}=req.body
         const order=new OrdersModel({
             REST_ID:rest_id,
             RNAME:rname,
@@ -11,7 +11,8 @@ exports.handle_save_new_order=async function handle_save_new_order(req,callback)
             AMOUNT:amount,
             DISH_DETAILS:dishes,
             ORD_TIMESTAMP:ts,
-            ORD_DEL_ADDRESS:address
+            ORD_DEL_ADDRESS:address,
+            SPECIAL_INSTRUCTIONS:specialInstructions
         })
         let result=await order.save({new:true})
         callback(null,result)

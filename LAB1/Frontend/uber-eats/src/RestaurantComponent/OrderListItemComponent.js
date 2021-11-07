@@ -50,7 +50,7 @@ export class OrderListItemComponent extends Component {
                     <div className="row">
                         <div className="col-sm-2">
                             <p>Order ID: {order._id}</p>
-                            <Link to={`/restaurant/${order.REST_ID}/view/customer/${order.CUST_ID}`}>View Customer</Link>
+                            
                         </div>
                       
                         <div className="col-sm-3">
@@ -90,6 +90,14 @@ export class OrderListItemComponent extends Component {
 
                             {/* <CustomPopup></CustomPopup> */}
                         </div>
+                    </div>
+                    <div className="row">
+                    <div className="col-sm-3">
+                    <Link to={`/restaurant/${order.REST_ID}/view/customer/${order.CUST_ID}`}>View Customer</Link>
+                    </div>
+                    <div className="col-sm-9">
+                        <Typography >Instructions: {order?.SPECIAL_INSTRUCTIONS}</Typography>
+                    </div>
                     </div>
                 </li>
                 </Form>

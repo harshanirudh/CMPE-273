@@ -49,7 +49,7 @@ export class CustomerFavouritesList extends Component {
                                 <div className="row mt-2">
                 {this.state.restaurantsList.map((item, index) => {
                             return (
-                                <Card className="col-md-3 mb-3" key={item.REST_ID} style={{ margin: '10px' }}>
+                                <Card className="col-md-3 mb-3" key={item._id} style={{ margin: '10px' }}>
                                     {/* <img src={this.setRestImage(item.IMAGE)} alt={item.RNAME} style={{ height: '150px', width: '200px' }} /> */}
                                     <CardMedia
                                         component="img"
@@ -57,7 +57,7 @@ export class CustomerFavouritesList extends Component {
                                         image={this.setRestImage(item.IMAGE)}
                                     />
                                     <CardContent >
-                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item.REST_ID}`}><h5 > {item.RNAME} </h5></Link> 
+                                        <Link to={`/customer/${this.props.match.params.custId}/restaurant/${item._id}`}><h5 > {item.RNAME} </h5></Link> 
                                         <p >{item.STREET}</p>
                                         <p >{item.CITY}</p>
                                         <p >Timing: {item.START_TIME}-{item.END_TIME}</p>

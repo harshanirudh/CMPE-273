@@ -5,17 +5,17 @@ import { baseUrl } from '../apiConfig'
 
 import NavComponent from '../SharedComponents/NavComponent'
 import OrderListItemComponent from './OrderListItemComponent'
-import { getROrdersList,updateROrdersList} from '../Redux/Restaurant/Restaurant-actions'
+import { getROrdersList, updateROrdersList } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TablePagination from '@mui/material/TablePagination';
 export class OrdersListComponent extends Component {
     constructor(props) {
         super(props)
-        this.masterOrdersList=[]
+        this.masterOrdersList = []
         this.state = {
             orders: [],
-            filter:"all",
+            filter: "all",
             page: 0,
             rowsPerPage: 5
         }
@@ -28,51 +28,58 @@ export class OrdersListComponent extends Component {
         return { Restaurant: state.Restaurant }
     }
     static mapDispatchToProps = dispatch => {
-        return bindActionCreators({ getROrdersList,updateROrdersList }, dispatch)
+        return bindActionCreators({ getROrdersList, updateROrdersList }, dispatch)
     }
     componentDidMount() {
-       let url=`${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
-       axios.get(url).then(res=>{
-           this.masterOrdersList=res.data;
-           this.props.getROrdersList(res.data)
-           this.setState({orders:res.data})
-       })
+        let url = `${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
+        axios.get(url).then(res => {
+            this.masterOrdersList = res.data;
+            this.props.getROrdersList(res.data)
+            this.setState({ orders: res.data })
+        })
     }
-    filter=(value)=>{
-        let newOrder=["new order","orderPreparing","pickupReady","onTheWay"];
-        let deliveredOrder=["picked up","delivered"]
-        let filteredList=[]
-        switch(value){
+    filter = (value) => {
+        let newOrder = ["new order", "orderPreparing", "pickupReady", "onTheWay"];
+        let deliveredOrder = ["picked up", "delivered"]
+        let cancelledOrder=["cancelled"]
+        let filteredList = []
+        switch (value) {
             case "all":
-                this.setState({orders:this.masterOrdersList,filter:"all"})
+                this.setState({ orders: this.masterOrdersList, filter: "all" })
                 break;
             case "new":
-                   filteredList=this.masterOrdersList.filter(order=>{
-                   return newOrder.includes(order.ORD_STATUS)
+                filteredList = this.masterOrdersList.filter(order => {
+                    return newOrder.includes(order.ORD_STATUS)
                 })
-                this.setState({orders:filteredList,filter:"new"})
+                this.setState({ orders: filteredList, filter: "new" })
                 break;
             case "delivered":
-                    filteredList=this.masterOrdersList.filter(order=>{
+                filteredList = this.masterOrdersList.filter(order => {
                     return deliveredOrder.includes(order.ORD_STATUS)
                 })
-                this.setState({orders:filteredList,filter:"delivered"})
+                this.setState({ orders: filteredList, filter: "delivered" })
+                break;
+            case "cancelled":
+                filteredList = this.masterOrdersList.filter(order => {
+                    return cancelledOrder.includes(order.ORD_STATUS)
+                })
+                this.setState({ orders: filteredList, filter: "cancelled" })
                 break;
         }
     }
-    handleOrderFilter=(e)=>{
+    handleOrderFilter = (e) => {
         console.log(e.target.value)
         this.filter(e.target.value);
     }
-    handleChildUpdate=()=>{
+    handleChildUpdate = () => {
         console.log("Inside update")
-        let url=`${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
-       axios.get(url).then(res=>{
-           this.masterOrdersList=res.data;
-           this.props.updateROrdersList(res.data)
-           this.setState({orders:res.data})
-           this.filter(this.state.filter)
-       })
+        let url = `${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
+        axios.get(url).then(res => {
+            this.masterOrdersList = res.data;
+            this.props.updateROrdersList(res.data)
+            this.setState({ orders: res.data })
+            this.filter(this.state.filter)
+        })
     }
 
     handleChangePage = (event, newPage) => {
@@ -93,37 +100,37 @@ export class OrdersListComponent extends Component {
         return (
             <div>
                 <NavComponent view="restaurant" rid={this.props.match.params.restId}></NavComponent>
-            <div className="container" id="modalLanding">
-                <div className="row mt-4">
-                <h2 className="col-sm-6">Orders</h2>
-                <select className="form-control col-sm-4" onChange={this.handleOrderFilter}>
-                    <option value="all">All Orders</option>
-                    <option value="new">New Order</option>
-                    <option value="delivered">Delivered Order</option>
-                    <option value="cancelled">Cancelled Order</option>
-                </select>
-                <TablePagination
-                                component="div"
-                                count={this.state.orders.length}
-                                page={this.state.page}
-                                onPageChange={this.handleChangePage}
-                                rowsPerPage={this.state.rowsPerPage}
-                                onRowsPerPageChange={this.handleChangeRowsPerPage}
-                                rowsPerPageOptions={[2,5, 10]}
-                            /> 
+                <div className="container" id="modalLanding">
+                    <div className="row mt-4">
+                        <h2 className="col-sm-6">Orders</h2>
+                        <select className="form-control col-sm-4" onChange={this.handleOrderFilter}>
+                            <option value="all">All Orders</option>
+                            <option value="new">New Order</option>
+                            <option value="delivered">Delivered Order</option>
+                            <option value="cancelled">Cancelled Order</option>
+                        </select>
+                        <TablePagination
+                            component="div"
+                            count={this.state.orders.length}
+                            page={this.state.page}
+                            onPageChange={this.handleChangePage}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onRowsPerPageChange={this.handleChangeRowsPerPage}
+                            rowsPerPageOptions={[2, 5, 10]}
+                        />
+                    </div>
+                    <ul className="list-group">
+                        {
+                            (this.state.rowsPerPage > 0
+                                ? this.state.orders.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                                : this.state.orders)
+                                .map((order) => {
+                                    console.log(order);
+                                    return <OrderListItemComponent order={order} key={order._id} update={this.handleChildUpdate}></OrderListItemComponent>
+                                })}
+
+                    </ul>
                 </div>
-                <ul className="list-group">
-                    {
-                        (this.state.rowsPerPage > 0
-                            ? this.state.orders.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                            : this.state.orders)
-                        .map((order) => {
-                            console.log(order);
-                            return <OrderListItemComponent order={order} key={order._id} update={this.handleChildUpdate}></OrderListItemComponent>
-                        })}
-                    
-                </ul>
-            </div>
             </div>
         )
 
