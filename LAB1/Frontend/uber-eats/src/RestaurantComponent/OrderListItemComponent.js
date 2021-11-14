@@ -80,6 +80,7 @@ export class OrderListItemComponent extends Component {
                                         <option value="orderPreparing">Preparing</option>
                                         <option value="onTheWay">On the way</option>
                                         <option value="delivered">Delivered</option>
+                                        <option value="cancelled">Cancel Order</option>
                                     </Field>
                                 </div>
                             }
