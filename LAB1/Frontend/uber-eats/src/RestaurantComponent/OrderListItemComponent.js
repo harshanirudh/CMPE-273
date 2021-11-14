@@ -71,6 +71,7 @@ export class OrderListItemComponent extends Component {
                                         <option value="orderPreparing">Preparing</option>
                                         <option value="pickupReady">Pickup Ready</option>
                                         <option value="picked up">Picked Up</option>
+                                        <option value="cancelled">Cancel Order</option>
                                     </Field>
                                 </div>
                                 :
