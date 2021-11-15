@@ -11,7 +11,7 @@ Enzyme.configure({
 describe('Customer Profile', () => {
   let wrapper
   beforeAll(()=>{
-    wrapper=shallow(<RestaurantSignup  view="unknown"/>)
+    wrapper=shallow(<RestaurantSignup.WrappedComponent  view="unknown"/>)
   })
   it('Check if navbar is present on customerprofile page', () => {
     expect(wrapper.find(NavComponent).exists()).to.equals(true)

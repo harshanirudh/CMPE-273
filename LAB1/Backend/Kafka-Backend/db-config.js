@@ -27,7 +27,7 @@ const mysql=require('mysql2');
 
 const mongoose=require("mongoose")
 const uri = "mongodb+srv://root:BiryaniBois@uber-eats-harsha.og8pb.mongodb.net/uber-eats?retryWrites=true&w=majority";
-const connection=mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true , maxPoolSize: 2 });
+const connection=mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true , maxPoolSize: 10 });
 module.exports={
     connection
     // connectionPool

@@ -55,6 +55,7 @@ export class OrderListItem extends Component {
         axios.put(`${baseUrl}/orders/edit/${orderId}`,{status:'cancelled'}).then(res=>{
             console.log(res);
             this.setState({orderStatus:"cancelled"})
+            this.props.reloadOrder()
         })
     }
     render() {

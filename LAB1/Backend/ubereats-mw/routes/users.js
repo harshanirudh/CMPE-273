@@ -10,12 +10,13 @@ const app = require('../app');
 const Customer = require('../models/CustomerModel');
 const Restaurant = require('../models/RestaurantModel')
 var kafka = require('../kafka/client');
+const { checkAuth } = require('../JwtStrategy');
 /**
  * Define the no of salt rounds for hashing
  */
 const saltRounds = 5;
 /* GET users listing. */
-router.get('/customers', async function (req, res, next) {
+router.get('/customers',checkAuth, async function (req, res, next) {
   try {
     res.json(await service.getCustomerUsers());
   } catch (err) {
@@ -26,7 +27,7 @@ router.get('/customers', async function (req, res, next) {
 /**
  * Get customers by customer ID
  */
-router.get('/customers/:id', async function (req, res) {
+router.get('/customers/:id',checkAuth, async function (req, res) {
   let payload = {
     params: req.params,
     body: req.body
@@ -46,7 +47,7 @@ router.get('/customers/:id', async function (req, res) {
  * Save new Customer
  */
 const customerPostValidator = validator.check(['fname', 'lname', 'email', 'pass'], 'Bad Request').exists();
-router.post('/customer', customerPostValidator, async (req, res) => {
+router.post('/customer', customerPostValidator, checkAuth,async (req, res) => {
   try {
     validator.validationResult(req).throw();
     let payload = {
@@ -71,7 +72,7 @@ router.post('/customer', customerPostValidator, async (req, res) => {
  * Update Customer Profile
  */
 const custPutValidator = validator.check(['about', 'add', 'city', 'country', 'dob', 'email', 'fname', 'lname', 'phone', 'state'], 'Bad Request').exists()
-router.put('/customer/:id', custPutValidator, async (req, res) => {
+router.put('/customer/:id', custPutValidator,checkAuth, async (req, res) => {
   try {
     validator.validationResult(req).throw();
     let payload = {
@@ -95,7 +96,7 @@ router.put('/customer/:id', custPutValidator, async (req, res) => {
 /**
  * Get Customers Location from profile
  */
-router.get('/customer/location/:id', async (req, res) => {
+router.get('/customer/location/:id',checkAuth, async (req, res) => {
   let payload = {
     params: req.params,
     body: req.body
@@ -115,7 +116,7 @@ router.get('/customer/location/:id', async (req, res) => {
 /**
  * Get All Unique restaurants and single image
  */
-router.get('/restarunt', async (req, res) => {
+router.get('/restarunt',checkAuth, async (req, res) => {
   let payload = {
     params: req.params,
     body: req.body
@@ -134,7 +135,7 @@ router.get('/restarunt', async (req, res) => {
 /**
  * Get restaurant by restaurant ID
  */
-router.get('/restarunt/:id', async (req, res) => {
+router.get('/restarunt/:id', checkAuth,async (req, res) => {
   let payload = {
     params: req.params,
     body: req.body
@@ -154,7 +155,7 @@ router.get('/restarunt/:id', async (req, res) => {
  * Save New Restaurant
  */
 const restPostValidator = validator.check(['add', 'city', 'country', 'email', 'pass', 'rname', 'state', 'zipcode'], 'Bad Request').exists();
-router.post('/restaurant', restPostValidator, async (req, res) => {
+router.post('/restaurant', restPostValidator,checkAuth, async (req, res) => {
   try {
     validator.validationResult(req).throw();
     let payload = {
@@ -181,7 +182,7 @@ router.post('/restaurant', restPostValidator, async (req, res) => {
  * 
  */
 const restPutValidator = validator.check(['add', 'city', 'country', 'email', 'rname', 'state', 'zipcode', 'rdeliverymode'], 'Bad Request').exists();
-router.put('/restaurant/:id', restPutValidator, async (req, res) => {
+router.put('/restaurant/:id', restPutValidator, checkAuth,async (req, res) => {
   try {
     validator.validationResult(req).throw();
     let payload = {

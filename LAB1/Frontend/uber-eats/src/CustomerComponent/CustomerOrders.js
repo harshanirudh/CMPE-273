@@ -14,6 +14,7 @@ export class CustomerOrders extends Component {
     constructor(props) {
         super(props)
         this.masterOrderList = []
+        this.getAllOrdersList = this.getAllOrdersList.bind(this)
         this.state = {
             orderList: [],
             filter: 'all',
@@ -45,15 +46,25 @@ export class CustomerOrders extends Component {
             this.setState({ addressList: otherAddress });
         })
     }
-    componentDidMount() {
+    getAllOrdersList(){
         let url = `${baseUrl}/orders/customer/${this.props.match.params.custId}`
-        this.getAddressList()
         axios.get(url).then(res => {
             this.masterOrderList = res.data
             console.log(res.data)
             this.setState({ orderList: res.data })
             this.props.getAllOrders(res.data)
         })
+    }
+    componentDidMount() {
+        // let url = `${baseUrl}/orders/customer/${this.props.match.params.custId}`
+        this.getAddressList()
+        // axios.get(url).then(res => {
+        //     this.masterOrderList = res.data
+        //     console.log(res.data)
+        //     this.setState({ orderList: res.data })
+        //     this.props.getAllOrders(res.data)
+        // })
+        this.getAllOrdersList()
     }
     handleFilter = (e) => {
         console.log(e.target.value)
@@ -165,7 +176,7 @@ export class CustomerOrders extends Component {
                                 ? this.state.orderList.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                 : this.state.orderList
                             ).map((order, index) => {
-                                return <OrderListItem order={order} key={order.ORDER_ID} address={this.state.addressList}></OrderListItem>
+                                return <OrderListItem order={order} key={order.ORDER_ID} address={this.state.addressList} reloadOrder={this.getAllOrdersList}></OrderListItem>
                             })}
                         </List>
                     </Card>
