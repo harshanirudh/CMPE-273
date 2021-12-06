@@ -13,7 +13,6 @@ var favouriteRouter=require('./routes/Favourites')
 var deliveryAddressRouter=require('./routes/DeliveryAddress')
 var ordersRouter=require('./routes/Orders')
 const cors = require('cors');
-
 var app = express();
 const passport = require('passport');
 const { auth } = require('./JwtStrategy');
