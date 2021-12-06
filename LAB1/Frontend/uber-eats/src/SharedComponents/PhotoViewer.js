@@ -6,6 +6,7 @@ import { uploadRestImages } from './UploadS3';
 import {getRImages } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_REST_IMAGES } from '../queries';
 
 let images = [];
 
@@ -73,15 +74,21 @@ class PhotoViewer extends React.Component {
 
     }
     async getAllImages() {
+        let query=GET_REST_IMAGES
         let url = `${baseUrl}/restaurant/images/${this.props.restId}`;
-        return await axios.get(url);
+        return await axios.post(url,{
+            query,
+            variables:{
+                restId:this.props.restId
+            }
+        });
 
     }
     componentDidMount() {
         console.log('Calling get images from didmount')
         this.getAllImages().then((res => {
             images = [] //make array empty
-            res.data?.IMAGE?.map((imageObj) => {
+            res.data.data.getRestImage?.map((imageObj) => {
                 images.push({
                     // "REST_ID": imageObj.,
                     "IMAGE_ID": imageObj,
@@ -97,7 +104,7 @@ class PhotoViewer extends React.Component {
         console.log('Calling get images from didupdate')
         this.getAllImages().then((res => {
             images = []
-            res.data?.IMAGE?.map((imageObj) => {
+            res.data.data.getRestImage?.map((imageObj) => {
                 images.push({
                     "REST_ID": imageObj.REST_ID,
                     "IMAGE_ID": imageObj.IMAGE_ID,

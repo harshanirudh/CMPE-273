@@ -9,6 +9,7 @@ import { incrementCounter, decrementCounter ,resetCounter,addToCart,removeFromCa
 import { getDishesList } from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_ALL_DISHES } from '../queries'
 export class MenuList extends Component {
     constructor(props) {
         super(props)
@@ -33,7 +34,13 @@ export class MenuList extends Component {
     async componentDidMount() {
         try {
             let url = `${baseUrl}/restaurant/${this.props.restId}/dishes`;
-            let resultList = await (await axios.get(url)).data;
+            let query=GET_ALL_DISHES
+            let resultList = await (await axios.post(url,{
+                query,
+                variables:{
+                    restId:this.props.restId
+                }
+            })).data.data.getAllDishes;
             this.masterDishesList=resultList;
             this.props.getDishesList(resultList)
             this.setState({ dishes: resultList })

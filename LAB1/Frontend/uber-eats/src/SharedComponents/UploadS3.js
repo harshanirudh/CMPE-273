@@ -4,8 +4,8 @@ export let S3config = {
     bucketName: 'ubereats-harsha',
     dirName: 'profilePics', /* optional */
     region: 'us-west-1',
-    accessKeyId: 'AKIAVDV7U5IG5A5TDZS4',
-    secretAccessKey: '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',
+    accessKeyId: 'AKIAVDV7U5IGXWGHPOZO',
+    secretAccessKey: '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',
 }
 
 

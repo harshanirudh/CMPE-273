@@ -7,6 +7,7 @@ import axios from 'axios'
 import { baseUrl } from '../apiConfig'
 import { Typography } from '@mui/material'
 import NavComponent from '../SharedComponents/NavComponent'
+import {GET_RESTAURANT_BY_ID} from '../queries'
 export class RestaurantLanding extends Component {
     constructor(props) {
         super(props)
@@ -34,10 +35,16 @@ export class RestaurantLanding extends Component {
     }
     componentDidMount(){
         let url=`${baseUrl}/users/restarunt/${this.setRestID()}`
-        axios.get(url).then((res)=>{
+        let query=GET_RESTAURANT_BY_ID
+        axios.post(url,{
+            query,
+            variables:{
+                restid:`${this.setRestID()}`
+            }
+        }).then((res)=>{
             this.setState({
-                restName:res.data?.RNAME,
-                restDetails:res.data
+                restName:res.data.data.getRestaurantById?.RNAME,
+                restDetails:res.data.data.getRestaurantById
             })
         })
     }

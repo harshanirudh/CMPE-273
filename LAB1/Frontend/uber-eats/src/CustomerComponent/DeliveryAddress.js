@@ -7,6 +7,7 @@ import * as yup from 'yup'
 import {  saveDeliveryAddress} from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GETALL_DELIVERY_QUERY, GET_CUSTOMER_PROFILE } from '../queries'
 
 export class DeliveryAddress extends Component {
     constructor(props) {
@@ -26,17 +27,29 @@ export class DeliveryAddress extends Component {
     getAddressList = () => {
         let getIntialAddress = `${baseUrl}/users/customers/${this.props.custId}`
         let getAllDeliveryAddress = `${baseUrl}/deliveryAddress/${this.props.custId}`
-        axios.all([axios.get(getIntialAddress), axios.get(getAllDeliveryAddress)]).then((res) => {
+        
+        axios.all([axios.post(getIntialAddress,{
+            query:GET_CUSTOMER_PROFILE,
+            variables:{
+                CUST_ID:this.props.custId
+            }
+        }),
+         axios.post(getAllDeliveryAddress,{
+            query:GETALL_DELIVERY_QUERY,
+            variables:{
+                custId:this.props.custId
+            }
+         })]).then((res) => {
             let list = [];
             console.log(res[0])
             let intialAddress = {
                 _id: 0,
-                ADDRESS: res[0]?.data?.STREET,
-                CITY: res[0]?.data?.CITY,
-                ZIPCODE: res[0]?.data?.ZIPCODE
+                ADDRESS: res[0]?.data.data.getCustomerById?.STREET,
+                CITY: res[0]?.data.data.getCustomerById?.CITY,
+                ZIPCODE: res[0]?.data.data.getCustomerById?.ZIPCODE
             }
-            let otherAddress = res[1]?.data;
-            if (res[0].data?.STREET?.length > 0)
+            let otherAddress = res[1]?.data.data.getDeliveryAddress;
+            if (res[0].data.data.getCustomerById?.STREET?.length > 0)
                 otherAddress?.unshift(intialAddress);
             this.props.saveDeliveryAddress(otherAddress)
             this.setState({ addressList: otherAddress });

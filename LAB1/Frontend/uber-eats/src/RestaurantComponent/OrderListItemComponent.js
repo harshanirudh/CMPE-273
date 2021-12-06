@@ -5,6 +5,7 @@ import React, { Component, createRef } from 'react'
 import { baseUrl } from '../apiConfig'
 import DoneIcon from '@mui/icons-material/Done';
 import { Link } from 'react-router-dom'
+import { UPDATE_ORDER_STATUS_MUTATION } from '../mutations'
 
 export class OrderListItemComponent extends Component {
     constructor(props) {
@@ -19,7 +20,13 @@ export class OrderListItemComponent extends Component {
         let orderUpdateUrl=`${baseUrl}/orders/edit/${this.props.order._id}`
         console.log(e.deliveryStatus)
         let data={status:e.deliveryStatus}
-        axios.put(orderUpdateUrl,data).then(res=>{
+        axios.post(orderUpdateUrl,{
+            query:UPDATE_ORDER_STATUS_MUTATION,
+            variables:{
+                orderId:this.props.order._id,
+                status:e.deliveryStatus
+            }
+        }).then(res=>{
             this.setState({
                 orderStatus:e.deliveryStatus,
                 openDialog:true

@@ -9,6 +9,7 @@ import { getROrdersList, updateROrdersList } from '../Redux/Restaurant/Restauran
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TablePagination from '@mui/material/TablePagination';
+import { GET_RESTAURANT_ORDERS_QUERY } from '../queries'
 export class OrdersListComponent extends Component {
     constructor(props) {
         super(props)
@@ -32,10 +33,16 @@ export class OrdersListComponent extends Component {
     }
     componentDidMount() {
         let url = `${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
-        axios.get(url).then(res => {
-            this.masterOrdersList = res.data;
-            this.props.getROrdersList(res.data)
-            this.setState({ orders: res.data })
+        
+        axios.post(url,{
+            query:GET_RESTAURANT_ORDERS_QUERY,
+            variables:{
+                restId:this.props.match.params.restId
+            }
+        }).then(res => {
+            this.masterOrdersList = res.data.data.getOrdersForRestaurant;
+            this.props.getROrdersList(res.data.data.getOrdersForRestaurant)
+            this.setState({ orders: res.data.data.getOrdersForRestaurant })
         })
     }
     filter = (value) => {
@@ -74,10 +81,15 @@ export class OrdersListComponent extends Component {
     handleChildUpdate = () => {
         console.log("Inside update")
         let url = `${baseUrl}/orders/restaurant/${this.props.match.params.restId}`
-        axios.get(url).then(res => {
-            this.masterOrdersList = res.data;
-            this.props.updateROrdersList(res.data)
-            this.setState({ orders: res.data })
+        axios.post(url,{
+            query:GET_RESTAURANT_ORDERS_QUERY,
+            variables:{
+                restId:this.props.match.params.restId
+            }
+        }).then(res => {
+            this.masterOrdersList = res.data.data.getOrdersForRestaurant;
+            this.props.updateROrdersList(res.data.data.getOrdersForRestaurant)
+            this.setState({ orders: res.data.data.getOrdersForRestaurant })
             this.filter(this.state.filter)
         })
     }

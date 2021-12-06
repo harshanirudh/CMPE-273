@@ -8,6 +8,8 @@ import { withCookies, Cookies } from 'react-cookie';
 import {saveProfileDetails ,getProfileDetails} from '../Redux/Restaurant/Restaurant-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_RESTAURANT_BY_ID } from '../queries';
+import { UPDATE_REST } from '../mutations';
 var { baseUrl } = require('../apiConfig')
 var axios = require("axios").default;
 let profileIntialValues = {
@@ -60,8 +62,13 @@ class RestaurantProfile extends Component {
     componentDidMount() {
         // console.log(this.props.match.params.profileId)
         let url=baseUrl+'/users/restarunt/'+this.props.match.params.profileId
-        axios.get(url).then((resp)=>{
-            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data
+        axios.post(url,{
+            query:GET_RESTAURANT_BY_ID,
+            variables:{
+                restid:this.props.match.params.profileId
+            }
+        }).then((resp)=>{
+            let {CITY,COUNTRY,EMAIL,END_TIME,PHONE,RDESCRIPTION,REST_ID,RNAME,START_TIME,STATE,STREET,ZIPCODE,RDELIVERY_MODE}=resp.data.data.getRestaurantById
             profileIntialValues.city=CITY?CITY:''
             profileIntialValues.country=COUNTRY?COUNTRY:''
             profileIntialValues.email=EMAIL?EMAIL:''
@@ -86,8 +93,13 @@ class RestaurantProfile extends Component {
         try {
             console.log(values)
             let url = baseUrl + '/users/restaurant/' + this.props.match.params.profileId
-            let response = await axios.put(url, values)
-            let rows = await response.data.affectedRows
+            let variables=values
+            variables.updateRestaurantId=this.props.match.params.profileId
+            let response = await axios.post(url, {
+                query:UPDATE_REST,
+                variables
+            })
+            let rows = await response.data.data.updateRestaurant
             if (rows == 1) {
                 // alert('Succesfully Updated')
                 // this.props.history.push('/restaurant/landing/' + this.props.match.params.profileId)

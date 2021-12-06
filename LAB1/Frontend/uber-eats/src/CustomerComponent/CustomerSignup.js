@@ -6,6 +6,7 @@ import NavComponent from '../SharedComponents/NavComponent';
 import { customerSignUp, restaurantSignUp} from '../Redux/Signup/Signup-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { SAVE_NEW_CUST_MUTATION } from '../mutations';
 var axios = require("axios").default;
 
 var { baseUrl } = require('../apiConfig')
@@ -46,7 +47,9 @@ export class CustomerSignup extends Component {
     AddNewCustomer(values) {
 
         let url = baseUrl + '/users/customer'
-        axios.post(url, values).then(res => {
+        let query=SAVE_NEW_CUST_MUTATION
+        let variables=values
+        axios.post(url, {query,variables}).then(res => {
             console.log(res.data);
             this.setState({
                 redirect: true,

@@ -2,6 +2,7 @@ import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divi
 import axios from 'axios'
 import React, { Component } from 'react'
 import { baseUrl } from '../apiConfig'
+import { UPDATE_ORDER_STATUS_MUTATION } from '../mutations'
 
 export class OrderListItem extends Component {
     constructor(props) {
@@ -52,7 +53,15 @@ export class OrderListItem extends Component {
     handleCancelOrder=()=>{
         console.log(this.props.order)
         const orderId=this.props.order._id
-        axios.put(`${baseUrl}/orders/edit/${orderId}`,{status:'cancelled'}).then(res=>{
+        let query=UPDATE_ORDER_STATUS_MUTATION
+        // {status:'cancelled'}
+        axios.post(`${baseUrl}/orders/edit/${orderId}`,{
+            query,
+            variables:{
+                orderId:orderId,
+                status:'cancelled'
+            }
+        }).then(res=>{
             console.log(res);
             this.setState({orderStatus:"cancelled"})
             this.props.reloadOrder()

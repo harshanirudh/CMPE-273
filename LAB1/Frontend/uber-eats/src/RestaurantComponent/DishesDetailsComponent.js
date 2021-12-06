@@ -10,6 +10,8 @@ import {saveDishDetails,getDishDetails } from '../Redux/Restaurant/Restaurant-ac
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { store } from '../Redux/store'
+import { GET_DISH_BY_ID_QUERY } from '../queries'
+import { SAVE_DISH_MUTATION, UPDATE_DISH_MUTATION } from '../mutations'
 export class DishesDetailsComponent extends Component {
     constructor(props) {
         super(props)
@@ -41,8 +43,14 @@ export class DishesDetailsComponent extends Component {
         console.log("inside did mount")
         if(this.props.match.params.dishId!='new'){
             let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish/'+this.props.match.params.dishId
-            axios.get(url).then((resp)=>{
-               let {DISH_NAME,INGREDIENTS,IMAGE,PRICE,DISH_DESCR,CATEGORY,DISH_TYPE} =resp.data[0];
+            axios.post(url,{
+                query:GET_DISH_BY_ID_QUERY,
+                variables:{
+                    dishId:this.props.match.params.dishId,
+                    restId:this.props.match.params.restId
+                }
+            }).then((resp)=>{
+               let {DISH_NAME,INGREDIENTS,IMAGE,PRICE,DISH_DESCR,CATEGORY,DISH_TYPE} =resp.data.data.getDIshById[0]
                this.formvals.dname=DISH_NAME;
                this.formvals.ingre=INGREDIENTS?INGREDIENTS:"";
                this.formvals.dimg=IMAGE?IMAGE:"";
@@ -62,7 +70,12 @@ export class DishesDetailsComponent extends Component {
         console.log(values)
         let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish'
         console.log(url)
-        axios.post(url,values).then((res)=>{
+        let variables=values;
+        variables.restId=this.props.match.params.restId
+        axios.post(url,{
+            query:SAVE_DISH_MUTATION,
+            variables
+        }).then((res)=>{
             console.log(res.data);
             this.props.saveDishDetails(values)
             this.setState({add:true})
@@ -74,7 +87,13 @@ export class DishesDetailsComponent extends Component {
         console.log(values)
         let url=baseUrl+'/restaurant/'+this.props.match.params.restId+'/dish/'+this.props.match.params.dishId;
         console.log(url)
-        axios.put(url,values).then((res)=>{
+        let variables=values;
+        variables.restId=this.props.match.params.restId
+        variables.dishId=this.props.match.params.dishId
+        axios.post(url,{
+            query:UPDATE_DISH_MUTATION,
+            variables
+        }).then((res)=>{
             console.log(res.data);
             this.props.saveDishDetails(values)
            this.setState({update:true})

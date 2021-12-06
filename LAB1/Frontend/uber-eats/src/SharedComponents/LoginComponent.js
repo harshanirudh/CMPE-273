@@ -10,6 +10,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { customerLogin, restaurantLogin } from '../Redux/Login/Login-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { CUSTOMER_LOGIN_QUERY, RESTAURANT_LOGIN } from '../queries';
 
 let loginValidator = yup.object({
     email: yup.string()
@@ -36,19 +37,21 @@ export class LoginComponent extends Component {
         if (this.props.type == 'Customer') {
             console.log("inside")
             let customerAuthUrl = `${baseUrl}/login/customer`
-            axios.post(customerAuthUrl, values,{withCredentials: true}).then((resp) => {
+            let query=CUSTOMER_LOGIN_QUERY
+            let variables=values
+            axios.post(customerAuthUrl, {query,variables}).then((resp) => {
                 let loginDetails = {
-                    isCustomerAuthenticated: resp.data.authenticated,
+                    isCustomerAuthenticated: resp.data.data.customerLogin.authenticated,
                     isRestaurantAuthenticated: false,
                     userEmail: values.email,
-                    id: resp.data.cust_id,
-                    token:resp.data.token
+                    id: resp.data.data.customerLogin.cust_id,
+                    token:resp.data.data.customerLogin.token
                 }
                 this.props.customerLogin(loginDetails);
                 let customerCookie=this.props.cookies.get('cookie')
                 console.log(this.props.cookies.get('cookie'))
                 
-                let successRedirectUrl = `/customer/landing/${resp.data.cust_id}`
+                let successRedirectUrl = `/customer/landing/${resp.data.data.customerLogin.cust_id}`
                 this.props.history.push(successRedirectUrl);
             }).catch((err) => {
                 this.setState({ invalidLogin: true })
@@ -57,19 +60,20 @@ export class LoginComponent extends Component {
         else {
             console.log("inside")
             let restAuthUrl = `${baseUrl}/login/restaurant`
-            axios.post(restAuthUrl, values,{withCredentials: true}).then((resp) => {
+            let query=RESTAURANT_LOGIN
+            axios.post(restAuthUrl, {query,variables:values},).then((resp) => {
                 let loginDetails = {
                     isCustomerAuthenticated: false,
-                    isRestaurantAuthenticated: resp.data.authenticated,
+                    isRestaurantAuthenticated: resp.data.data.RestaurantLogin.authenticated,
                     userEmail: values.email,
-                    id: resp.data.rest_id,
-                    token:resp.data.token
+                    id: resp.data.data.RestaurantLogin.rest_id,
+                    token:resp.data.data.RestaurantLogin.token
                 
                 }
                 this.props.restaurantLogin(loginDetails);
                 // let restCookie=this.props.cookies.get('restCookie')
                 console.log(this.props)
-                let successRedirectUrl = `/restaurant/landing/${resp.data.rest_id}`
+                let successRedirectUrl = `/restaurant/landing/${resp.data.data.RestaurantLogin.rest_id}`
                 this.props.history.push(successRedirectUrl);
             }).catch((err) => {
                 console.log("error",err)
