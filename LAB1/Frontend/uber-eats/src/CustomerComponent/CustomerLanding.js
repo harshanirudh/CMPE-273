@@ -16,6 +16,8 @@ import NavComponent from '../SharedComponents/NavComponent';
 import {  saveRestaurantList,getRestaurantList,getFavouritesRest,addToFavourites} from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_ALL_RESTAURANTS_QUERY, GET_CUSTOMER_FAVS_QUERY, GET_CUST_LOCATION_QUERY, SEARCH_REST_BY_DISH_NAME_QUERY, SEARCH_REST_BY_DISH_TYPE } from '../queries';
+import { SAVE_FAVS_MUTATION } from '../mutations';
 export class CustomerLanding extends Component {
     constructor(props) {
         super(props)
@@ -40,11 +42,26 @@ export class CustomerLanding extends Component {
         let url = `${baseUrl}/users/restarunt`
         let apiCustomerLocation = `${baseUrl}/users/customer/location/${this.props.match.params.custId}`;
         let getFavRestId=`${baseUrl}/favourites/customer/${this.props.match.params.custId}`
-        axios.all([axios.get(url), axios.get(apiCustomerLocation),axios.get(getFavRestId)]).then(resp => {
+        let getAllRestaurants=GET_ALL_RESTAURANTS_QUERY
+        let getCustomerLocation=GET_CUST_LOCATION_QUERY
+        let getFavRestIdQuery=GET_CUSTOMER_FAVS_QUERY
+        axios.all([axios.post(url,{query:getAllRestaurants}), 
+            axios.post(apiCustomerLocation,{
+                query:getCustomerLocation,
+                variables:{
+                    custId:`${this.props.match.params.custId}`
+                }})
+            ,axios.post(getFavRestId,{
+                query:getFavRestIdQuery,
+                variables:{
+                    custId:`${this.props.match.params.custId}`
+                }
+            })
+        ]).then(resp => {
 
             let restaurantsList = []
-            restaurantsList = resp[0].data
-            let location = resp[1].data?.location
+            restaurantsList = resp[0].data.data.getAllRestaurants
+            let location = resp[1].data.data?.getCustomerLocation
             // this.favouritesRestIds=resp[2].data?.rest_ids
             let fList = restaurantsList.filter(item => {
                 let city = item.CITY.toString().toLowerCase();
@@ -63,7 +80,7 @@ export class CustomerLanding extends Component {
             this.setState(
                 { 
                     restaurantsList: finalList ,
-                    favouritesRestIds:resp[2].data
+                    favouritesRestIds:resp[2].data.data.getFavouritesForCustomer
                 })
 
         })
@@ -94,14 +111,16 @@ export class CustomerLanding extends Component {
         if (searchString.length > 0) {
             if (this.searchCategory.current.value === 'dish') {
                 let url = `${baseUrl}/restaurant/searchBy/dishes`
-                axios.post(url, { 'dishSeq': searchString }).then((res => {
+                let searchByDishName=SEARCH_REST_BY_DISH_NAME_QUERY
+                // { 'dishSeq': searchString }
+                axios.post(url, {query:searchByDishName,variables:{ dishSeq: searchString }}).then((res => {
                     console.log(this.masterRestaurantList)
                     let filterList = this.masterRestaurantList.filter(i => {
                         // Check if delivery/pickup toggle is selected, if selected check the delivery mode and return
                         if (this.state.deliveryFilter.length > 0)
-                            return (res.data.rest_id.includes(i._id)) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
+                            return (res.data.data.searchRestByDish.includes(i._id)) && ((i.RDELIVERY_MODE == this.state.deliveryFilter) || (i.RDELIVERY_MODE == 'both'))
                         else {
-                            return res.data.rest_id.includes(i._id);
+                            return res.data.data.searchRestByDish.includes(i._id);
                         }
                     })
                     console.log(filterList)
@@ -138,10 +157,14 @@ export class CustomerLanding extends Component {
             this.setState({restaurantsList:this.masterRestaurantList})
         }else{
         let url=`${baseUrl}/restaurant/searchBy/type/${e.target.value}`
-        axios.get(url).then(res=>{
+        let searchByType=SEARCH_REST_BY_DISH_TYPE
+        axios.post(url,{
+            query:searchByType,
+            values:{type:`${e.target.value}`}
+        }).then(res=>{
             let filterList=this.masterRestaurantList.filter(i=>{
                 console.log(res.data)
-                return res.data.rest_id?.includes(i._id)
+                return res.data.data.searchRestByDishType?.includes(i._id)
             })
             this.setState({restaurantsList:filterList})
         })
@@ -174,7 +197,14 @@ export class CustomerLanding extends Component {
     setFavourite(restId){
         let url=`${baseUrl}/favourites/add/${this.props.match.params.custId}/${restId}`
         this.setState({loading:true})
-        axios.post(url).then((res)=>{
+        let query=SAVE_FAVS_MUTATION
+        axios.post(url,{
+            query,
+            variables:{
+                custId:this.props.match.params.custId,
+                restId:restId
+            }
+        }).then((res)=>{
             let newArr=[restId,...this.state.favouritesRestIds]
             this.props.addToFavourites(newArr)
             this.setState({

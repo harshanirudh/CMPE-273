@@ -10,6 +10,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { getAllOrders } from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GETALL_DELIVERY_QUERY, GET_CUSTOMER_ORDERS_QUERY, GET_CUSTOMER_PROFILE } from '../queries'
 export class CustomerOrders extends Component {
     constructor(props) {
         super(props)
@@ -32,15 +33,30 @@ export class CustomerOrders extends Component {
     getAddressList = () => {
         let getIntialAddress = `${baseUrl}/users/customers/${this.props.match.params.custId}`
         let getAllDeliveryAddress = `${baseUrl}/deliveryAddress/${this.props.match.params.custId}`
-        axios.all([axios.get(getIntialAddress), axios.get(getAllDeliveryAddress)]).then((res) => {
+        let getCustomerIntialAdress=GET_CUSTOMER_PROFILE
+        let getAllDeliveryQuery=GETALL_DELIVERY_QUERY
+        axios.all([
+            axios.post(getIntialAddress,{
+                query:getCustomerIntialAdress,
+                variables:{
+                    CUST_ID:this.props.match.params.custId
+                }
+            }), 
+            axios.post(getAllDeliveryAddress,{
+                query:getAllDeliveryQuery,
+                variables:{
+                    custId:this.props.match.params.custId
+                }
+            })
+        ]).then((res) => {
             let list = [];
             let intialAddress = {
                 add_id: 0,
-                address: res[0]?.data[0]?.STREET,
-                city: res[0]?.data[0]?.CITY,
-                zipcode: res[0]?.data[0]?.ZIPCODE
+                address: res[0]?.data[0]?.data.getCUstomerById.STREET,
+                city: res[0]?.data[0]?.data.getCUstomerById.CITY,
+                zipcode: res[0]?.data[0]?.data.getCUstomerById.ZIPCODE
             }
-            let otherAddress = res[1]?.data;
+            let otherAddress = res[1]?.data.data.getDeliveryAddress;
             otherAddress?.unshift(intialAddress);
             console.log(otherAddress)
             this.setState({ addressList: otherAddress });
@@ -48,11 +64,17 @@ export class CustomerOrders extends Component {
     }
     getAllOrdersList(){
         let url = `${baseUrl}/orders/customer/${this.props.match.params.custId}`
-        axios.get(url).then(res => {
-            this.masterOrderList = res.data
+        let query=GET_CUSTOMER_ORDERS_QUERY
+        axios.post(url,{
+            query,
+            variables:{
+                custId:this.props.match.params.custId
+            }
+        }).then(res => {
+            this.masterOrderList = res.data.data.getOrdersForCustomer
             console.log(res.data)
-            this.setState({ orderList: res.data })
-            this.props.getAllOrders(res.data)
+            this.setState({ orderList: res.data.data.getOrdersForCustomer })
+            this.props.getAllOrders(res.data.data.getOrdersForCustomer)
         })
     }
     componentDidMount() {

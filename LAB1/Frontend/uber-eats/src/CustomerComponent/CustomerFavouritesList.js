@@ -8,6 +8,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { getFavouritesRest} from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_CUST_FAVS_REST_DETAILS } from '../queries'
 export class CustomerFavouritesList extends Component {
 
     constructor(props) {
@@ -25,10 +26,16 @@ export class CustomerFavouritesList extends Component {
     }
     componentDidMount(){
         let url=`${baseUrl}/favourites/details/customer/${this.props.match.params.custId}`
-        axios.get(url).then((resp)=>{
+        let query=GET_CUST_FAVS_REST_DETAILS
+        axios.post(url,{
+            query,
+            variables:{
+                custId:this.props.match.params.custId
+            }
+        }).then((resp)=>{
              console.log(resp.data)
-             this.props.getFavouritesRest(resp.data.map(i=>i.REST_ID))
-             this.setState({restaurantsList:resp.data})
+             this.props.getFavouritesRest(resp.data.data.getFavsDetails.map(i=>i._id))
+             this.setState({restaurantsList:resp.data.data.getFavsDetails})
         })
     }
     setRestImage(imageURL) {

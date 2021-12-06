@@ -9,6 +9,8 @@ import { uploadProfilePics } from './../SharedComponents/UploadS3'
 import {  saveCustomerProfile,getCustomerProfile} from '../Redux/Customer/Customer-actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { GET_CUSTOMER_PROFILE } from '../queries';
+import { UPDATE_CUST_PROFILE_QUERY } from '../mutations';
 var axios = require("axios").default;
 var { baseUrl } = require('../apiConfig')
 
@@ -59,8 +61,15 @@ class CustomerProfile extends Component {
     handleSave(values) {
         console.log(values)
         let url = baseUrl + '/users/customer/' + this.props.match.params.custId;
-        axios.put(url, values).then((resp) => {
-            let rows = resp.data.affectedRows;
+        const query=UPDATE_CUST_PROFILE_QUERY
+        const variables={
+            id:this.props.match.params.custId,
+        
+        }
+        Object.assign(variables,values)
+        axios.post(url,{query,variables}).then((resp)=>{
+        // axios.put(url, values).then((resp) => {
+            let rows = resp.data.data.updateCustomer;
             if (rows > 0) {
                 console.log("Success")
                 this.props.saveCustomerProfile(values)
@@ -101,10 +110,16 @@ class CustomerProfile extends Component {
     }
     componentDidMount() {
         let url = baseUrl + "/users/customers/" + this.props.match.params.custId;
-        // console.log(url)
-        axios.get(url).then((resp) => {
-            console.log(resp.data)
-            let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data;
+        const query=GET_CUSTOMER_PROFILE
+        const variables={
+            CUST_ID:this.props.match.params.custId
+        }
+        axios.post(url,{query,variables}).then(resp=>{
+            let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data.data.getCustomerById
+    
+        // axios.get(url).then((resp) => {
+        //     console.log(resp.data)
+            // let { ABOUT, CITY, COUNTRY, CUST_ID, EMAIL, FNAME, LNAME, NICKNAME, PHONE, PROFILE_PIC, STATE, STREET, ZIPCODE, DOB } = resp.data;
             custProfIntialValues.about = ABOUT ? ABOUT : "";
             custProfIntialValues.city = CITY?CITY:"";
             custProfIntialValues.country = COUNTRY?COUNTRY:"";

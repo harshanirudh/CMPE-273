@@ -16,6 +16,7 @@ import { baseUrl } from '../apiConfig';
 import DeliveryAddress from './DeliveryAddress';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+import { SAVE_NEW_ORDER_MUTATION } from '../mutations';
 
 export class CheckoutComponent extends Component {
     constructor(props) {
@@ -143,19 +144,23 @@ export class CheckoutComponent extends Component {
                 console.log("valid")
                 let dateTime=new Date()
                 let orderDetails={
-                    rest_id:this.props.location.state.restDetails._id,
+                    restId:this.props.location.state.restDetails._id,
                     rname:this.props.location.state.restDetails.RNAME,
-                    cust_id:this.props.match.params.custId,
+                    custId:this.props.match.params.custId,
                     order_type:'delivery',
                     dishes:this.props.location.state.items,
-                    amount:this.calculateAmount(this.props.location.state.items),
+                    amount:''+this.calculateAmount(this.props.location.state.items),
                     ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
                     address:this.selectedAddress,
                     specialInstructions:this.state.specialInstructions
                 }
                 console.log(orderDetails)
                 let url=`${baseUrl}/orders/new`
-                axios.post(url,orderDetails).then((res)=>{
+                let query=SAVE_NEW_ORDER_MUTATION
+                axios.post(url,{
+                    query,
+                    variables:orderDetails
+                }).then((res)=>{
                     console.log(res.data)
                     this.openConfirmationBox()
                 })
@@ -166,19 +171,23 @@ export class CheckoutComponent extends Component {
         }else if(this.state.deliveryMode==='pickup'){
             let dateTime=new Date()
             let orderDetails={
-                rest_id:this.props.location.state.restDetails._id,
+                restId:this.props.location.state.restDetails._id,
                 rname:this.props.location.state.restDetails.RNAME,
-                cust_id:this.props.match.params.custId,
-                order_type:'pickup',
+                custId:this.props.match.params.custId,
+                orderType:'pickup',
                 dishes:this.props.location.state.items,
-                amount:this.calculateAmount(this.props.location.state.items),
+                amount:''+this.calculateAmount(this.props.location.state.items),
                 ts: dateTime.toLocaleDateString()+" "+dateTime.toLocaleTimeString(),
                 address:null,
                 specialInstructions:this.state.specialInstructions
             }
             console.log(orderDetails)
                 let url=`${baseUrl}/orders/new`
-                axios.post(url,orderDetails).then((res)=>{
+                let query=SAVE_NEW_ORDER_MUTATION
+                axios.post(url,{
+                    query,
+                    variables:orderDetails
+                }).then((res)=>{
                     console.log(res.data)
                     this.openConfirmationBox()
                 })

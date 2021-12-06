@@ -68,7 +68,7 @@ function App() {
             <Route exact path="/customerSignup/error">
               <SignupStatus type="error" view="cust"></SignupStatus>
             </Route>
-            <CustomerProtectedRoute exact path="/customer/profile/:custId" component={CustomerProfile}></CustomerProtectedRoute>
+            <Route exact path="/customer/profile/:custId" component={CustomerProfile}></Route>
             <CustomerProtectedRoute exact path="/customer/landing/:custId" component={CustomerLanding}></CustomerProtectedRoute>
             <CustomerProtectedRoute exact path="/customer/:custId/restaurant/:restId" component={CustomerRestComponent}></CustomerProtectedRoute>
             <CustomerProtectedRoute exact path="/customer/:custId/favourites" component={CustomerFavouritesList}></CustomerProtectedRoute>

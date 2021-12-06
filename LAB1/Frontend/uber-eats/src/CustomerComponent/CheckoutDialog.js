@@ -19,6 +19,7 @@ import { incrementCounter, decrementCounter } from '../Redux/Cart/Cart-actions'
 import CheckoutComponent from './CheckoutComponent';
 import { baseUrl } from '../apiConfig';
 import axios from 'axios';
+import { GET_RESTAURANT_BY_ID } from '../queries';
 
 class CheckoutDialog extends React.Component {
     //   const [open, setOpen] = React.useState(false);
@@ -95,8 +96,14 @@ class CheckoutDialog extends React.Component {
         let restId = (sessionStorage.getItem('restId'));
         if (restId) {
             let getRestaurantDetails = `${baseUrl}/users/restarunt/${restId}`;
-            axios.get(getRestaurantDetails).then((resp) => {
-                this.setState({restaurantDetails:resp.data})
+            let query=GET_RESTAURANT_BY_ID
+            axios.post(getRestaurantDetails,{
+                query,
+                variables:{
+                    restid:restId
+                }
+            }).then((resp) => {
+                this.setState({restaurantDetails:resp.data.data.getRestaurantById})
             }).catch((err) => {
                 console.log(err);
             })
