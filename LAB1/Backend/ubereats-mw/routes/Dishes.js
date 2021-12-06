@@ -6,7 +6,7 @@ const DishesModel = require('../models/DishesModel');
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 const { checkAuth } = require('../JwtStrategy');
 
 router.post('/:id/dish',checkAuth,async(req,res)=>{

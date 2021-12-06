@@ -10,7 +10,8 @@ const ordersSchema= new Schema({
     AMOUNT:{type:String},
     DISH_DETAILS:{type:Object},
     ORD_TIMESTAMP:{type:String},
-    ORD_DEL_ADDRESS:{type:mongoose.SchemaTypes.ObjectId}
+    ORD_DEL_ADDRESS:{type:String},
+    SPECIAL_INSTRUCTIONS:{type:String}
 },{timestamps:true})
 
 // const Customer=

@@ -5,7 +5,7 @@ const DeliveryAddressModel = require('../models/DeliveryAddressModel');
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 const { checkAuth } = require('../JwtStrategy');
 
 router.post('/add/:custId',checkAuth,async(req,res)=>{

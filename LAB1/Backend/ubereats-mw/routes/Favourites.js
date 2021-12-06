@@ -3,7 +3,7 @@ var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
 var favourites=require('../models/CustomerFavouritesModel');
 const RestaurantModel = require('../models/RestaurantModel');
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 const { checkAuth } = require('../JwtStrategy');
 router.post('/add/:custId/:restId',checkAuth,async(req,res)=>{
     // try{

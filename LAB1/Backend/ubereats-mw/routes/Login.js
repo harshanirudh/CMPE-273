@@ -12,7 +12,7 @@ const CustomerModel=require('../models/CustomerModel')
 const passport=require('passport');
 const RestaurantModel = require('../models/RestaurantModel');
 const loginValidator = validator.check(['email', 'pass'], 'Bad Request').exists()
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 
 router.post('/customer', loginValidator, async (req, res) => {
     try {
