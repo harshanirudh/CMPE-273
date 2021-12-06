@@ -9,7 +9,7 @@ var service = require('./../services/users-service');
 const app = require('../app');
 const Customer = require('../models/CustomerModel');
 const Restaurant = require('../models/RestaurantModel')
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 const { checkAuth } = require('../JwtStrategy');
 /**
  * Define the no of salt rounds for hashing

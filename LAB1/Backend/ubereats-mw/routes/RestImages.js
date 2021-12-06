@@ -4,7 +4,7 @@ const Restaurant = require('../models/RestaurantModel');
 
 var router = express.Router();
 var pool = require('./../db-config').connectionPool.promise()
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 var passport=require('passport');
 const { checkAuth } = require('../JwtStrategy');
 

@@ -9,7 +9,7 @@ var pool = require('./../db-config').connectionPool.promise()
 var service = require('./../services/users-service');
 const {verifyUser}=require('./Login')
 const passport=require('passport')
-var kafka = require('../kafka/client');
+// var kafka = require('../kafka/client');
 const {checkAuth}  = require("../JwtStrategy")
 // const passport = require("passport");
 /**
